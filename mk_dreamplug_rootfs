@@ -21,9 +21,9 @@
 
 
 # target=/media/disk
-target=/media/disk
-hostname='dreamspark'
-rootpasswd='password'
+target=/space/freedombox/build/dreamplug
+hostname='freedombox'
+rootpasswd='freedom'
 
 #kernelimage=http://dreamplug.googlecode.com/files/uImage
 #kernelmodules=http://dreamplug.googlecode.com/files/linux-2.6.33.6.tar.bz2
@@ -31,10 +31,9 @@ rootpasswd='password'
 kernelimage=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/uImage
 kernelmodules=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/Modules.tar.gz
 
-tmpdir=/tmp/multistrap_temp
+tmpdir=/space/freedombox/build/tmp
 
-
-
+mkdir -p $target
 mkdir -p $tmpdir
 
 wget -c $kernelimage --output-document="$tmpdir/uImage"
@@ -181,7 +180,7 @@ echo \"Reboot time!\"
 # echo 0 >  /sys/class/leds/guruplug\:red\:health/brightness	# Poweron ??
 reboot -d -f -i -p
 
-" > cat > $target/install.sh  
+" > $target/install.sh  
 
 chmod 755 $target/install.sh
 
