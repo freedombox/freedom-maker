@@ -34,9 +34,11 @@
 basedir=/opt/fbx/build
 target=$basedir/dreamplug
 tmpdir=$basedir/tmp
+pkgcache=$tmpdir/aptcache
 
 mkdir -p $target
 mkdir -p $tmpdir
+mkdir -p $pkgcache
 
 hostname='freedombox'
 
@@ -60,18 +62,13 @@ fi
 
 rm -rf $target/*
 
-# Do we have any downloaded packages from previous runs?
-# This uses disk space in the host system, but greatly reduces the time when running this script several times in a row.
-mkdir -p $target/var/cache/apt/
-cp -r $tmpdir/aptcache/* $target/var/cache/apt/
-
+mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt/
 
 echo "Multistrapping..."
 multistrap -f multistrap.conf --no-auth -d $target 
 
-echo "Moving downloaded packages"
-mkdir -p $tmpdir/aptcache/
-cp -r $target/var/cache/apt/* $tmpdir/aptcache/
+umount $target/var/cache/apt/
+mkdir $target/var/cache/apt/archives
 
 echo "Unpacking kernel modules..."
 mkdir -p $target/lib/modules/
