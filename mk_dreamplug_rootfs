@@ -2,28 +2,29 @@
 
 #  ----------------------------------------------------------------------------
 #  "THE BEER-WARE LICENSE" (Revision 42):
-#  <ivan@sanchezortega.es> wrote this file. As long as you retain this notice you
-#  can do whatever you want with this stuff. If we meet some day, and you think
-#  this stuff is worth it, you can buy me a beer in return.
+#  <ivan@sanchezortega.es> wrote this file. 
+#  As long as you retain this notice you can do whatever you want with 
+#  this stuff. If we meet some day, and you think this stuff is worth it, 
+#  you can buy me a beer in return.
 #  ----------------------------------------------------------------------------
 
 # mk_dreamplug_rootfs
 #
-# Runs multistrap and readies the resultinf root filesystem so that it silently completes package configuration on the first boot-up.
-# This has been tailored for the DreamPlug, and tested.
-# It might be possible to use it on the Sheeva and GuruPlug by pushing another kernel, but it hasn't been tested that way. Use it at your own risk.
-#
-# Based on http://gnesis.crysol.org/es/node/1384 and on http://plugcomputer.org/plugforum/index.php?topic=878.0
-# 
-# 2011-05-14: first release
-# 2011-05-15: tweaks to reduce flash writes
-# 2011-05-16: added non-free rep and libertas-firmware package
+# Runs multistrap and readies the resulting root filesystem to silently 
+# complete package configuration on the first boot-up.
 
+# where to build images, etc
+basedir=/opt/fbx/build
+target=$basedir/dreamplug
+tmpdir=$basedir/tmp
 
-# target=/media/disk
-target=/space/freedombox/build/dreamplug
+mkdir -p $target
+mkdir -p $tmpdir
+
 hostname='freedombox'
-rootpasswd='freedom'
+
+# changing rootpasswd here currently has no effect .. hard-coded hash later!
+rootpasswd='password'
 
 #kernelimage=http://dreamplug.googlecode.com/files/uImage
 #kernelmodules=http://dreamplug.googlecode.com/files/linux-2.6.33.6.tar.bz2
@@ -31,14 +32,8 @@ rootpasswd='freedom'
 kernelimage=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/uImage
 kernelmodules=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/Modules.tar.gz
 
-tmpdir=/space/freedombox/build/tmp
-
-mkdir -p $target
-mkdir -p $tmpdir
-
 wget -c $kernelimage --output-document="$tmpdir/uImage"
 wget -c $kernelmodules --output-document="$tmpdir/linux.tar.gz"
-
 
 rm -rf $target/*
 
