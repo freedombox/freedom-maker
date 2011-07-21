@@ -1,0 +1,26 @@
+Freedom-Maker  -  Bdale's building tools for the FreedomBox project
+
+To build for a DreamPlug, use
+
+	sudo ./mk_dreamplug_rootfs
+
+This will yield a file tree under /opt/fbx/build/dreamplug, representing the
+contents of a root file system.  Get that onto a USB stick with something
+like
+
+	sudo mount /dev/sdc1 /media/freedom
+	sudo rsync -atvz --progress /opt/fbx/build/dreamplug/ /media/freedom/
+	sudo umount /media/freedom
+
+Move the USB stick to the DreamPlug, and arrange to boot the existing kernel
+from internal microSD pointing to our new root filesystem by interrupting the
+boot to talk to U-Boot:
+
+	setenv bootargs_root root=/dev/sdc1
+	saveenv
+
+Press reset, and the system should boot.  On the first boot, an automated
+script will run that configures all the packages, touched up a few config
+files, and then forces a reboot.  Starting on the second boot, a login prompt
+should eventually appear on the serial console.
+
