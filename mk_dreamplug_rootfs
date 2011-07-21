@@ -32,8 +32,14 @@ rootpasswd='password'
 kernelimage=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/uImage
 kernelmodules=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/Modules.tar.gz
 
-wget -c $kernelimage --output-document="$tmpdir/uImage"
-wget -c $kernelmodules --output-document="$tmpdir/linux.tar.gz"
+if [ ! -f $tmpdir/uImage ]
+then
+	wget -c $kernelimage --output-document="$tmpdir/uImage"
+fi
+if [ ! -f $tmpdir/linux.tar.gz ]
+then
+	wget -c $kernelmodules --output-document="$tmpdir/linux.tar.gz"
+fi
 
 rm -rf $target/*
 
@@ -140,7 +146,8 @@ echo \"Preconfiguring dash - else dash and bash will be left in a broken state\"
 /var/lib/dpkg/info/dash.preinst install
 
 echo \"Configuring all packages\"
-export DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true 
+export LC_ALL=C LANGUAGE=C LANG=C 
 dpkg --configure -a
 
 # By default, spawn a console on the serial port
