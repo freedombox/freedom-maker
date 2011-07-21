@@ -1,8 +1,25 @@
 #!/bin/bash
+# 
+# Copyright 2011 by Bdale Garbee <bdale@gag.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 
 
+# based on work by <ivan@sanchezortega.es>, who released his script under
+# the following license terms:
 #  ----------------------------------------------------------------------------
 #  "THE BEER-WARE LICENSE" (Revision 42):
-#  <ivan@sanchezortega.es> wrote this file. 
 #  As long as you retain this notice you can do whatever you want with 
 #  this stuff. If we meet some day, and you think this stuff is worth it, 
 #  you can buy me a beer in return.
@@ -17,11 +34,9 @@
 basedir=/opt/fbx/build
 target=$basedir/dreamplug
 tmpdir=$basedir/tmp
-pkgcache=$tmpdir/aptcache
 
 mkdir -p $target
 mkdir -p $tmpdir
-mkdir -p $pkgcache
 
 hostname='freedombox'
 
@@ -45,13 +60,18 @@ fi
 
 rm -rf $target/*
 
-mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt/
+# Do we have any downloaded packages from previous runs?
+# This uses disk space in the host system, but greatly reduces the time when running this script several times in a row.
+mkdir -p $target/var/cache/apt/
+cp -r $tmpdir/aptcache/* $target/var/cache/apt/
+
 
 echo "Multistrapping..."
 multistrap -f multistrap.conf --no-auth -d $target 
 
-umount $target/var/cache/apt/
-mkdir $target/var/cache/apt/archives
+echo "Moving downloaded packages"
+mkdir -p $tmpdir/aptcache/
+cp -r $target/var/cache/apt/* $tmpdir/aptcache/
 
 echo "Unpacking kernel modules..."
 mkdir -p $target/lib/modules/
@@ -76,7 +96,6 @@ sys	/sys		sysfs	none		0	0
 none	/dev/pts	devpts	defaults	0	0
 tmpfs   /tmp            tmpfs   rw,nosuid,nodev 0       0
 " > $target/etc/fstab
-
 
 touch $target/etc/mtab
 
@@ -104,24 +123,15 @@ allow-hotplug eth1
 iface eth1 inet dhcp
         " > $target/etc/network/interfaces
 
-
 # Setup nameserver (use OpenDNS by default)
 echo "nameserver 208.67.222.222
 nameserver 208.67.220.220" > $target/etc/resolv.conf
-
-
-
 
 # Touch the net generator udev so that eth0 won't be reassigned in case the user
 # changes the MAC address - this may happen if you change the rootfs between plugs.
 touch $target/etc/udev/rules.d/75-persistent-net-generator.rules
 
-
-
-
-# Yo dawg! I heard you like scripts, so I put a script in ya script so you can script while you script!
-# ... so here we'll generate a second stage script which will be run when the plug boots up for the first time
-# It will:
+# generate script which will be run on first boot to:
 #  * configure all packages silently
 #  * configure inittab to spawn a console on the serial port (JTAG)
 #  * delete the script and reboot
@@ -143,8 +153,8 @@ echo \"Preconfiguring dash - else dash and bash will be left in a broken state\"
 /var/lib/dpkg/info/dash.preinst install
 
 echo \"Configuring all packages\"
-export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true 
-export LC_ALL=C LANGUAGE=C LANG=C 
+export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+export LC_ALL=C LANGUAGE=C LANG=C
 dpkg --configure -a
 
 # By default, spawn a console on the serial port
