@@ -31,7 +31,7 @@
 # complete package configuration on the first boot-up.
 
 # where to build images, etc
-basedir=/opt/fbx/build
+basedir=`pwd`/build
 target=$basedir/dreamplug
 tmpdir=$basedir/tmp
 pkgcache=$tmpdir/aptcache

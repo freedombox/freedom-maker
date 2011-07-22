@@ -4,12 +4,12 @@ To build for a DreamPlug, use
 
 	sudo ./mk_dreamplug_rootfs
 
-This will yield a file tree under /opt/fbx/build/dreamplug, representing the
+This will yield a file tree under build/dreamplug, representing the
 contents of a root file system.  Get that onto a USB stick with something
 like
 
 	sudo mount /dev/sdc1 /media/freedom
-	sudo rsync -atvz --progress /opt/fbx/build/dreamplug/ /media/freedom/
+	sudo rsync -atvz --progress build/dreamplug/ /media/freedom/
 	sudo umount /media/freedom
 
 Move the USB stick to the DreamPlug, and arrange to boot the existing kernel
