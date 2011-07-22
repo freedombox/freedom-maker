@@ -128,17 +128,11 @@ nameserver 208.67.220.220" > $target/etc/resolv.conf
 # changes the MAC address - this may happen if you change the rootfs between plugs.
 touch $target/etc/udev/rules.d/75-persistent-net-generator.rules
 
-# generate script which will be run on first boot to:
-#  * configure all packages silently
-#  * configure inittab to spawn a console on the serial port (JTAG)
-#  * delete the script and reboot
+# generate configuration script
 
-echo "Setting up first-boot script"
+echo "Create script to configure packages in qemu-user-static"
 
 echo "
-echo \"Deleting old inittab\"
-rm /etc/inittab
-
 echo \"Preconfiguring dash - else dash and bash will be left in a broken state\"
 /var/lib/dpkg/info/dash.preinst install
 
@@ -178,15 +172,6 @@ reboot -d -f -i -p
 " > $target/install.sh  
 
 chmod 755 $target/install.sh
-
-echo "Enabling first-boot script"
-echo "
-# The default runlevel.
-id:2:initdefault:
-
-T0:12345:wait:/install.sh -L ttyS0 115200 vt100
-# T0:12345:respawn:/sbin/getty -L ttyS0 115200 vt100
-" > $target/etc/inittab
 
 echo "Use qemu-user-static to perform first-boot configuration now"
 
