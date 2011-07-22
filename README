@@ -19,8 +19,7 @@ boot to talk to U-Boot:
 	setenv bootargs_root root=/dev/sdc1
 	saveenv
 
-Press reset, and the system should boot.  On the first boot, an automated
-script will run that configures all the packages, touched up a few config
-files, and then forces a reboot.  Starting on the second boot, a login prompt
-should eventually appear on the serial console.
+Press reset, and the system should boot to a login prompt.
 
+Be aware that this is an imcomplete solution for now .. you will want to at
+least do things like create unique ssh host keys for your device!

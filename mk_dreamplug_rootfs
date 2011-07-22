@@ -42,12 +42,6 @@ mkdir -p $pkgcache
 
 hostname='freedombox'
 
-# changing rootpasswd here currently has no effect .. hard-coded hash later!
-rootpasswd='password'
-
-#kernelimage=http://dreamplug.googlecode.com/files/uImage
-#kernelmodules=http://dreamplug.googlecode.com/files/linux-2.6.33.6.tar.bz2
-
 kernelimage=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/uImage
 kernelmodules=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/Modules.tar.gz
 
@@ -74,7 +68,6 @@ echo "Unpacking kernel modules..."
 mkdir -p $target/lib/modules/
 tar -C $target/lib/ -zxvf $tmpdir/linux.tar.gz | tail
 
-
 # Until udev is configured and run for the first time, dev nodes won't be created, but we need some basic ones for spawning a console (console) and creating RSA keys for SSH (urandom).
 echo "Creating basic device nodes"
 mknod $target/dev/console c 5 1
@@ -82,7 +75,6 @@ mknod $target/dev/random c 1 8
 mknod $target/dev/urandom c 1 9
 mknod $target/dev/null c 1 3
 mknod $target/dev/ptmx c 5 2
-
 
 # Basic fstab & mtab..
 echo "Setting up basic fstab & mtab"
@@ -100,7 +92,7 @@ touch $target/etc/mtab
 echo "Setting up hostname, initial root password, /etc/network/interfaces, nameservers, persistent-net-generator rules"
 echo $hostname > $target/etc/hostname
 
-# The root password is "password" - that thing down there is the hash. The first-boot script should change the password, but currently does not :-(
+# The root password is "password"
 echo "root:Npge08pfz4wuk:0:0:root:/root:/bin/bash" > $target/etc/passwd
 echo "root:Npge08pfz4wuk:0:" > $target/etc/group
 
@@ -145,12 +137,6 @@ dpkg --configure -a
 echo \"Adding a getty on the serial port\"
 echo \"T0:12345:respawn:/sbin/getty -L ttyS0 115200 vt100\" >> /etc/inittab
 
-echo \"Running depmod\"
-depmod
-
-echo \"Setting new root password\"
-echo -e \"$rootpasswd\\n$rootpasswd\\n\" | /usr/bin/passwd root
-
 echo \"Tweaks to reduce flash writes as per http://www.plugcomputer.org/plugwiki/index.php/Reduce_Flash_Writes\"
 echo \"
 # Reduce writes to flash drives
@@ -166,8 +152,8 @@ rm -f /install.sh
 echo \"Syncing filesystem just in case something didn't get written\"
 sync
 
-echo \"Reboot time!\"
-reboot -d -f -i -p
+echo \"End configuration progress by exiting from the chroot\"
+exit
 
 " > $target/install.sh  
 
