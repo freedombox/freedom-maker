@@ -136,13 +136,6 @@ touch $target/etc/udev/rules.d/75-persistent-net-generator.rules
 echo "Setting up first-boot script"
 
 echo "
-# Lets blink the leds during the first boot, just for fun.
-mount sys /sys -t sysfs
-echo \"heartbeat\" >  /sys/class/leds/guruplug\:green\:wmode/trigger	# AP
-echo \"heartbeat\" >  /sys/class/leds/guruplug\:red\:wmode/trigger	# Wifi
-echo \"heartbeat\" >  /sys/class/leds/guruplug\:green\:health/trigger	# BT
-echo \"heartbeat\" >  /sys/class/leds/guruplug\:red\:health/trigger	# Poweron ?? (doesnt work)
-
 echo \"Deleting old inittab\"
 rm /etc/inittab
 
@@ -180,10 +173,6 @@ echo \"Syncing filesystem just in case something didn't get written\"
 sync
 
 echo \"Reboot time!\"
-# echo 0 >  /sys/class/leds/guruplug\:green\:health/brightness	# BT
-# echo 0 >  /sys/class/leds/guruplug\:green\:wmode/brightness	# AP
-# echo 0 >  /sys/class/leds/guruplug\:red\:wmode/brightness	# Wifi
-# echo 0 >  /sys/class/leds/guruplug\:red\:health/brightness	# Poweron ??
 reboot -d -f -i -p
 
 " > $target/install.sh  
@@ -198,6 +187,12 @@ id:2:initdefault:
 T0:12345:wait:/install.sh -L ttyS0 115200 vt100
 # T0:12345:respawn:/sbin/getty -L ttyS0 115200 vt100
 " > $target/etc/inittab
+
+echo "Use qemu-user-static to perform first-boot configuration now"
+
+mkdir -p $target/usr/bin
+cp /usr/bin/qemu-arm-static $target/usr/bin
+chroot $target /install.sh
 
 echo "Syncing..."
 sync
