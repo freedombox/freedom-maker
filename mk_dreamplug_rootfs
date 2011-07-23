@@ -69,6 +69,12 @@ echo "Unpacking kernel modules..."
 mkdir -p $target/lib/modules/
 tar -C $target/lib/ -zxvf $tmpdir/linux.tar.gz | tail
 
+echo "copy uImage to target filesystem"
+mkdir -p $target/boot
+cp build/tmp/uImage $target/boot/uImage
+echo "copy copy2internal.sh script to target filesystem"
+cp bin/copy2internal.sh $target/boot/copy2internal.sh
+
 # Until udev is configured and run for the first time, dev nodes won't be created, but we need some basic ones for spawning a console (console) and creating RSA keys for SSH (urandom).
 echo "Creating basic device nodes"
 mknod $target/dev/console c 5 1
