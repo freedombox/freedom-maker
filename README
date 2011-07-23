@@ -19,7 +19,6 @@ Move the USB stick to the DreamPlug, and arrange to boot the existing kernel
 from internal microSD pointing to our new root filesystem by interrupting the
 boot to talk to U-Boot:
 
-	setenv bootargs_root root=/dev/sdc1
 	setenv x_bootargs_root root=/dev/sdc1 rootdelay=10
 	saveenv
 	reset
