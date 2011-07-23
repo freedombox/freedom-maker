@@ -41,6 +41,7 @@ mkdir -p $tmpdir
 mkdir -p $pkgcache
 
 hostname='freedombox'
+rootpassword='freedom'
 
 kernelimage=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/uImage
 kernelmodules=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/Modules.tar.gz
@@ -89,12 +90,8 @@ tmpfs   /tmp            tmpfs   rw,nosuid,nodev 0       0
 touch $target/etc/mtab
 
 # Set up hostname
-echo "Setting up hostname, initial root password, /etc/network/interfaces, nameservers, persistent-net-generator rules"
+echo "Setting up hostname, /etc/network/interfaces, nameservers, persistent-net-generator rules"
 echo $hostname > $target/etc/hostname
-
-# The root password is "password"
-echo "root:Npge08pfz4wuk:0:0:root:/root:/bin/bash" > $target/etc/passwd
-echo "root:Npge08pfz4wuk:0:" > $target/etc/group
 
 # Clear /etc/network/interfaces
 echo "# This file describes the network interfaces available on your system
@@ -133,6 +130,10 @@ export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
 export LC_ALL=C LANGUAGE=C LANG=C
 dpkg --configure -a
 
+# Establish an initial root password
+echo \"Set root password to \"$rootpassword
+echo root:$rootpassword | /usr/sbin/chpasswd
+
 # By default, spawn a console on the serial port
 echo \"Adding a getty on the serial port\"
 echo \"T0:12345:respawn:/sbin/getty -L ttyS0 115200 vt100\" >> /etc/inittab
@@ -164,6 +165,7 @@ echo "Use qemu-user-static to perform first-boot configuration now"
 mkdir -p $target/usr/bin
 cp /usr/bin/qemu-arm-static $target/usr/bin
 chroot $target /install.sh
+rm $target/usr/bin/qemu-arm-static
 
 echo "Syncing..."
 sync
