@@ -60,7 +60,7 @@ rm -rf $target/*
 mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt/
 
 echo "Multistrapping..."
-multistrap -f multistrap.conf --no-auth -d $target 
+multistrap -f fbx-armel.conf --no-auth -d $target 
 
 umount $target/var/cache/apt/
 mkdir $target/var/cache/apt/archives
@@ -93,7 +93,7 @@ touch $target/etc/mtab
 echo "Setting up hostname, /etc/network/interfaces, nameservers, persistent-net-generator rules"
 echo $hostname > $target/etc/hostname
 
-# Clear /etc/network/interfaces
+# Create /etc/network/interfaces
 echo "# This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5).
 

@@ -1,5 +1,8 @@
 Freedom-Maker  -  Bdale's building tools for the FreedomBox project
 
+Install required build packages:
+	apt-get install multistrap qemu-user-static
+
 To build for a DreamPlug, use
 
 	sudo ./mk_dreamplug_rootfs
@@ -17,9 +20,11 @@ from internal microSD pointing to our new root filesystem by interrupting the
 boot to talk to U-Boot:
 
 	setenv bootargs_root root=/dev/sdc1
+	setenv x_bootargs_root root=/dev/sdc1 rootdelay=10
 	saveenv
+	reset
 
-Press reset, and the system should boot to a login prompt.
+The system should boot to a login prompt.
 
 Be aware that this is an imcomplete solution for now .. you will want to at
 least do things like create unique ssh host keys for your device!
