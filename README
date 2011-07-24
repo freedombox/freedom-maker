@@ -25,5 +25,14 @@ boot to talk to U-Boot:
 
 The system should boot to a login prompt.
 
+- - - - -
+
+If you want to set things up to boot from the internal microSD card, once
+you're logged into the system booted from root on USB stick you can use:
+
+	sh /boot/copy2dream.sh
+
+- - - - -
+
 Be aware that this is an imcomplete solution for now .. you will want to at
 least do things like create unique ssh host keys for your device!
