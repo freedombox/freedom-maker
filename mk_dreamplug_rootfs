@@ -136,6 +136,9 @@ export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
 export LC_ALL=C LANGUAGE=C LANG=C
 dpkg --configure -a
 
+# sshd may be left running by the postinst, clean that up
+/etc/init.d/ssh stop
+
 # Establish an initial root password
 echo \"Set root password to \"$rootpassword
 echo root:$rootpassword | /usr/sbin/chpasswd
