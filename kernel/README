@@ -1,0 +1,35 @@
+This packages should get a kernel up and running into DreamPlug device.
+
+WARNING: Packages are currently untested.
+
+After kernel is installed on device, hooks should be calling:
+ 1) update-initramfs -c -k 3.0.0-4
+ 2) flash-kernel 3.0.0-4
+
+After that you should get a uImage and uInitrd files under /boot.
+
+This is work in progress, so stay tunned. Final goal is to enable
+DreamPlug device in Debian, but currently it needs to get into mainline
+Linus' kernel tree.
+
+Bootloader
+GlobalScale (or Marvell) code is reusing GuruPlug machine identification,
+while mainline kernel assigns another machine identification for DreamPlug
+3550. That might cause problems regarding the bootloader in use, if it is 
+the mainline one or the GlobalScale provided one, which expect different
+machine ID.
+
+Linus' kernel
+Jason Cooper is enabling device tree support, in the meanwhile,
+Arnaud Patard is working out a patch to reuse GuruPlug machine definition.
+
+After this work is completed upstream, enabling Debian support is trivial,
+as enabling kirkwood kernel, debian-installer and U-Boot.
+
+Nitpicks
+Libertas UAP driver is hard to get into mainline kernel, so either someone needs
+to attempt mainlining it or it needs to be built as separated module out of kernel
+tree.
+
+Hector Oron
+Fri Aug 26 00:02:39 UTC 2011
