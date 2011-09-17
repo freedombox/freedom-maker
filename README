@@ -36,3 +36,10 @@ you're logged into the system booted from root on USB stick you can use:
 
 Be aware that this is an imcomplete solution for now .. you will want to at
 least do things like create unique ssh host keys for your device!
+
+- - - - -
+hacking with zumbi's kernel
+
+	setenv x_bootcmd_kernel fatload usb 2 0x6400000 uImage
+	setenv x_bootargs_root root=/dev/sdc2 rootdelay=10
+	boot

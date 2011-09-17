@@ -1,0 +1,9 @@
+#!/bin/sh
+# create required partitions on a USB stick
+
+parted -s /dev/sdb mklabel msdos
+parted -s /dev/sdb mkpart primary fat16 0 128
+parted -s /dev/sdb mkpart primary ext2 128 100%
+
+mkdosfs /dev/sdb1
+mke2fs -j /dev/sdb2

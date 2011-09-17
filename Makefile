@@ -1,7 +1,11 @@
-# copy DreamPlug root filesystem to a usb stick with an ext3 partition 
+# copy DreamPlug root filesystem to a usb stick 
+# stick assumed to have 2 partitions, 128meg FAT and the rest ext3 partition
 dreamstick:	stamp-dreamplug-rootfs
 	mount /media/freedom
-	sudo rsync -atvz --progress --delete build/dreamplug/ /media/freedom/
+	mount /media/freedom/boot
+	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ /media/freedom/
+	cp build/dreamplug/boot/* /media/freedom/boot/
+	umount /media/freedom/boot
 	umount /media/freedom
 
 # populate a tree with DreamPlug root filesystem

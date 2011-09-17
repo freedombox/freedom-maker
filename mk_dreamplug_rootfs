@@ -43,18 +43,6 @@ mkdir -p $pkgcache
 hostname='freedombox'
 rootpassword='freedom'
 
-kernelimage=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/uImage
-kernelmodules=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/Modules.tar.gz
-
-if [ ! -f $tmpdir/uImage ]
-then
-	wget -c $kernelimage --output-document="$tmpdir/uImage"
-fi
-if [ ! -f $tmpdir/linux.tar.gz ]
-then
-	wget -c $kernelmodules --output-document="$tmpdir/linux.tar.gz"
-fi
-
 rm -rf $target/*
 
 mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt/
@@ -65,13 +53,15 @@ multistrap -f fbx-armel.conf --no-auth -d $target
 umount $target/var/cache/apt/
 mkdir $target/var/cache/apt/archives
 
-echo "Unpacking kernel modules..."
-mkdir -p $target/lib/modules/
-tar -C $target/lib/ -zxvf $tmpdir/linux.tar.gz | tail
+echo `pwd` 
 
-echo "copy uImage to target filesystem"
-mkdir -p $target/boot
-cp build/tmp/uImage $target/boot/uImage
+# kludge around Dreamplug kernel support not being available in Debian main yet
+mkdir -p $target/tmp/kernel
+cp kernel/*.deb $target/tmp/kernel/
+cp kernel/uImage $target/tmp/kernel/
+
+echo `pwd` 
+
 echo "copy copy2dream.sh script to target filesystem"
 cp bin/copy2dream.sh $target/boot/copy2dream.sh
 
@@ -138,6 +128,22 @@ dpkg --configure -a
 
 # sshd may be left running by the postinst, clean that up
 /etc/init.d/ssh stop
+
+# post-install operations for kernel packages
+echo \"Installing kernel content\"
+dpkg --install /tmp/kernel/*.deb
+
+# rename deliverables so that flash-kernel is happy using them
+mv /boot/config-3.0.0 /boot/config-3.0.0-kirkwood
+mv /boot/initrd.img-3.0.0 /boot/initrd.img-3.0.0-kirkwood
+mv /boot/System.map-3.0.0 /boot/System.map-3.0.0-kirkwood
+mv /boot/vmlinuz-3.0.0 /boot/vmlinuz-3.0.0-kirkwood
+
+# pre-processed bootable kernel image crafted from above using flash-kernel
+cp /tmp/kernel/uImage /boot/uImage
+
+# update-initramfs -c -k 3.0.0-4
+# flash-kernel 3.0.0-4
 
 # Establish an initial root password
 echo \"Set root password to \"$rootpassword
