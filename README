@@ -1,45 +1,68 @@
 Freedom-Maker  -  Bdale's building tools for the FreedomBox project
 
+The general idea for now is that we're going to populate a USB stick 
+with a Debian 'squeeze' system that can be used to boot a DreamPlug.  Once 
+the plug is running on the USB stick, a script on the stick can be used to 
+copy the stick contents to the internal 2gb microSD card.
+
+***
+*** Warning!  There are no "training wheels" here .. read the scripts and
+***           understand what they're going to do before you run them...
+***
+
 Install required build packages:
-	apt-get install multistrap qemu-user-static
+	apt-get install multistrap qemu-user-static u-boot-tools
 
-To build for a DreamPlug, use
+Partition a USB stick to have a small FAT partition and large ext3 partition,
+create a /media/freedom mount point, and add entries to /etc/fstab like:
 
-	sudo ./mk_dreamplug_rootfs
+  /dev/sdb1 /media/freedom/boot vfat	user,noauto	0	0
+  /dev/sdb2 /media/freedom	ext3	user,noauto	0	0
 
-This will yield a file tree under build/dreamplug, representing the
-contents of a root file system.  Get that onto a USB stick with something
-like
+This will allow the Makefile to mount and unmount the stick at will.
 
-	sudo mount /dev/sdc1 /media/freedom
-	sudo rsync -atvz --progress build/dreamplug/ /media/freedom/
-	sudo umount /media/freedom
+Update the file fbx-base.conf setting the source= line to your favorite
+Debian mirror.
 
-Move the USB stick to the DreamPlug, and arrange to boot the existing kernel
-from internal microSD pointing to our new root filesystem by interrupting the
-boot to talk to U-Boot:
+To populate the stick with bits for a DreamPlug, just plug it in to your 
+computer and type:
 
-	setenv x_bootargs_root root=/dev/sdc1 rootdelay=10
-	saveenv
-	reset
+	make
 
-The system should boot to a login prompt.
+This will build a file tree under build/dreamplug, representing the
+contents of a root file system, then that content will be copied to the stick.
+
+Move the USB stick to the DreamPlug, obtain a serial console, and hit reset.
+Interrupt the boot and type the following to boot from the USB stick:
+
+	setenv x_bootcmd_kernel fatload usb 2 0x6400000 uImage 
+	setenv x_bootargs_root root=/dev/sdc2 rootdelay=10
+	boot
+
+The system should boot to a login prompt, using only the bits on the stick.
+
+The default root password is 'freedom'
 
 - - - - -
 
-If you want to set things up to boot from the internal microSD card, once
-you're logged into the system booted from root on USB stick you can use:
+To set things up to boot from the internal microSD card, once you're logged 
+into the system booted from root on USB stick you can use:
 
 	sh /boot/copy2dream.sh
 
+On reboot, you may want to interrupt the boot and type the following to ensure
+you boot from the internal microSD .. though these are the factory defaults
+and so may not need adjustment if you haven't changed anything.
+
+	setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage 
+	setenv x_bootargs_root root=/dev/sda2 rootdelay=10
+	savenv
+	reset
+
 - - - - -
 
-Be aware that this is an imcomplete solution for now .. you will want to at
-least do things like create unique ssh host keys for your device!
+Be aware that this is a *very* imcomplete solution for now, suitable only
+for developers .. you will want to at least do things like create unique 
+ssh host keys for your device!
 
 - - - - -
-hacking with zumbi's kernel
-
-	setenv x_bootcmd_kernel fatload usb 2 0x6400000 uImage
-	setenv x_bootargs_root root=/dev/sdc2 rootdelay=10
-	boot

@@ -32,6 +32,9 @@ mknod /media/dev/urandom c 1 9
 mknod /media/dev/null c 1 3
 mknod /media/dev/ptmx c 5 2
 
+# patch up /etc/fstab entry for /boot
+sed -e 's/sdc1/sda1/g' < /etc/fstab > /media/etc/fstab
+
 umount /dev/sda1
 umount /dev/sda2
 
