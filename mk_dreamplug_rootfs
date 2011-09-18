@@ -63,7 +63,9 @@ cp kernel/uImage $target/tmp/kernel/
 echo `pwd` 
 
 echo "copy copy2dream.sh script to target filesystem"
-cp bin/copy2dream.sh $target/boot/copy2dream.sh
+cp bin/copy2dream.sh $target/sbin/copy2dream
+chown root:root $target/sbin/copy2dream
+chmod 744 $target/sbin/copy2dream
 
 # Until udev is configured and run for the first time, dev nodes won't be created, but we need some basic ones for spawning a console (console) and creating RSA keys for SSH (urandom).
 echo "Creating basic device nodes"
