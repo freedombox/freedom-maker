@@ -18,8 +18,7 @@ mount /dev/sda2 /media
 mkdir -p /media/boot
 mount /dev/sda1 /media/boot
 
-sudo rsync -atvz --progress --exclude=boot --exclude proc --exclude sys \
-	--exclude media --exclude dev build/dreamplug/ /media/freedom/
+rsync -atvz --progress --exclude=boot --exclude proc --exclude sys --exclude media --exclude dev / /media/freedom/
 
 cp /boot/* /media/boot/
 mkdir /media/proc /media/sys /media/media
