@@ -36,6 +36,15 @@ mknod /media/dev/ptmx c 5 2
 # patch up /etc/fstab entry for /boot
 sed -e 's/sdc1/sda1/g' < /etc/fstab > /media/etc/fstab
 
+echo "#!/bin/sh" > /media/root/tweak-kernel
+echo "mount -t proc proc /proc" >> /media/root/tweak-kernel
+echo "flash-kernel 3.0.0-kirkwood" >> /media/root/tweak-kernel
+echo "umount /proc" >> /media/root/tweak-kernel
+echo "exit" >> /media/root/tweak-kernel
+chmod +x /media/root/tweak-kernel
+
+chroot /media /root/tweak-kernel
+
 echo "unmount target partitions"
 umount /dev/sda1
 umount /dev/sda2
