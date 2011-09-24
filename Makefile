@@ -7,6 +7,7 @@ dreamstick:	stamp-dreamplug-rootfs
 	mount /media/freedom/boot
 	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ /media/freedom/
 	cp build/dreamplug/boot/* /media/freedom/boot/
+	sleep 1
 	umount /media/freedom/boot
 	umount /media/freedom
 
