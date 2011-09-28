@@ -53,14 +53,17 @@ multistrap -f fbx-armel.conf --no-auth -d $target
 umount $target/var/cache/apt/
 mkdir $target/var/cache/apt/archives
 
-echo `pwd` 
+# don't leave target image containing apt config of the build host
+# FIXME -- we could do this better, using ftp.debian.org is a temporary hack
+echo "clean up target apt configuration"
+rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
+cp etc/sources.list $target/etc/apt/sources.list
 
 # kludge around Dreamplug kernel support not being available in Debian main yet
+echo "copy kernel packages to target filesystem"
 mkdir -p $target/tmp/kernel
 cp kernel/*.deb $target/tmp/kernel/
 cp kernel/uImage $target/tmp/kernel/
-
-echo `pwd` 
 
 echo "copy copy2dream.sh script to target filesystem"
 cp bin/copy2dream.sh $target/sbin/copy2dream
