@@ -1,7 +1,7 @@
 Freedom-Maker  -  Bdale's building tools for the FreedomBox project
 
 The general idea for now is that we're going to populate a USB stick 
-with a Debian 'squeeze' system that can be used to boot a DreamPlug.  Once 
+with a Debian 'wheezy' system that can be used to boot a DreamPlug.  Once 
 the plug is running on the USB stick, a script on the stick can be used to 
 copy the stick contents to the internal 2gb microSD card.
 
