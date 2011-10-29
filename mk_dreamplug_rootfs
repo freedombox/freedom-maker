@@ -184,7 +184,7 @@ exit
 
 chmod 755 $target/install.sh
 
-echo "Use qemu-user-static to perform first-boot configuration now"
+echo "Using qemu-user-static to perform first-boot configuration now."
 
 mkdir -p $target/usr/bin
 cp /usr/bin/qemu-arm-static $target/usr/bin
