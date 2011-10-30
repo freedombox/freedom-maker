@@ -30,6 +30,9 @@
 # Runs multistrap and readies the resulting root filesystem to silently 
 # complete package configuration on the first boot-up.
 
+# We don't tolerate errors.
+set -e
+
 # where to build images, etc
 basedir=`pwd`/build
 target=$basedir/dreamplug
