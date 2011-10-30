@@ -169,7 +169,7 @@ vm.laptop_mode=5
 vm.swappiness=0
 vm.dirty_writeback_centisecs=1500
 vm.dirty_expire_centisecs=1500
-\" >> /etc/sysctl.conf
+\" >> /etc/sysctl.d/freedombox.conf
 
 echo \"Deleting this very same script\"
 rm -f /install.sh
