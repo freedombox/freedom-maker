@@ -46,6 +46,8 @@ mkdir -p $pkgcache
 hostname='freedombox'
 rootpassword='freedom'
 
+kernel_version="$(ls kernel/linux-image-*.deb | sort -rn | head -n1 | cut -d_ -f1 | sed s#kernel/linux-image-##)"
+
 rm -rf $target/*
 
 mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt/
@@ -142,17 +144,10 @@ dpkg --configure -a
 echo \"Installing kernel content\"
 dpkg --install /tmp/kernel/*.deb
 
-# rename deliverables so that flash-kernel is happy using them
-mv /boot/config-3.0.0 /boot/config-3.0.0-kirkwood
-mv /boot/initrd.img-3.0.0 /boot/initrd.img-3.0.0-kirkwood
-mv /boot/System.map-3.0.0 /boot/System.map-3.0.0-kirkwood
-mv /boot/vmlinuz-3.0.0 /boot/vmlinuz-3.0.0-kirkwood
-
 # pre-processed bootable kernel image crafted from above using flash-kernel
 cp /tmp/kernel/uImage /boot/uImage
 
-# update-initramfs -c -k 3.0.0-4
-# flash-kernel 3.0.0-4
+# flash-kernel $kernel_version
 
 # Establish an initial root password
 echo \"Set root password to \"$rootpassword

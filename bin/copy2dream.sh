@@ -36,9 +36,11 @@ mknod /media/dev/ptmx c 5 2
 # patch up /etc/fstab entry for /boot
 sed -e 's/sdc1/sda1/g' < /etc/fstab > /media/etc/fstab
 
+kernel_version="$(/bin/ls /media/boot/vmlinuz-*-kirkwood | sort -rn | head -n1 | sed s#/media/boot/vmlinuz-##)"
+
 echo "#!/bin/sh" > /media/root/tweak-kernel
 echo "mount -t proc proc /proc" >> /media/root/tweak-kernel
-echo "flash-kernel 3.0.0-kirkwood" >> /media/root/tweak-kernel
+echo "flash-kernel $kernel_version" >> /media/root/tweak-kernel
 echo "umount /proc" >> /media/root/tweak-kernel
 echo "exit" >> /media/root/tweak-kernel
 chmod +x /media/root/tweak-kernel
