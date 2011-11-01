@@ -22,7 +22,7 @@ mkdir -p /media/boot
 mount /dev/sda1 /media/boot
 
 echo "=> copy filesystem content from USB stick to target partitions"
-(cd / ; tar cf - `/bin/ls | grep -v boot | grep -v proc | grep -v sys | grep -v media | grep -v dev`) | (cd /media ; tar xvf -)
+(cd / ; tar cpSf - `/bin/ls | grep -v boot | grep -v proc | grep -v sys | grep -v media | grep -v dev`) | (cd /media ; tar xpf -)
 cp /boot/* /media/boot/
 
 echo "=> touch up target root partition"
