@@ -66,8 +66,9 @@ On reboot, you may want to interrupt the boot and type the following to ensure
 you boot from the internal microSD by default.  This bootcmd line elides the 
 time-consuming attempts to boot grom gigE, which makes boot go much faster:
 
-	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000;'
+	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
 	setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage 
+	setenv x_bootcmd_initrd fatload usb 0 0x6900000 uInitrd
 	setenv x_bootargs_root root=/dev/sda2 rootdelay=10
 	saveenv
 	reset
