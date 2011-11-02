@@ -41,8 +41,9 @@ provided by the optional JTAG dongle), is to use 'screen', like so:
 Interrupt the boot by pressing a key during the autoboot countdown, and type 
 the following to boot from the USB stick:
 
-	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000;'
+	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
 	setenv x_bootcmd_kernel fatload usb 2 0x6400000 uImage 
+	setenv x_bootcmd_initrd fatload usb 2 0x6900000 uInitrd
 	setenv x_bootargs_root root=/dev/sdc2 rootdelay=10
 	boot
 
