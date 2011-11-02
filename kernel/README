@@ -1,8 +1,8 @@
 To compile your own kernel, you can use config-3.0.0-1bauer4-kirkwood as basis.
 Follow the following steps on the DreamPlug to compile a new kernel:
 
-  1. Get the kernel source.
-    # apt-get install linux-source-3.0.0 kernel-package
+  1. Get the kernel source and other needed packages.
+    # apt-get install linux-source-3.0.0 kernel-package lzma
   2. Unpack it somewhere.
     # cd /var/tmp; tar xfj /usr/src/linux-source-3.0.0.tar.bz2
   3. Apply the patches found in http://people.debian.org/~zumbi/dreamplug/patches/
