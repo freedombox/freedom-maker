@@ -1,9 +1,37 @@
 #!/bin/sh
 # create required partitions on a USB stick
 
-parted -s /dev/sdb mklabel msdos
-parted -s /dev/sdb mkpart primary fat16 0 128
-parted -s /dev/sdb mkpart primary ext2 128 100%
+# Do not tolerate errors.
+set -e
 
-mkdosfs /dev/sdb1
-mke2fs -j /dev/sdb2
+if [ $# -ne 1 ]; then
+    echo 'Usage: partition-stick <block device>'
+    exit 1
+fi
+
+if [ ! -b $1 ]; then
+    echo "Error: $1 is not a block device."
+    exit 1
+fi
+
+if grep -q $1 /etc/mtab; then
+    echo "Error: $1 is currently mounted."
+    exit 1;
+fi
+
+repeat=1
+while [ $repeat -eq 1 ]; do
+    read -p "Do you really want to format (and lose all data on) device $MOUNTED? [y/n] " CONFIRMATION
+    case "$CONFIRMATION" in
+	y|Y) repeat=0 ;;
+	n|N) exit 0 ;;
+	*) echo "You have to type 'y' or 'n'." ;;
+    esac
+done
+
+sudo parted -s $1 mklabel msdos
+sudo parted -a optimal -s $1 mkpart primary fat16 0 128
+sudo parted -a optimal -s $1 mkpart primary ext2 128 100%
+
+sudo mkdosfs ${1}1
+sudo mkfs.ext3 -j ${1}2
