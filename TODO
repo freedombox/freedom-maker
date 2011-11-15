@@ -1,13 +1,12 @@
-- re-factor the script(s) to allow building for at least Sheeva and Dream
-- fold in use of vmdebootstrap to build x86 image(s)
-- there are a few things we really do want to defer to first boot, or at least
-  make it trivial to fix up per-system
+- initial boot configuration improvements, as there are a few things we 
+  really do want to defer to first boot, or at least make it trivial to 
+  fix up per-system
 	- ssh host keys
 	- root password
-- decide what we're going to do about the provided u-boot .. use or replace?
-- decide which kernel we actually want to run and incorporate into the build
-- work out recommended process for getting from freedom-maker outputs to bits
-  installed and running on each target type
-	- DreamPlug:	sh /boot/copy2dream.sh
 - add Sheeva as a build target
 - add x86 virtualized as a build target (use vmdebootstrap?)
+- investigate and integrate software components that looks interesting
+	- channel-server, the buddycloud channels service for XMPP
+	- babeld, loop-free distance-vector routing protocol
+	- tahoe-lafs, secure distributed filesystem
+
