@@ -33,21 +33,27 @@
 # We don't tolerate errors.
 set -e
 
+# users
+hostname='freedombox'
+rootpassword='freedom'
+user='fbx'
+userpassword='frdm'
+
 # where to build images, etc
 basedir=`pwd`/build
 target=$basedir/dreamplug
 tmpdir=$basedir/tmp
 pkgcache=$tmpdir/aptcache
+homedir=$target/home/$user
 
 mkdir -p $target
 mkdir -p $tmpdir
 mkdir -p $pkgcache
-
-hostname='freedombox'
-rootpassword='freedom'
+mkdir -p $homedir; chown 1000:1000 $homedir
 
 kernel_version="$(ls kernel/linux-image-*.deb | sort -rn | head -n1 | cut -d_ -f1 | sed s#kernel/linux-image-##)"
 
+umount $target/var/cache/apt
 rm -rf $target/*
 
 mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt/
@@ -114,7 +120,7 @@ iface eth0 inet dhcp
 
 allow-hotplug eth1
 iface eth1 inet dhcp
-        " > $target/etc/network/interfaces
+" > $target/etc/network/interfaces
 
 # Setup nameserver (use OpenDNS by default)
 echo "nameserver 208.67.222.222
@@ -152,6 +158,11 @@ cp /tmp/kernel/uImage /boot/uImage
 # Establish an initial root password
 echo \"Set root password to \"$rootpassword
 echo root:$rootpassword | /usr/sbin/chpasswd
+
+# Create a default user
+echo \"Creating fbx user.\"
+useradd $user
+echo $user:$userpassword | /usr/sbin/chpasswd
 
 # By default, spawn a console on the serial port
 echo \"Adding a getty on the serial port\"
