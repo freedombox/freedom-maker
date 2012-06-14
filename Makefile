@@ -35,11 +35,11 @@ clean:
 	sudo rm -rf build/dreamplug
 
 distclean:	clean
-	rm -rf build
+	sudo rm -rf build
 
 clean-image:
-	-rm freedombox-unstable_`date --rfc-3339=date`.img
-	-rm freedombox-unstable_`date --rfc-3339=date`.vdi
+	rm -f $(IMAGE)
+	rm -f $(ARCHIVE)
 
 # taking lots of hints from http://wiki.osdev.org/Loopback_Device
 # and from http://wiki.mandriva.com/en/VirtualBox
