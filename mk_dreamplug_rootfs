@@ -53,7 +53,6 @@ mkdir -p $homedir; chown 1000:1000 $homedir
 
 kernel_version="$(ls kernel/linux-image-*.deb | sort -rn | head -n1 | cut -d_ -f1 | sed s#kernel/linux-image-##)"
 
-umount $target/var/cache/apt
 rm -rf $target/*
 
 mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt/

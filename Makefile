@@ -4,13 +4,10 @@ NAME = freedombox-unstable
 IMAGE = "$(NAME)_$(TODAY).img"
 VBOX = "$(NAME)_$(TODAY).vdi"
 ARCHIVE = "$(NAME)_$(TODAY).tar.bz2"
-SIZE = 600
+# make a test image the size of the build file, with a 1MB buffer.
+SIZE = `expr \`du -sm build | sed 's/build.*//'\` + 1`
 LOOP = /dev/loop0
 MOUNT = /mnt/fbx
-
-kitty:
-	echo $(TODAY)
-	echo $(IMAGE)
 
 # copy DreamPlug root filesystem to a usb stick 
 # stick assumed to have 2 partitions, 128meg FAT and the rest ext3 partition
@@ -30,16 +27,18 @@ stamp-dreamplug-rootfs: fbx-armel.conf fbx-base.conf mk_dreamplug_rootfs
 	sudo ./mk_dreamplug_rootfs
 	touch stamp-dreamplug-rootfs
 
-clean:
+clean: clean-image
 	rm -f stamp-dreamplug-rootfs
+# just in case I tried to build before plugging in the USB drive.
+	-sudo umount `pwd`/build/dreamplug/var/cache/apt/
 	sudo rm -rf build/dreamplug
 
 distclean:	clean
-	rm -rf build
+	sudo rm -rf build
 
 clean-image:
-	-rm freedombox-unstable_`date --rfc-3339=date`.img
-	-rm freedombox-unstable_`date --rfc-3339=date`.vdi
+	rm -f $(IMAGE)
+	rm -f $(ARCHIVE)
 
 # taking lots of hints from http://wiki.osdev.org/Loopback_Device
 # and from http://wiki.mandriva.com/en/VirtualBox
