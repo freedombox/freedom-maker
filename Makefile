@@ -11,7 +11,7 @@ MOUNT = /mnt/fbx
 
 # copy DreamPlug root filesystem to a usb stick 
 # stick assumed to have 2 partitions, 128meg FAT and the rest ext3 partition
-dreamstick:	stamp-dreamplug-rootfs
+dreamstick:	stamp-dreamplug-rootfs predepend
 # 	bin/partition-stick
 	mount /media/freedom
 	sudo mkdir -p /media/freedom/boot
@@ -21,6 +21,10 @@ dreamstick:	stamp-dreamplug-rootfs
 	sleep 1
 	umount /media/freedom/boot
 	umount /media/freedom
+
+predepend:
+	sudo apt-get install multistrap qemu-user-static u-boot-tools git hg
+	touch predepend
 
 # populate a tree with DreamPlug root filesystem
 stamp-dreamplug-rootfs: fbx-armel.conf fbx-base.conf mk_dreamplug_rootfs
@@ -44,8 +48,18 @@ clean-image:
 # and from http://wiki.mandriva.com/en/VirtualBox
 test-image: clean-image stamp-dreamplug-rootfs
 	dd if=/dev/zero of=$(IMAGE) bs=1M count=$(SIZE)
-	sudo ./bin/build_image.sh $(IMAGE) $(LOOP) $(MOUNT) $(SIZE)
+# to partition the image or not?  Virtualbox won't boot off it either way.
+# http://wiki.osdev.org/Loopback_Device: ocnapw
+#fdisk -u -C$SIZE -S63 -H16 $IMAGE
+#losetup -o32256 $LOOP $IMAGE
+	losetup $(LOOP) $(IMAGE)
+	mkfs -t ext2 $(LOOP)
+	mkdir -p $(MOUNT)
+	mount -t ext2 $(LOOP) $(MOUNT)
+	umount $(MOUNT)
+	losetup -d $(LOOP)
 	tar -cvjf $(ARCHIVE) $(IMAGE)
+	chown 1000:1000 $(IMAGE) $(ARCHIVE)
 #	vboxmanage convertfromraw $(IMAGE) $(VBOX)
 #	vboxmanage modifyhd --resize 2048 $(VBOX)
 #	echo Remember to resize the partition with gParted and install Grub.
