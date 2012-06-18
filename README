@@ -11,7 +11,7 @@ copy the stick contents to the internal 2gb microSD card.
 ***
 
 Install required build packages:
-	apt-get install multistrap qemu-user-static u-boot-tools
+	apt-get install multistrap qemu-user-static u-boot-tools git hg
 
 Partition a USB stick to have a small FAT partition and large ext3 partition,
 create a /media/freedom mount point, and add entries to /etc/fstab like:
