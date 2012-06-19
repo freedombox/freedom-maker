@@ -7,7 +7,6 @@ ARCHIVE = "$(NAME)_$(TODAY).tar.bz2"
 # make a test image the size of the build file, with a 1MB buffer.
 SIZE = `expr \`du -sm build | sed 's/build.*//'\` + 1`
 LOOP = /dev/loop0
-MOUNT = /mnt/fbx
 
 # copy DreamPlug root filesystem to a usb stick 
 # stick assumed to have 2 partitions, 128meg FAT and the rest ext3 partition
@@ -52,12 +51,9 @@ test-image: clean-image stamp-dreamplug-rootfs
 # http://wiki.osdev.org/Loopback_Device: ocnapw
 #fdisk -u -C$SIZE -S63 -H16 $IMAGE
 #losetup -o32256 $LOOP $IMAGE
-	losetup $(LOOP) $(IMAGE)
-	mkfs -t ext2 $(LOOP)
-	mkdir -p $(MOUNT)
-	mount -t ext2 $(LOOP) $(MOUNT)
-	umount $(MOUNT)
-	losetup -d $(LOOP)
+	sudo losetup $(LOOP) $(IMAGE)
+	sudo mkfs -t ext2 $(LOOP)
+	sudo losetup -d $(LOOP)
 	tar -cvjf $(ARCHIVE) $(IMAGE)
 	chown 1000:1000 $(IMAGE) $(ARCHIVE)
 #	vboxmanage convertfromraw $(IMAGE) $(VBOX)

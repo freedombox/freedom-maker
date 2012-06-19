@@ -66,13 +66,13 @@ mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt
 echo "Multistrapping..."
 multistrap -f fbx-armel.conf -d $target
 
-mkdir $target/var/cache/apt/archives
+mkdir -p $target/var/cache/apt/archives
 
 # don't leave target image containing apt config of the build host
 # FIXME -- we could do this better, using ftp.debian.org is a temporary hack
 echo "clean up target apt configuration"
 rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
-copy_file /etc/sources.list
+copy_file etc/sources.list
 
 # kludge around Dreamplug kernel support not being available in Debian main yet
 echo "copy kernel packages to target filesystem"
@@ -81,7 +81,7 @@ cp kernel/*.deb $target/tmp/kernel/
 cp kernel/uImage $target/tmp/kernel/
 
 echo "copy copy2dream script to target filesystem"
-copy_file /sbin/copy2dream
+copy_file sbin/copy2dream
 chown root:root $target/sbin/copy2dream
 chmod 744 $target/sbin/copy2dream
 
@@ -95,7 +95,7 @@ mknod $target/dev/ptmx c 5 2
 
 # Basic fstab & mtab..
 echo "Setting up basic fstab & mtab"
-copy_file /etc/fstab
+copy_file etc/fstab
 
 touch $target/etc/mtab
 
@@ -104,10 +104,10 @@ echo "Setting up hostname, /etc/network/interfaces, nameservers, persistent-net-
 echo $hostname > $target/etc/hostname
 
 # Create /etc/network/interfaces
-copy_file /etc/network/interfaces
+copy_file etc/network/interfaces
 
 # Setup nameserver (use OpenDNS by default)
-copy_file /etc/resolv.conf
+copy_file etc/resolv.conf
 
 # Touch the net generator udev so that eth0 won't be reassigned in case the user
 # changes the MAC address - this may happen if you change the rootfs between plugs.
@@ -117,8 +117,7 @@ touch $target/etc/udev/rules.d/75-persistent-net-generator.rules
 
 echo "Create script to configure packages in qemu-user-static"
 
-copy_file $target/install.sh
-
+copy_file install.sh
 chmod 755 $target/install.sh
 
 echo "Adding a few FreedomBox projects to the image."
