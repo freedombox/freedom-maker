@@ -13,18 +13,18 @@ copy the stick contents to the internal 2gb microSD card.
 Install required build packages:
 	apt-get install multistrap qemu-user-static u-boot-tools git hg
 
-Partition a USB stick to have a small FAT partition and large ext3 partition,
+Partition a USB stick to have a small FAT partition and large ext2 partition,
 create a /media/freedom mount point, and add entries to /etc/fstab like:
 
   /dev/sdb1 /media/freedom/boot vfat	user,noauto	0	0
-  /dev/sdb2 /media/freedom	ext3	user,noauto	0	0
+  /dev/sdb2 /media/freedom	ext2	user,noauto	0	0
 
 This will allow the Makefile to mount and unmount the stick at will.
 
 Update the file fbx-base.conf setting the source= line to your favorite
 Debian mirror.
 
-To populate the stick with bits for a DreamPlug, just plug it in to your 
+To populate the stick with bits for a DreamPlug, just plug it in to your
 computer and type:
 
 	make
