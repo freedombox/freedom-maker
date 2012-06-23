@@ -1,0 +1,17 @@
+#!/bin/bash
+
+function tweak-kernel {
+    kernel_version="$(/bin/ls $mountpoint/boot/vmlinuz-*-kirkwood | sort -rn | head -n1 | sed s#$mountpoint/boot/vmlinuz-##)"
+
+    mount -t proc proc /proc
+    flash-kernel $kernel_version
+    umount /proc
+}
+
+function remove-self {
+    rm /root/first-run
+    rm /root/.bash_login
+}
+
+tweak-kernel
+remove-self
