@@ -29,6 +29,11 @@ cp /tmp/kernel/uImage /boot/uImage
 echo "Set root password to "$rootpassword
 echo root:$rootpassword | /usr/sbin/chpasswd
 
+# Create a default user
+echo "Creating fbx user."
+useradd $user
+echo $user:$userpassword | /usr/sbin/chpasswd
+
 # By default, spawn a console on the serial port
 echo "Adding a getty on the serial port"
 echo "T0:12345:respawn:/sbin/getty -L ttyS0 115200 vt100" >> /etc/inittab

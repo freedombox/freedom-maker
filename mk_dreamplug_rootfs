@@ -39,6 +39,8 @@ rootpassword='freedom'
 user='fbx'
 userpassword='frdm'
 export rootpassword
+export user
+export userpassword
 
 # where to build images, etc
 basedir=`pwd`/build
