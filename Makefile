@@ -60,3 +60,19 @@ test-image: clean-image stamp-dreamplug-rootfs
 #	vboxmanage convertfromraw $(IMAGE) $(VBOX)
 #	vboxmanage modifyhd --resize 2048 $(VBOX)
 #	echo Remember to resize the partition with gParted and install Grub.
+
+test-card: stamp-dreamplug-rootfs
+	mount /media/freedom
+	sudo mkdir -p /media/freedom/boot
+	mount /media/freedom/boot
+	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ /media/freedom/
+	cp build/dreamplug/boot/* /media/freedom/boot/
+# we don't need to copy2dream, this is already on the microSD card.
+	sudo rm /media/freedom/sbin/copy2dream
+# fix fstab for the SD card.
+	sed -e 's/sdc1/sda1/g' < source/etc/fstab > /media/freedom/etc/fstab
+	sync
+	sleep 1
+	umount /media/freedom/boot
+	umount /media/freedom
+	@echo "Build complete.  Remember to login as root."
