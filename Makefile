@@ -31,7 +31,7 @@ stamp-dreamplug-rootfs: fbx-armel.conf fbx-base.conf mk_dreamplug_rootfs
 	sudo ./mk_dreamplug_rootfs
 	touch stamp-dreamplug-rootfs
 
-clean: clean-image
+clean:
 	rm -f stamp-dreamplug-rootfs
 # just in case I tried to build before plugging in the USB drive.
 	-sudo umount `pwd`/build/dreamplug/var/cache/apt/
@@ -39,27 +39,6 @@ clean: clean-image
 
 distclean:	clean
 	sudo rm -rf build
-
-clean-image:
-	rm -f $(IMAGE)
-	rm -f $(ARCHIVE)
-
-# taking lots of hints from http://wiki.osdev.org/Loopback_Device
-# and from http://wiki.mandriva.com/en/VirtualBox
-test-image: clean-image stamp-dreamplug-rootfs
-	dd if=/dev/zero of=$(IMAGE) bs=1M count=$(SIZE)
-# to partition the image or not?  Virtualbox won't boot off it either way.
-# http://wiki.osdev.org/Loopback_Device: ocnapw
-#fdisk -u -C$SIZE -S63 -H16 $IMAGE
-#losetup -o32256 $LOOP $IMAGE
-	sudo losetup $(LOOP) $(IMAGE)
-	sudo mkfs -t ext2 $(LOOP)
-	sudo losetup -d $(LOOP)
-	tar -cvjf $(ARCHIVE) $(IMAGE)
-	chown 1000:1000 $(IMAGE) $(ARCHIVE)
-#	vboxmanage convertfromraw $(IMAGE) $(VBOX)
-#	vboxmanage modifyhd --resize 2048 $(VBOX)
-#	echo Remember to resize the partition with gParted and install Grub.
 
 test-card: stamp-dreamplug-rootfs
 	mount /media/freedom
