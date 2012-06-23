@@ -17,12 +17,13 @@ dreamstick:	stamp-dreamplug-rootfs predepend
 	mount /media/freedom/boot
 	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ /media/freedom/
 	cp build/dreamplug/boot/* /media/freedom/boot/
+	sync
 	sleep 1
 	umount /media/freedom/boot
 	umount /media/freedom
 
 predepend:
-	sudo apt-get install multistrap qemu-user-static u-boot-tools git hg
+	sudo apt-get install multistrap qemu-user-static u-boot-tools git mercurial
 	touch predepend
 
 # populate a tree with DreamPlug root filesystem
