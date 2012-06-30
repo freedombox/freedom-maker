@@ -1,8 +1,10 @@
 # /usr/bin/make
+MOUNTPOINT = /media/freedom
+BOOTPOINT = $(MOUNTPOINT)/boot
+DEVICE = /dev/sdb
 TODAY = `date +%Y.%m%d`
 NAME = freedombox-unstable
 IMAGE = "$(NAME)_$(TODAY).img"
-VBOX = "$(NAME)_$(TODAY).vdi"
 ARCHIVE = "$(NAME)_$(TODAY).tar.bz2"
 # make a test image the size of the build file, with a 1MB buffer.
 SIZE = `expr \`du -sm build | sed 's/build.*//'\` + 1`
@@ -12,15 +14,15 @@ LOOP = /dev/loop0
 # stick assumed to have 2 partitions, 128meg FAT and the rest ext3 partition
 dreamstick:	stamp-dreamplug-rootfs predepend
 # 	bin/partition-stick
-	mount /media/freedom
-	sudo mkdir -p /media/freedom/boot
-	mount /media/freedom/boot
-	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ /media/freedom/
-	cp build/dreamplug/boot/* /media/freedom/boot/
+	mount $(MOUNTPOINT)
+	sudo mkdir -p $(BOOTPOINT)
+	mount $(BOOTPOINT)
+	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
+	cp build/dreamplug/boot/* $(BOOTPOINT)/
 	sync
 	sleep 1
-	umount /media/freedom/boot
-	umount /media/freedom
+	umount $(BOOTPOINT)
+	umount $(MOUNTPOINT)
 
 predepend:
 	sudo apt-get install multistrap qemu-user-static u-boot-tools git mercurial
@@ -41,17 +43,37 @@ distclean:	clean
 	sudo rm -rf build
 
 test-card: stamp-dreamplug-rootfs
-	mount /media/freedom
-	sudo mkdir -p /media/freedom/boot
-	mount /media/freedom/boot
-	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ /media/freedom/
-	cp build/dreamplug/boot/* /media/freedom/boot/
+	-umount $(BOOTPOINT)
+	-umount $(MOUNTPOINT)
+	mount $(MOUNTPOINT)
+	sudo mkdir -p $(BOOTPOINT)
+	mount $(BOOTPOINT)
+	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
+	cp build/dreamplug/boot/* $(BOOTPOINT)/
 # we don't need to copy2dream, this is already on the microSD card.
-	sudo rm /media/freedom/sbin/copy2dream
+	sudo rm $(MOUNTPOINT)/sbin/copy2dream
 # fix fstab for the SD card.
-	sed -e 's/sdc1/sda1/g' < source/etc/fstab > /media/freedom/etc/fstab
+	sudo sh -c "sed -e 's/sdc1/sda1/g' < source/etc/fstab > $(MOUNTPOINT)/etc/fstab"
 	sync
 	sleep 1
-	umount /media/freedom/boot
-	umount /media/freedom
+	umount $(BOOTPOINT)
+	umount $(MOUNTPOINT)
 	@echo "Build complete.  Remember to login as root."
+
+clean-card: clean
+	-umount $(BOOTPOINT)
+	-umount $(MOUNTPOINT)
+
+	sudo mkdir -p $(BOOTPOINT)
+	mount $(BOOTPOINT)
+	sudo rm -rf $(BOOTPOINT)/*
+	umount $(BOOTPOINT)
+
+	sudo mkdir -p $(MOUNTPOINT)
+	mount $(MOUNTPOINT)
+	sudo rm -rf $(MOUNTPOINT)/*
+	umount $(MOUNTPOINT)
+
+weekly-card: clean-card test-card
+	dd if=$(DEVICE) of=$(IMAGE) bs=1M
+	tar -cjvf $(ARCHIVE) $(IMAGE)
