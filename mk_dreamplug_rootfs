@@ -50,81 +50,41 @@ tmpdir=$basedir/tmp
 pkgcache=$tmpdir/aptcache
 homedir=$target/home/$user
 
-function copy_file {
-    cp "${source}/${1}" "${target}/${1}"
-}
+#
+# intro
+#
 
+# make the directories we'll need.
 mkdir -p $target
-mkdir -p $tmpdir
-mkdir -p $pkgcache
-
-kernel_version="$(ls kernel/linux-image-*.deb | sort -rn | head -n1 | cut -d_ -f1 | sed s#kernel/linux-image-##)"
-
 rm -rf $target/*
 
+mkdir -p $tmpdir
+mkdir -p $pkgcache
 mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt/
+mkdir -p $target/var/cache/apt/archives
+mkdir -p $target/tmp/kernel
+mkdir -p $target/usr/bin
 
+# multistrap
 echo "Multistrapping..."
 multistrap -f fbx-armel.conf -d $target
+rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
 
-mkdir -p $target/var/cache/apt/archives
 
+#
+# Copy!
+#
+
+echo "Copying the source directory to the FreedomBox root."
 # don't leave target image containing apt config of the build host
 # FIXME -- we could do this better, using ftp.debian.org is a temporary hack
-echo "clean up target apt configuration"
-rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
-copy_file etc/sources.list
+#echo "clean up target apt configuration"
+cp -r "${source}/*" "${target}/"
 
-# kludge around Dreamplug kernel support not being available in Debian main yet
-echo "copy kernel packages to target filesystem"
-mkdir -p $target/tmp/kernel
-cp kernel/*.deb $target/tmp/kernel/
-cp kernel/uImage $target/tmp/kernel/
 
-echo "copy copy2dream script to target filesystem"
-copy_file sbin/copy2dream
-chown root:root $target/sbin/copy2dream
-chmod 744 $target/sbin/copy2dream
-
-# Until udev is configured and run for the first time, dev nodes won't be created, but we need some basic ones for spawning a console (console) and creating RSA keys for SSH (urandom).
-echo "Creating basic device nodes"
-mknod $target/dev/console c 5 1
-mknod $target/dev/random c 1 8
-mknod $target/dev/urandom c 1 9
-mknod $target/dev/null c 1 3
-mknod $target/dev/ptmx c 5 2
-
-# Basic fstab & mtab..
-echo "Setting up basic fstab & mtab"
-copy_file etc/fstab
-
-touch $target/etc/mtab
-
-# Set up hostname
-echo "Setting up hostname, /etc/network/interfaces, nameservers, persistent-net-generator rules"
-echo $hostname > $target/etc/hostname
-
-# Create /etc/network/interfaces
-copy_file etc/network/interfaces
-
-# Setup nameserver (use OpenDNS by default)
-copy_file etc/resolv.conf
-
-# Touch the net generator udev so that eth0 won't be reassigned in case the user
-# changes the MAC address - this may happen if you change the rootfs between plugs.
-touch $target/etc/udev/rules.d/75-persistent-net-generator.rules
-
-# generate configuration script
-
-echo "Create script to configure packages in qemu-user-static"
-
-copy_file install.sh
-chmod 755 $target/install.sh
-
-# copy root's files too
-echo "Copying /root"
-copy_file root/.bash_login
-copy_file root/first-run
+#
+# Post-copy configuration.
+#
 
 echo "Adding a few FreedomBox projects to the image."
 
@@ -134,12 +94,12 @@ git clone git://github.com/jvasile/withsqlite.git $homedir/withsqlite
 hg clone https://hg@bitbucket.org/nickdaly/plugserver $homedir/plugserver
 chown -R 1000:1000 $homedir
 
-echo "Using qemu-user-static to perform first-boot configuration now."
 
-mkdir -p $target/usr/bin
-cp /usr/bin/qemu-arm-static $target/usr/bin
-chroot $target /install.sh
-rm $target/usr/bin/qemu-arm-static
+#
+# cleanup and finalize
+#
+
+bin/finalize $target $hostname
 
 echo "Syncing..."
 sync

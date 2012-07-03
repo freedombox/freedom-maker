@@ -8,10 +8,16 @@ function tweak-kernel {
     umount /proc
 }
 
+function create-keys {
+
+}
+
 function remove-self {
-    rm /root/first-run
-    rm /root/.bash_login
+    rm /etc/init.d/first-run
+    rm /etc/rc1.d/first-run
+    rm /etc/rc2.d/first-run
 }
 
 tweak-kernel
+create-keys
 remove-self

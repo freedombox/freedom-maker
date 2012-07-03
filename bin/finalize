@@ -1,0 +1,64 @@
+#! /bin/bash
+#
+# Copyright 2011 by Bdale Garbee <bdale@gag.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 
+
+# based on work by <ivan@sanchezortega.es>, who released his script under
+# the following license terms:
+#  ----------------------------------------------------------------------------
+#  "THE BEER-WARE LICENSE" (Revision 42):
+#  As long as you retain this notice you can do whatever you want with 
+#  this stuff. If we meet some day, and you think this stuff is worth it, 
+#  you can buy me a beer in return.
+#  ----------------------------------------------------------------------------
+
+# finalize
+#
+# Readies the root filesystem to silently complete package
+# configuration on the first boot-up.
+
+# We don't tolerate errors.
+set -e
+
+target=$1
+hostname=$2
+
+# Until udev is configured and run for the first time, dev nodes won't be created, but we need some basic ones for spawning a console (console) and creating RSA keys for SSH (urandom).
+echo "Creating basic device nodes"
+mknod $target/dev/console c 5 1
+mknod $target/dev/random c 1 8
+mknod $target/dev/urandom c 1 9
+mknod $target/dev/null c 1 3
+mknod $target/dev/ptmx c 5 2
+
+# Set up hostname
+echo "Setting up hostname, /etc/network/interfaces, nameservers, persistent-net-generator rules"
+echo $hostname > $target/etc/hostname
+
+# kludge around Dreamplug kernel support not being available in Debian main yet
+echo "copy kernel packages to target filesystem"
+cp kernel/*.deb $target/tmp/kernel/
+cp kernel/uImage $target/tmp/kernel/
+
+# prepare to copy, when we do it later.
+chown root:root $target/sbin/copy2dream
+chmod 744 $target/sbin/copy2dream
+
+echo "Using qemu-user-static to perform first-boot configuration now."
+chmod 755 $target/install.sh
+cp /usr/bin/qemu-arm-static $target/usr/bin
+chroot $target /install.sh
+rm $target/usr/bin/qemu-arm-static
