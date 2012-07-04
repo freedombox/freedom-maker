@@ -18,6 +18,12 @@ dreamstick:	stamp-dreamplug-rootfs predepend
 	mount $(BOOTPOINT)
 	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
 	cp build/dreamplug/boot/* $(BOOTPOINT)/
+
+# prevent the first-run script from running during boot.
+# we'll do that during copy2dream.
+rm $(MOUNTPOINT)/etc/init.d/first-run $(MOUNTPOINT)/etc/rc1.d/S01first-run $(MOUNTPOINT)/etc/rc2.d/S01first-run
+
+# and finish!
 	sync
 	sleep 1
 	umount $(BOOTPOINT)
