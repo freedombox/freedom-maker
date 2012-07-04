@@ -36,11 +36,11 @@ mknod /media/dev/ptmx c 5 2
 # patch up /etc/fstab entry for /boot
 sed -e 's/sdc1/sda1/g' < /etc/fstab > /media/etc/fstab
 
-chroot /media /root/first-run
+# flash the kernel and create the device's keys
+chroot /media /etc/init.d/first-run
 
 echo "unmount target partitions"
 umount /dev/sda1
 umount /dev/sda2
 
 echo "=> installation complete, see docs to boot from internal microSD"
-

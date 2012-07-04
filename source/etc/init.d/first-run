@@ -34,3 +34,5 @@ function remove-self {
 tweak-kernel
 create-keys
 remove-self
+echo "Kernel flashed.  Rebooting."
+reboot
