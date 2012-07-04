@@ -2,3 +2,4 @@ build
 predepend
 stamp-dreamplug-rootfs
 trackers
+freedombox-unstable*
