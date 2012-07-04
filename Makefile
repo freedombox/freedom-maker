@@ -1,4 +1,5 @@
 # /usr/bin/make
+
 MOUNTPOINT = /media/freedom
 BOOTPOINT = $(MOUNTPOINT)/boot
 DEVICE = /dev/sdb
@@ -6,11 +7,9 @@ TODAY = `date +%Y.%m%d`
 NAME = freedombox-unstable
 IMAGE = "$(NAME)_$(TODAY).img"
 ARCHIVE = "$(NAME)_$(TODAY).tar.bz2"
-# make a test image the size of the build file, with a 1MB buffer.
-SIZE = `expr \`du -sm build | sed 's/build.*//'\` + 1`
 LOOP = /dev/loop0
 
-# copy DreamPlug root filesystem to a usb stick 
+# copy DreamPlug root filesystem to a usb stick
 # stick assumed to have 2 partitions, 128meg FAT and the rest ext3 partition
 dreamstick:	stamp-dreamplug-rootfs predepend
 # 	bin/partition-stick
@@ -24,12 +23,14 @@ dreamstick:	stamp-dreamplug-rootfs predepend
 	umount $(BOOTPOINT)
 	umount $(MOUNTPOINT)
 
+# install required files so users don't need to do it themselves.
 predepend:
 	sudo apt-get install multistrap qemu-user-static u-boot-tools git mercurial
 	touch predepend
 
 # populate a tree with DreamPlug root filesystem
-stamp-dreamplug-rootfs: fbx-armel.conf fbx-base.conf mk_dreamplug_rootfs
+stamp-dreamplug-rootfs: fbx-armel.conf fbx-base.conf mk_dreamplug_rootfs \
+		bin/projects bin/finalize
 	sudo ./mk_dreamplug_rootfs
 	touch stamp-dreamplug-rootfs
 
@@ -38,11 +39,13 @@ clean:
 # just in case I tried to build before plugging in the USB drive.
 	-sudo umount `pwd`/build/dreamplug/var/cache/apt/
 	sudo rm -rf build/dreamplug
+	-rm $(IMAGE) $(ARCHIVE)
 
-distclean:	clean
+distclean: clean
 	sudo rm -rf build
 
-test-card: stamp-dreamplug-rootfs
+# populate the microSD card with a bootable file system
+microSd: stamp-dreamplug-rootfs
 	-umount $(BOOTPOINT)
 	-umount $(MOUNTPOINT)
 	mount $(MOUNTPOINT)
@@ -50,7 +53,7 @@ test-card: stamp-dreamplug-rootfs
 	mount $(BOOTPOINT)
 	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
 	cp build/dreamplug/boot/* $(BOOTPOINT)/
-# we don't need to copy2dream, this is already on the microSD card.
+# we don't need to copy2dream, this is the microSD card.
 	sudo rm $(MOUNTPOINT)/sbin/copy2dream
 # fix fstab for the SD card.
 	sudo sh -c "sed -e 's/sdc1/sda1/g' < source/etc/fstab > $(MOUNTPOINT)/etc/fstab"
@@ -58,8 +61,9 @@ test-card: stamp-dreamplug-rootfs
 	sleep 1
 	umount $(BOOTPOINT)
 	umount $(MOUNTPOINT)
-	@echo "Build complete.  Remember to login as root."
+	@echo "Build complete."
 
+# remove all data from the microSD card to repopulate it with a pristine image.
 clean-card: clean
 	-umount $(BOOTPOINT)
 	-umount $(MOUNTPOINT)
@@ -74,6 +78,7 @@ clean-card: clean
 	sudo rm -rf $(MOUNTPOINT)/*
 	umount $(MOUNTPOINT)
 
-weekly-card: clean-card test-card
+# build the weekly test image
+weekly-card: clean-card microSd
 	dd if=$(DEVICE) of=$(IMAGE) bs=1M
 	tar -cjvf $(ARCHIVE) $(IMAGE)
