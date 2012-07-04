@@ -30,22 +30,13 @@ echo "Set root password to "$rootpassword
 echo root:$rootpassword | /usr/sbin/chpasswd
 
 # Create a default user
-echo "Creating fbx user."
+echo "Creating fbx user, password: $userpassword"
 useradd $user
 echo $user:$userpassword | /usr/sbin/chpasswd
 
 # By default, spawn a console on the serial port
 echo "Adding a getty on the serial port"
 echo "T0:12345:respawn:/sbin/getty -L ttyS0 115200 vt100" >> /etc/inittab
-
-echo "Tweaks to reduce flash writes as per http://www.plugcomputer.org/plugwiki/index.php/Reduce_Flash_Writes"
-echo "
-# Reduce writes to flash drives
-vm.laptop_mode=5
-vm.swappiness=0
-vm.dirty_writeback_centisecs=1500
-vm.dirty_expire_centisecs=1500
-" >> /etc/sysctl.conf
 
 echo "Deleting this very same script"
 rm -f /install.sh
