@@ -1,4 +1,16 @@
 #!/bin/bash
+#
+# Script to complete the post-install process on first FBX boot.
+
+### BEGIN INIT INFO
+# Provides:          first-run
+# Default-Start:     1 2
+# Required-Start:    2
+# Required-Stop:
+# Default-Stop:
+# Short-Description: Finish FBX install on DreamPlug
+### END INIT INFO
+
 
 function tweak-kernel {
     kernel_version="$(/bin/ls $mountpoint/boot/vmlinuz-*-kirkwood | sort -rn | head -n1 | sed s#$mountpoint/boot/vmlinuz-##)"
@@ -9,13 +21,14 @@ function tweak-kernel {
 }
 
 function create-keys {
-
+    echo "Creating Keys."
+    echo "Well, not really."
 }
 
 function remove-self {
     rm /etc/init.d/first-run
-    rm /etc/rc1.d/first-run
-    rm /etc/rc2.d/first-run
+    rm /etc/rc1.d/S01first-run
+    rm /etc/rc2.d/S01first-run
 }
 
 tweak-kernel
