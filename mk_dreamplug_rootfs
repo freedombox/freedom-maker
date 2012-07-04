@@ -38,6 +38,7 @@ hostname='freedombox'
 rootpassword='freedom'
 user='fbx'
 userpassword='frdm'
+export hostname
 export rootpassword
 export user
 export userpassword
@@ -49,15 +50,16 @@ target=$basedir/dreamplug
 tmpdir=$basedir/tmp
 pkgcache=$tmpdir/aptcache
 homedir=$target/home/$user
-
-#
-# intro
-#
+export basedir
+export source
+export target
+export tmpdir
+export pkgcache
+export homedir
 
 # make the directories we'll need.
 mkdir -p $target
 rm -rf $target/*
-
 mkdir -p $tmpdir
 mkdir -p $pkgcache
 mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt/
@@ -70,38 +72,17 @@ echo "Multistrapping..."
 multistrap -f fbx-armel.conf -d $target
 rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
 
-
-#
-# Copy!
-#
-
+# copy!
 echo "Copying the source directory to the FreedomBox root."
-# don't leave target image containing apt config of the build host
-# FIXME -- we could do this better, using ftp.debian.org is a temporary hack
-#echo "clean up target apt configuration"
-cp -r "${source}/*" "${target}/"
+rsync -av $source/ $target
 
+# add projects to the image to make it a useful FreedomBox.
+bin/projects
 
-#
-# Post-copy configuration.
-#
+# cleanup and finalize the image so it boots correctly.
+bin/finalize
 
-echo "Adding a few FreedomBox projects to the image."
-
-git clone git://github.com/NickDaly/Plinth.git $homedir/plinth
-git clone git://github.com/jvasile/freedombox-privoxy $homedir/freedombox-privoxy
-git clone git://github.com/jvasile/withsqlite.git $homedir/withsqlite
-hg clone https://hg@bitbucket.org/nickdaly/plugserver $homedir/plugserver
-chown -R 1000:1000 $homedir
-
-
-#
-# cleanup and finalize
-#
-
-bin/finalize $target $hostname
-
+# finish!
 echo "Syncing..."
 sync
-
 echo "Finished. You may now copy the rootfs to the plug."

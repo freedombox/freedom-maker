@@ -33,9 +33,6 @@
 # We don't tolerate errors.
 set -e
 
-target=$1
-hostname=$2
-
 # Until udev is configured and run for the first time, dev nodes won't be created, but we need some basic ones for spawning a console (console) and creating RSA keys for SSH (urandom).
 echo "Creating basic device nodes"
 mknod $target/dev/console c 5 1
