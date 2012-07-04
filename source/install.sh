@@ -1,6 +1,9 @@
 echo "Preconfiguring dash - else dash and bash will be left in a broken state"
 /var/lib/dpkg/info/dash.preinst install
 
+# don't leave target image containing apt config of the build host
+# FIXME -- we could do this better, using ftp.debian.org is a temporary hack
+#echo "clean up target apt configuration"
 echo "Configuring all packages"
 export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
 export LC_ALL=C LANGUAGE=C LANG=C
