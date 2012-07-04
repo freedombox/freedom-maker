@@ -87,4 +87,5 @@ clean-card: clean
 # build the weekly test image
 weekly-card: clean-card microSd
 	dd if=$(DEVICE) of=$(IMAGE) bs=1M
+	@echo "Image copied.  The microSD card may now be removed."
 	tar -cjvf $(ARCHIVE) $(IMAGE)
