@@ -58,6 +58,7 @@ microSd: stamp-dreamplug-rootfs
 	sudo mkdir -p $(BOOTPOINT)
 	mount $(BOOTPOINT)
 	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
+	cp kernel/* $(BOOTPOINT)/
 	cp build/dreamplug/boot/* $(BOOTPOINT)/
 # we don't need to copy2dream, this is the microSD card.
 	sudo rm $(MOUNTPOINT)/sbin/copy2dream
