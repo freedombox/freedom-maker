@@ -51,7 +51,7 @@ distclean: clean
 	sudo rm -rf build
 
 # populate the microSD card with a bootable file system
-microSd: stamp-dreamplug-rootfs
+microSD: stamp-dreamplug-rootfs
 	-umount $(BOOTPOINT)
 	-umount $(MOUNTPOINT)
 	mount $(MOUNTPOINT)
@@ -86,7 +86,7 @@ clean-card: clean
 	umount $(MOUNTPOINT)
 
 # build the weekly test image
-weekly-card: clean-card microSd
+weekly-card: clean-card microSD
 	dd if=$(DEVICE) of=$(IMAGE) bs=1M
 	@echo "Image copied.  The microSD card may now be removed."
 	tar -cjvf $(ARCHIVE) $(IMAGE)
