@@ -31,7 +31,7 @@ dreamstick:	stamp-dreamplug-rootfs predepend
 
 # install required files so users don't need to do it themselves.
 predepend:
-	sudo apt-get install multistrap qemu-user-static u-boot-tools git mercurial
+	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial"
 	touch predepend
 
 # populate a tree with DreamPlug root filesystem
