@@ -1,0 +1,33 @@
+#! /bin/bash
+# 
+# Copyright 2012 by Nick Daly <nick.m.daly@gmail.com>
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# 
+
+# projects
+#
+# Installs external projects to the system.
+
+# We don't tolerate errors.
+set -e
+
+
+echo "Adding a few FreedomBox projects to the image."
+
+git clone git://github.com/NickDaly/Plinth.git $homedir/plinth
+git clone git://github.com/jvasile/freedombox-privoxy $homedir/freedombox-privoxy
+git clone git://github.com/jvasile/withsqlite.git $homedir/withsqlite
+hg clone https://hg@bitbucket.org/nickdaly/plugserver $homedir/plugserver
+chown -R 1000:1000 $homedir

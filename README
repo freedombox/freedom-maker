@@ -10,21 +10,20 @@ copy the stick contents to the internal 2gb microSD card.
 ***           understand what they're going to do before you run them...
 ***
 
-Install required build packages:
-	apt-get install multistrap qemu-user-static u-boot-tools
+# To Use It
 
-Partition a USB stick to have a small FAT partition and large ext3 partition,
+Partition a USB stick to have a small FAT partition and large ext2 partition,
 create a /media/freedom mount point, and add entries to /etc/fstab like:
 
   /dev/sdb1 /media/freedom/boot vfat	user,noauto	0	0
-  /dev/sdb2 /media/freedom	ext3	user,noauto	0	0
+  /dev/sdb2 /media/freedom	ext2	user,noauto	0	0
 
 This will allow the Makefile to mount and unmount the stick at will.
 
 Update the file fbx-base.conf setting the source= line to your favorite
 Debian mirror.
 
-To populate the stick with bits for a DreamPlug, just plug it in to your 
+To populate the stick with bits for a DreamPlug, just plug it in to your
 computer and type:
 
 	make
@@ -73,10 +72,76 @@ time-consuming attempts to boot grom gigE, which makes boot go much faster:
 	saveenv
 	reset
 
-- - - - -
+# To Understand It
 
 Be aware that this is a *very* imcomplete solution for now, suitable only
 for developers .. you will want to at least do things like create unique 
 ssh host keys for your device!
 
-- - - - -
+Digging into the code should be fairly straightforward.  There are only six
+files you need to be aware of:
+
+- /Makefile: The makefile that describes and builds the system.
+- /mk_dreamplug_rootfs: Builds the DreamPlug's root file-system.
+- /bin/projects: The place for external projects to hook into and customize
+  themselves before they're copied to the image.
+- /bin/finalize: Finalizes and prepares the build for booting.
+- /source: The root file system.
+- /source/install.sh: Pre-boot configuration that needs to be run on the device
+  itself (from within a chroot).
+
+## Makefile
+
+There are three major targets to be aware of:
+
+- dreamstick: The default target.  This loads an image to a USB drive that can
+  be used to install the FreedomBox without opening up your DreamPlug and
+  voiding the warranty.  You'll need a JTAG, though.
+- weekly-card: The target used to produce the weekly FreedomBox test release.
+  This will copy the image to a card that can be popped directly into the
+  microSD card slot in the DreamPlug.  The DreamPlug will boot happily without
+  needing a JTAG.
+- stamp-dreamplug-rootfs: The root file system itself.  It doesn't get installed
+  anywhere (that's done by the other two targets), but is a good way to test
+  whether the image will actually build, without waiting for all that pesky
+  hardware I/O.
+
+## mk_dreamplug_rootfs
+
+Starts building the system by creating all the destination directories and
+installing the base system.
+
+## /bin/projects
+
+Where projects that want to integrate into the FreedomBox should hook into.
+Keep in mind, we aren't in a chroot at this point.  The only environment
+variables you'll probably need are:
+
+- user: The non-root user's name (uid = 1000).
+- homedir: The non-root user's home-directory.
+
+## /bin/finalize
+
+Getting the system ready for boot, doing the things that don't need to be done
+inside a chroot.  You probably don't need to change this.
+
+## /source
+
+The root file system on the DreamPlug.  Modify this, and you're modifying what
+ends up on the FreedomBox.
+
+## /source/install.sh
+
+This is executed from a chroot during the build process to do configuration that
+needs to be done on the device itself.  You shouldn't need to modify this.  If
+you're installing a project that needs to change how the system configures
+itself, you're probably doing something wrong.
+
+# Questions
+
+I don't know if I'm using flash-kernel correctly.  I doubt it.  I don't think it
+can be run on an already booted system without rebooting immediately thereafter.
+
+That would explain a few things.
+
+Should it be run in the chroot instead?
