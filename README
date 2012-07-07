@@ -127,6 +127,182 @@ time-consuming attempts to boot grom gigE, which makes boot go much faster:
 	saveenv
 	reset
 
+# To Make It
+
+If you want to build your own image yourself, you're more than welcome to.
+Whether you're using a USB drive or a microSD card, you'll need to ensure that
+it's at least 2 GB in size and that it has two partitons:
+
+1. The stick must start with a 128 MB FAT partition for the boot directory.
+
+2. The rest of the stick is an EXT2 partition, for the main installation.
+
+The rest of the steps you need to follow depend on whether you're using a USB
+stick or a microSD card.
+
+## Building on a USB Stick
+
+Partition a USB stick to have a small FAT partition and large ext2 partition,
+create a /media/freedom mount point, and add entries to /etc/fstab like:
+
+    /dev/sdb1 /media/freedom/boot vfat user,noauto 0 0
+    /dev/sdb2 /media/freedom ext2 user,noauto 0 0
+
+This will allow the Makefile to mount and unmount the stick at will.
+
+If you have a favorite Debian mirror, update the file fbx-base.conf setting the
+source= line.
+
+To populate the stick with bits for a DreamPlug, just plug it in to your
+computer and type:
+
+	make
+
+This will build a file tree under build/dreamplug, representing the contents of
+a root file system, then that content will be copied to the stick.
+
+## Building it on a microSD card.
+
+Changing the image and building your own is a simple 18 step process!  Lots of
+thanks to Nick Hardiman for putting these instructions together.
+
+### Get Ready
+
+1. Start your workstation.
+
+2. Use a Debian OS, the version doesn't matter.  A virtual image, such
+   as a VirtualBox image, is fine.  Usually.
+
+3. Use the root account.
+
+### Prepare an SD Card
+
+4. Find a microSD card with SD card holder.  It must be at least 2GB
+   in size.
+
+5. Insert the card into your workstation.
+
+6. Install a partition editor.  Install parted if you are a masochist.
+
+    # apt-get install parted
+
+7. Create 2 partitions.  Use cfdisk, parted, gparted or similar.
+
+    # cfdisk  /dev/sdb
+
+   a. First partition: 128meg (no smaller or the kernel copy will run
+      out of room and make - see below - will end with an error).
+
+   b. Second partition: The rest of the card (anything over 600 MB
+      should work).
+
+8. Make a note of the SD card’s device name.  Mine is /dev/sdb (my
+   workstation’s layout is simple: one disk called /dev/sda and
+   nothing else defined).
+   
+9. Format the two partitions.
+
+   a. First partition: FAT
+
+    # mkdosfs /dev/sdb1
+
+   b. Second partition: ext3
+
+    # mkfs.ext3 /dev/sdb2
+
+10. Create a mountpoint on your workstation.
+
+    # mkdir /media/freedom
+
+11. Mount the second partition.
+
+    # mount /dev/sdb2 /media/freedom/
+
+12. Mount the first partition.
+
+    # mount /dev/sdb1 /media/freedom/boot/
+
+13. Check your work.
+
+    # mount
+
+    sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime)
+    ...
+    /dev/sdb2 on /media/freedom type ext3
+    (rw,relatime,errors=continue,barrier=1,data=ordered)
+    /dev/sdb1 on /media/freedom/boot type vfat
+    (rw,relatime,fmask=0022,dmask=0022,codepage=cp437,iocharset=utf8,shortname=mixed,errors=remount-ro)
+
+### Clone the Git Repository
+
+14. Install git.
+
+    # apt-get install git
+    
+    Reading package lists... Done
+    ...
+    After this operation, 15.3 MB of additional disk space will be used.
+    Do you want to continue [Y/n]?
+    ...
+
+15. Clone Nick Daly’s repository.
+    
+    $ git clone https://github.com/NickDaly/freedom-maker.git
+
+    Cloning into 'freedom-maker'...
+
+
+### Create the Debian OS.
+
+16. Change to the new directory.
+
+    $ cd ~/freedom-maker/
+
+17. Kick off:
+
+    $ make weekly-card
+    
+18. Enter your password when asked by "sudo".  If that fails, run:
+
+    $ su -c "make weekly-card"
+    
+If you do that, you'll need to enter the root password to build the image.
+
+The next part took about an hour, but required no input from me.  Packages were
+downloaded.  Lots of commands were run.  Many harmless errors were ignored:
+
+    sysvinit: restarting...init: timeout opening/writing control channel /run/initctl
+    .init: timeout opening/writing control channel /run/initctl
+    ...
+
+There was good news:
+
+    Multistrap system installed successfully...
+    Copying the source directory to the FreedomBox root.
+
+There was an enormous amount of this:
+
+    bin/bash
+          818092 100%    7.07MB/s    0:00:00 (xfer#1, to-check=1102/1123)
+    bin/cat
+           42736 100%  362.91kB/s    0:00:00 (xfer#2, to-check=1101/1123)
+    bin/chgrp
+           54996 100%  383.62kB/s    0:00:00 (xfer#3, to-check=1100/1123)
+    ...
+
+Finally an image is copied and zipped up for redistribution:
+
+    dd if=/dev/sdb of="freedombox-unstable_`date +%Y.%m%d`.img" bs=1M
+    3781+1 records in
+    3781+1 records out
+    3965190144 bytes (4.0 GB) copied, 266.174 s, 14.9 MB/s
+    Image copied.  The microSD card may now be removed.
+    tar -cjvf "freedombox-unstable_`date +%Y.%m%d`.tar.bz2"
+    "freedombox-unstable_`date +%Y.%m%d`.img"
+    freedombox-unstable_2012.0705.img
+
+The end.  Hooray!  The SD card is ready for the DreamPlug.
+
 # To Understand It
 
 Be aware that this is a *very* imcomplete solution for now, suitable only
