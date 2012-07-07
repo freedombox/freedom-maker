@@ -17,6 +17,7 @@ dreamstick:	stamp-dreamplug-rootfs predepend
 	sudo mkdir -p $(BOOTPOINT)
 	mount $(BOOTPOINT)
 	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
+	cp kernel/* $(BOOTPOINT)/
 	cp build/dreamplug/boot/* $(BOOTPOINT)/
 
 # we'll manually run the first-run script in copy2dream
