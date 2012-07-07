@@ -72,6 +72,9 @@ echo "Multistrapping..."
 multistrap -f fbx-armel.conf -d $target
 rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
 
+# un-do the bind mount so we don't trip over it later
+umount $target/var/cache/apt/
+
 # copy!
 echo "Copying the source directory to the FreedomBox root."
 rsync -av $source/ $target
