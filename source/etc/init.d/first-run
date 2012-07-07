@@ -26,9 +26,9 @@ function create-keys {
 }
 
 function remove-self {
-    rm /etc/init.d/first-run
-    rm /etc/rc1.d/S01first-run
-    rm /etc/rc2.d/S01first-run
+    rm -f /etc/init.d/first-run
+    rm -f /etc/rc1.d/S01first-run
+    rm -f /etc/rc2.d/S01first-run
 }
 
 tweak-kernel

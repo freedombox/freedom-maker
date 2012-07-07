@@ -19,9 +19,8 @@ dreamstick:	stamp-dreamplug-rootfs predepend
 	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
 	cp build/dreamplug/boot/* $(BOOTPOINT)/
 
-# prevent the first-run script from running during boot.
-# we'll do that during copy2dream.
-	rm $(MOUNTPOINT)/etc/init.d/first-run $(MOUNTPOINT)/etc/rc1.d/S01first-run $(MOUNTPOINT)/etc/rc2.d/S01first-run
+# we'll manually run the first-run script in copy2dream
+	rm $(MOUNTPOINT)/etc/rc1.d/S01first-run $(MOUNTPOINT)/etc/rc2.d/S01first-run
 
 # and finish!
 	sync
