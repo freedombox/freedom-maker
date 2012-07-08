@@ -210,9 +210,9 @@ thanks to Nick Hardiman for putting these instructions together.
 
     # mkfs.ext3 /dev/sdb2
 
-10. Create a mountpoint on your workstation.
+10. Create the mountpoints on your workstation.
 
-    # mkdir /media/freedom
+    # mkdir -p /media/freedom/boot
 
 11. Mount the second partition.
 
