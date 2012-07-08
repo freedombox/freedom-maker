@@ -138,12 +138,3 @@ This is executed from a chroot during the build process to do configuration that
 needs to be done on the device itself.  You shouldn't need to modify this.  If
 you're installing a project that needs to change how the system configures
 itself, you're probably doing something wrong.
-
-# Questions
-
-I don't know if I'm using flash-kernel correctly.  I doubt it.  I don't think it
-can be run on an already booted system without rebooting immediately thereafter.
-
-That would explain a few things.
-
-Should it be run in the chroot instead?
