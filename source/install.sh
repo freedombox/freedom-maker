@@ -20,11 +20,8 @@ mv /boot/initrd.img-3.0.0 /boot/initrd.img-3.0.0-kirkwood
 mv /boot/System.map-3.0.0 /boot/System.map-3.0.0-kirkwood
 mv /boot/vmlinuz-3.0.0 /boot/vmlinuz-3.0.0-kirkwood
 
-# pre-processed bootable kernel image crafted from above using flash-kernel
-cp /tmp/kernel/uImage /boot/uImage
-
-# update-initramfs -c -k 3.0.0-4
-# flash-kernel 3.0.0-4
+# process installed kernel to create uImage, uInitrd, dtb
+FK_MACHINE="Globalscale Technologies Dreamplug" flash-kernel
 
 # Establish an initial root password
 echo "Set root password to "$rootpassword
