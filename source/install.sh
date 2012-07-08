@@ -7,6 +7,8 @@ export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
 export LC_ALL=C LANGUAGE=C LANG=C
 
 # allow flash-kernel to work without valid /proc contents
+# ** this doesn't *really* work, since there are too many checks that fail
+#    in an emulated environment!  We'll have to do it by hand below anyway...
 export FK_MACHINE="Globalscale Technologies Dreamplug"
 
 dpkg --configure -a
@@ -15,7 +17,18 @@ dpkg --configure -a
 /etc/init.d/ssh stop
 
 # process installed kernel to create uImage, uInitrd, dtb
-FK_MACHINE="Globalscale Technologies Dreamplug" flash-kernel
+#  using flash-kernel would be a good approach, except it fails in the cross
+#  build environment due to too many environment checks...
+#FK_MACHINE="Globalscale Technologies Dreamplug" flash-kernel
+#  so, let's do it manually...
+
+(cd /boot ; \
+    mkimage -A arm -O linux -T kernel -n 'Debian kernel 3.2.0-3-kirkwood' \
+	-a 0x8000 -e 0x8000 -d vmlinuz-3.2.0-3-kirkwood uImage ; \
+    mkimage -A arm -O linux -T ramdisk -C gzip -a 0x0 -e 0x0 \
+	-n 'Debian ramdisk 3.2.0-3-kirkwood' \
+	-d initrd.img-3.2.0-3-kirkwood uInitrd ; \
+    cp /usr/lib/linux-image-3.2.0-3-kirkwood/kirkwood-dreamplug.dtb dtb )
 
 # Establish an initial root password
 echo "Set root password to "$rootpassword
