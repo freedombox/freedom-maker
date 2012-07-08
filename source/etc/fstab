@@ -1,4 +1,4 @@
-rootfs	  /		rootfs	relatime,rw	0	0
+/dev/sdc2 /		auto	relatime,rw	0	0
 proc	  /proc		proc	none		0	0
 sys	  /sys		sysfs	none		0	0
 none	  /dev/pts	devpts	defaults	0	0
