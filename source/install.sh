@@ -5,6 +5,10 @@ echo "Preconfiguring dash - else dash and bash will be left in a broken state"
 echo "Configuring all packages"
 export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
 export LC_ALL=C LANGUAGE=C LANG=C
+
+# allow flash-kernel to work without valid /proc contents
+export FK_MACHINE="Globalscale Technologies Dreamplug"
+
 dpkg --configure -a
 
 # sshd may be left running by the postinst, clean that up
