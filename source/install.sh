@@ -14,16 +14,6 @@ dpkg --configure -a
 # sshd may be left running by the postinst, clean that up
 /etc/init.d/ssh stop
 
-# post-install operations for kernel packages
-echo "Installing kernel content"
-dpkg --install /tmp/kernel/*.deb
-
-# rename deliverables so that flash-kernel is happy using them
-mv /boot/config-3.0.0 /boot/config-3.0.0-kirkwood
-mv /boot/initrd.img-3.0.0 /boot/initrd.img-3.0.0-kirkwood
-mv /boot/System.map-3.0.0 /boot/System.map-3.0.0-kirkwood
-mv /boot/vmlinuz-3.0.0 /boot/vmlinuz-3.0.0-kirkwood
-
 # process installed kernel to create uImage, uInitrd, dtb
 FK_MACHINE="Globalscale Technologies Dreamplug" flash-kernel
 
