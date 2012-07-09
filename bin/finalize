@@ -54,9 +54,17 @@ cp kernel/uImage $target/tmp/kernel/
 chown root:root $target/sbin/copy2dream
 chmod 744 $target/sbin/copy2dream
 
+# prepare chroot project finalization
+cp bin/projects-chroot $target/
+
 echo "Using qemu-user-static to perform first-boot configuration now."
 chmod 755 $target/install.sh
 cp /usr/bin/qemu-arm-static $target/usr/bin
 echo "Running install script from source/install.sh"
 chroot $target /install.sh
+echo "Running install script from bin/projects-chroot.sh"
+chroot $target /projects-chroot.sh
+
+# clean up.
+rm "${target}/projects-chroot"
 rm "${target}/usr/bin/qemu-arm-static"
