@@ -9,9 +9,6 @@
 	- channel-server, the buddycloud channels service for XMPP
 	- babeld, loop-free distance-vector routing protocol
 	- tahoe-lafs, secure distributed filesystem
-- our kernel images are very old .. build new ones
-- right now, we depend on kernel/uInitrd being useful on a USB stick,
-  would be better to generate that instead of just keeping one around?
 
 *** stuff to do for first feature release ***
 
