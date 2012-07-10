@@ -11,7 +11,7 @@ LOOP = /dev/loop0
 
 # copy DreamPlug root filesystem to a usb stick
 # stick assumed to have 2 partitions, 128meg FAT and the rest ext3 partition
-dreamstick:	stamp-dreamplug-rootfs predepend
+dreamstick:	stamp-dreamplug-rootfs stamp-predepend
 # 	bin/partition-stick
 	mount $(MOUNTPOINT)
 	sudo mkdir -p $(BOOTPOINT)
@@ -28,9 +28,9 @@ dreamstick:	stamp-dreamplug-rootfs predepend
 	umount $(MOUNTPOINT)
 
 # install required files so users don't need to do it themselves.
-predepend:
+stamp-predepend:
 	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial"
-	touch predepend
+	touch stamp-predepend
 
 # populate a tree with DreamPlug root filesystem
 stamp-dreamplug-rootfs: fbx-armel.conf fbx-base.conf mk_dreamplug_rootfs \
