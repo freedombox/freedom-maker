@@ -17,6 +17,7 @@ dreamstick:	stamp-dreamplug-rootfs stamp-predepend
 	sudo mkdir -p $(BOOTPOINT)
 	mount $(BOOTPOINT)
 	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
+	sudo cp build/dreamplug/boot/* $(MOUNTPOINT)/boot/
 
 # we'll manually run the first-run script in copy2dream
 	rm $(MOUNTPOINT)/etc/rc1.d/S01first-run $(MOUNTPOINT)/etc/rc2.d/S01first-run
@@ -56,6 +57,7 @@ microSD: stamp-dreamplug-rootfs
 	sudo mkdir -p $(BOOTPOINT)
 	mount $(BOOTPOINT)
 	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
+	sudo cp build/dreamplug/boot/* $(MOUNTPOINT)/boot/
 # we don't need to copy2dream, this is the microSD card.
 	sudo rm $(MOUNTPOINT)/sbin/copy2dream
 # fix fstab for the SD card.
