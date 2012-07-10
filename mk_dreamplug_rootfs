@@ -64,7 +64,6 @@ mkdir -p $tmpdir
 mkdir -p $pkgcache
 mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt/
 mkdir -p $target/var/cache/apt/archives
-mkdir -p $target/tmp/kernel
 mkdir -p $target/usr/bin
 
 # multistrap
