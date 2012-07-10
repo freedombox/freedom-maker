@@ -12,3 +12,15 @@
 - our kernel images are very old .. build new ones
 - right now, we depend on kernel/uInitrd being useful on a USB stick,
   would be better to generate that instead of just keeping one around?
+
+*** stuff to do for first feature release ***
+
+  - pre-configured user interface
+	- DHCP and HTTP servers on eth0 and/or eth1
+	- plinth-based initial config interface
+
+  - freedom buddy installed
+  - openvpn server setup
+  - the privoxy fork configured as a transparent proxy
+  - plinth configured to at display these config details and to control
+    whatever is feasible
