@@ -62,8 +62,8 @@ chmod 755 $target/install.sh
 cp /usr/bin/qemu-arm-static $target/usr/bin
 echo "Running install script from source/install.sh"
 chroot $target /install.sh
-echo "Running install script from bin/projects-chroot.sh"
-chroot $target /projects-chroot.sh
+echo "Running install script from bin/projects-chroot"
+chroot $target /projects-chroot
 
 # clean up.
 rm "${target}/projects-chroot"
