@@ -22,7 +22,7 @@ function tweak-kernel {
 
 function wifi-ap-setup {
     wget -O /tmp/marvell_wifi_firmware.tar.gz http://www.spinifex.com.au/plugs/downloads/dreamplug/marvell_wifi_firmware.tar.gz
-    tar -C /tmp -zxf marvell_wifi_firmware.tar.gz
+    tar -C /tmp -zxf /tmp/marvell_wifi_firmware.tar.gz
     mkdir -p /lib/firmware/mrvl
     cp /tmp/lib/firmware/mrvl/* /lib/firmware/mrvl
 }
@@ -39,6 +39,7 @@ function remove-self {
 }
 
 tweak-kernel
+sleep 30    # wait for dhcp
 wifi-ap-setup
 create-keys
 remove-self
