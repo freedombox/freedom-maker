@@ -9,6 +9,10 @@ IMAGE = "$(NAME)_$(TODAY).img"
 ARCHIVE = "$(NAME)_$(TODAY).tar.bz2"
 LOOP = /dev/loop0
 
+#
+# armel
+#
+
 # copy DreamPlug root filesystem to a usb stick
 # stick assumed to have 2 partitions, 128meg FAT and the rest ext3 partition
 dreamstick:	stamp-dreamplug-rootfs predepend
@@ -17,6 +21,7 @@ dreamstick:	stamp-dreamplug-rootfs predepend
 	sudo mkdir -p $(BOOTPOINT)
 	mount $(BOOTPOINT)
 	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
+	cp kernel/* $(BOOTPOINT)/
 	cp build/dreamplug/boot/* $(BOOTPOINT)/
 
 # prevent the first-run script from running during boot.
@@ -29,29 +34,19 @@ dreamstick:	stamp-dreamplug-rootfs predepend
 	umount $(BOOTPOINT)
 	umount $(MOUNTPOINT)
 
+# populate a tree with DreamPlug root filesystem
+stamp-dreamplug-rootfs: fbx-armel.conf fbx-base.conf mk_dreamplug_rootfs \
+		bin/projects bin/finalize
+	sudo ./mk_dreamplug_rootfs fbx-armel.conf
+	touch stamp-dreamplug-rootfs
+
 # install required files so users don't need to do it themselves.
 predepend:
 	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial"
 	touch predepend
 
-# populate a tree with DreamPlug root filesystem
-stamp-dreamplug-rootfs: fbx-armel.conf fbx-base.conf mk_dreamplug_rootfs \
-		bin/projects bin/finalize
-	sudo ./mk_dreamplug_rootfs
-	touch stamp-dreamplug-rootfs
-
-clean:
-	rm -f stamp-dreamplug-rootfs
-# just in case I tried to build before plugging in the USB drive.
-	-sudo umount `pwd`/build/dreamplug/var/cache/apt/
-	sudo rm -rf build/dreamplug
-	-rm $(IMAGE) $(ARCHIVE)
-
-distclean: clean
-	sudo rm -rf build
-
 # populate the microSD card with a bootable file system
-microSd: stamp-dreamplug-rootfs
+microSd-armel: stamp-dreamplug-rootfs
 	-umount $(BOOTPOINT)
 	-umount $(MOUNTPOINT)
 	mount $(MOUNTPOINT)
@@ -70,6 +65,39 @@ microSd: stamp-dreamplug-rootfs
 	umount $(MOUNTPOINT)
 	@echo "Build complete."
 
+# build the weekly test image
+weekly-armel: clean-card microSd-armel
+	dd if=$(DEVICE) of=$(IMAGE)-armel bs=1M
+	@echo "Image copied.  The microSD card may now be removed."
+	tar -cjvf $(ARCHIVE)-armel $(IMAGE)-armel
+
+#
+# i386
+#
+
+#
+# amd64
+#
+
+rootfs-amd64: fbx-armel.conf fbx-base.conf mk_dreamplug_rootfs bin/projects \
+        bin/finalize
+	sudo ./mk_dreamplug_rootfs fbx-amd64.conf
+	touch stamp-dreamplug-rootfs
+
+#
+# meta
+#
+
+clean:
+	rm -f stamp-dreamplug-rootfs
+# just in case I tried to build before plugging in the USB drive.
+	-sudo umount `pwd`/build/dreamplug/var/cache/apt/
+	sudo rm -rf build/dreamplug
+	-rm $(IMAGE) $(ARCHIVE)
+
+distclean: clean
+	sudo rm -rf build
+
 # remove all data from the microSD card to repopulate it with a pristine image.
 clean-card: clean
 	-umount $(BOOTPOINT)
@@ -84,9 +112,3 @@ clean-card: clean
 	mount $(MOUNTPOINT)
 	sudo rm -rf $(MOUNTPOINT)/*
 	umount $(MOUNTPOINT)
-
-# build the weekly test image
-weekly-card: clean-card microSd
-	dd if=$(DEVICE) of=$(IMAGE) bs=1M
-	@echo "Image copied.  The microSD card may now be removed."
-	tar -cjvf $(ARCHIVE) $(IMAGE)
