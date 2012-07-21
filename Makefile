@@ -35,9 +35,10 @@ dreamstick:	stamp-dreamplug-rootfs predepend
 	umount $(MOUNTPOINT)
 
 # populate a tree with DreamPlug root filesystem
-stamp-dreamplug-rootfs: fbx-armel.conf fbx-base.conf mk_dreamplug_rootfs \
+stamp-dreamplug-rootfs: multistrap-configs/fbx-armel.conf \
+		multistrap-configs/fbx-base.conf mk_dreamplug_rootfs \
 		bin/projects bin/finalize
-	sudo ./mk_dreamplug_rootfs fbx-armel.conf
+	sudo ./mk_dreamplug_rootfs multistrap-configs/fbx-armel.conf
 	touch stamp-dreamplug-rootfs
 
 # install required files so users don't need to do it themselves.
@@ -79,9 +80,10 @@ weekly-armel: clean-card microSd-armel
 # amd64
 #
 
-rootfs-amd64: fbx-armel.conf fbx-base.conf mk_dreamplug_rootfs bin/projects \
+rootfs-amd64: multistrap-configs/fbx-armel.conf \
+		multistrap-configs/fbx-base.conf mk_dreamplug_rootfs bin/projects \
         bin/finalize
-	sudo ./mk_dreamplug_rootfs fbx-amd64.conf
+	sudo ./mk_dreamplug_rootfs multistrap-configs/fbx-amd64.conf
 	touch stamp-dreamplug-rootfs
 
 #

@@ -35,7 +35,7 @@
 # We don't tolerate errors.
 set -e
 
-config=fbx-armel.conf
+config=multistrap-configs/fbx-armel.conf
 if [ -n "$1" ]
 then
     config=$1
