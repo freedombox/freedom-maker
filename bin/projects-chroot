@@ -3,13 +3,15 @@
 function plugserver_setup {
     # get ready to install stuff with the plugserver scripts
 
-    cd $homedir/plugserver/setup/
+    cd /home/fbx/plugserver/setup/
     . shared.sh
 
     armed
     prerequisite_install
     prerequisite_config
 }
+
+plugserver_setup
 
 # harden the system
 # anomaly_setup
