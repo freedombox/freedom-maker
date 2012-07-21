@@ -1,1 +1,21 @@
-#! /bin/sh
+#! /bin/bash
+
+function plugserver_setup {
+    # get ready to install stuff with the plugserver scripts
+
+    cd $homedir/plugserver/setup/
+    . shared.sh
+
+    armed
+    prerequisite_install
+    prerequisite_config
+}
+
+# harden the system
+# anomaly_setup
+
+# configure a firewall
+# firewall_setup
+
+# install ikiwiki!
+wiki_setup
