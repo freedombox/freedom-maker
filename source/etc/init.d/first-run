@@ -43,15 +43,19 @@ function create-keys {
 }
 
 function remove-self {
+    # vanish.
+
     rm /etc/init.d/first-run
     rm /etc/rc1.d/S01first-run
     rm /etc/rc2.d/S01first-run
 }
 
-tweak-kernel
-sleep 30    # wait for dhcp
-wifi-ap-setup
 create-keys
+wifi-ap-setup
+
+# the last things we do before quitting.
+tweak-kernel
 remove-self
+
 echo "Kernel flashed.  Rebooting."
 reboot
