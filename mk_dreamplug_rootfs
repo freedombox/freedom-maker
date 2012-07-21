@@ -29,9 +29,17 @@
 #
 # Runs multistrap and readies the resulting root filesystem to silently 
 # complete package configuration on the first boot-up.
+#
+# Accepts the multistrap config file name as an argument.
 
 # We don't tolerate errors.
 set -e
+
+config=fbx-armel.conf
+if [ -n "$1" ]
+then
+    config=$1
+fi
 
 # users
 hostname='freedombox'
@@ -69,7 +77,7 @@ mkdir -p $target/usr/bin
 
 # multistrap
 echo "Multistrapping..."
-multistrap -f fbx-armel.conf -d $target
+multistrap -f $config -d $target
 rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
 
 # copy!
