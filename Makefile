@@ -47,7 +47,7 @@ predepend:
 	touch predepend
 
 # populate the microSD card with a bootable file system
-microSd-armel: stamp-dreamplug-rootfs
+microSd-dreamplug: stamp-dreamplug-rootfs
 	-umount $(BOOTPOINT)
 	-umount $(MOUNTPOINT)
 	mount $(MOUNTPOINT)
@@ -66,8 +66,36 @@ microSd-armel: stamp-dreamplug-rootfs
 	umount $(MOUNTPOINT)
 	@echo "Build complete."
 
+# populate a USB drive with a bootable file system
+microSd-guruplug: stamp-dreamplug-rootfs
+	-umount $(BOOTPOINT)
+	-umount $(MOUNTPOINT)
+	mount $(MOUNTPOINT)
+	sudo mkdir -p $(BOOTPOINT)
+	mount $(BOOTPOINT)
+	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
+	cp kernel/* $(BOOTPOINT)/
+	cp build/dreamplug/boot/* $(BOOTPOINT)/
+# we don't need to copy2dream, this is the microSD card.
+	sudo rm $(MOUNTPOINT)/sbin/copy2dream
+# fix fstab for the SD card.
+	sudo sh -c "sed -e 's/sdc1/sda1/g' < source/etc/fstab > $(MOUNTPOINT)/etc/fstab"
+	touch $(MOUNTPOINT)/var/freedombox/dont-tweak-kernel
+	sync
+	sleep 1
+	umount $(BOOTPOINT)
+	umount $(MOUNTPOINT)
+	@echo "Build complete."
+
+
 # build the weekly test image
-weekly-armel: clean-card microSd-armel
+weekly-dreamplug: clean-card microSd-dreamplug
+	dd if=$(DEVICE) of=$(IMAGE)-armel bs=1M
+	@echo "Image copied.  The microSD card may now be removed."
+	tar -cjvf $(ARCHIVE)-armel $(IMAGE)-armel
+
+# build the weekly test image
+weekly-guruplug: clean-card microSd-guruplug
 	dd if=$(DEVICE) of=$(IMAGE)-armel bs=1M
 	@echo "Image copied.  The microSD card may now be removed."
 	tar -cjvf $(ARCHIVE)-armel $(IMAGE)-armel
