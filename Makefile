@@ -1,135 +1,99 @@
 # /usr/bin/make
 
+# armel amd64 i386
+ARCHITECTURE = armel
+# dreamplug guruplug
+MACHINE = dreamplug
+# card usb
+DESTINATION = card
+BUILD = $(MACHINE)-$(ARCHITECTURE)-$(DESTINATION)
+BUILD_DIR = build/$(ARCHITECTURE)
 MOUNTPOINT = /media/freedom
 BOOTPOINT = $(MOUNTPOINT)/boot
 DEVICE = /dev/sdb
 TODAY = `date +%Y.%m%d`
-NAME = freedombox-unstable
-IMAGE = "$(NAME)_$(TODAY).img"
-ARCHIVE = "$(NAME)_$(TODAY).tar.bz2"
+NAME = freedombox-unstable_$(TODAY)_$(BUILD)
+IMAGE = $(NAME).img
+ARCHIVE = $(NAME).tar.bz2
 LOOP = /dev/loop0
 
-#
-# armel
-#
+# populate a tree with DreamPlug root filesystem
+rootfs-$(ARCHITECTURE): multistrap-configs/fbx-base.conf \
+		multistrap-configs/fbx-$(ARCHITECTURE).conf \
+		mk_dreamplug_rootfs \
+		bin/projects bin/finalize bin/projects-chroot
+	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
+	sudo ./mk_dreamplug_rootfs $(ARCHITECTURE) multistrap-configs/fbx-$(ARCHITECTURE).conf
+	touch rootfs-$(ARCHITECTURE)
 
-# copy DreamPlug root filesystem to a usb stick
+# copy DreamPlug root filesystem to a usb stick or microSD card
 # stick assumed to have 2 partitions, 128meg FAT and the rest ext3 partition
-dreamstick:	stamp-dreamplug-rootfs predepend
-# 	bin/partition-stick
+image: rootfs-$(ARCHITECTURE)
+	-umount $(BOOTPOINT)
+	-umount $(MOUNTPOINT)
 	mount $(MOUNTPOINT)
 	sudo mkdir -p $(BOOTPOINT)
 	mount $(BOOTPOINT)
-	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
+	sudo rsync -atvz --progress --delete --exclude=boot $(BUILD_DIR)/ $(MOUNTPOINT)/
 	cp kernel/* $(BOOTPOINT)/
-	cp build/dreamplug/boot/* $(BOOTPOINT)/
-
+	cp $(BUILD_DIR)/boot/* $(BOOTPOINT)/
+ifeq ($(DESTINATION),usb)
 # prevent the first-run script from running during boot.
-# we'll do that during copy2dream.
-	rm $(MOUNTPOINT)/etc/init.d/first-run $(MOUNTPOINT)/etc/rc1.d/S01first-run $(MOUNTPOINT)/etc/rc2.d/S01first-run
-
-# and finish!
+# we'll do this during copy2dream.
+	rm $(MOUNTPOINT)/etc/rc1.d/S01first-run $(MOUNTPOINT)/etc/rc2.d/S01first-run
+endif
+ifeq ($(DESTINATION),card)
+# we don't need to copy2dream, this is the microSD card.
+	sudo rm $(MOUNTPOINT)/sbin/copy2dream
+# fix fstab for the SD card.
+	sudo sh -c "sed -e 's/sdc1/sda1/g' < $(BUILD_DIR)/etc/fstab > $(MOUNTPOINT)/etc/fstab"
+endif
+ifeq ($(MACHINE),guruplug)
+# we can't flash the guru plug's kernel
+	mkdir -p $(MOUNTPOINT)/var/freedombox/
+	touch $(MOUNTPOINT)/var/freedombox/dont-tweak-kernel
+endif
 	sync
 	sleep 1
 	umount $(BOOTPOINT)
 	umount $(MOUNTPOINT)
+	@echo "Build complete."
 
-# populate a tree with DreamPlug root filesystem
-stamp-dreamplug-rootfs: multistrap-configs/fbx-armel.conf \
-		multistrap-configs/fbx-base.conf mk_dreamplug_rootfs \
-		bin/projects bin/finalize
-	sudo ./mk_dreamplug_rootfs multistrap-configs/fbx-armel.conf
-	touch stamp-dreamplug-rootfs
+
+# build the weekly test image
+weekly-image: image
+# if we aren't installing to an armel system, assume we need a bootloader.
+ifneq ($(ARCHITECTURE),armel)
+# also, try my best to protect users from themselves:
+ifneq ($(DEVICE),/dev/sda)
+	sudo grub-install $(DEVICE)
+endif
+endif
+	dd if=$(DEVICE) of=$(IMAGE) bs=1M
+	@echo "Image copied.  The microSD card may now be removed."
+	tar -cjvf $(ARCHIVE) $(IMAGE)
+
+#
+# meta
+#
 
 # install required files so users don't need to do it themselves.
 predepend:
 	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial"
 	touch predepend
 
-# populate the microSD card with a bootable file system
-microSd-dreamplug: stamp-dreamplug-rootfs
-	-umount $(BOOTPOINT)
-	-umount $(MOUNTPOINT)
-	mount $(MOUNTPOINT)
-	sudo mkdir -p $(BOOTPOINT)
-	mount $(BOOTPOINT)
-	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
-	cp kernel/* $(BOOTPOINT)/
-	cp build/dreamplug/boot/* $(BOOTPOINT)/
-# we don't need to copy2dream, this is the microSD card.
-	sudo rm $(MOUNTPOINT)/sbin/copy2dream
-# fix fstab for the SD card.
-	sudo sh -c "sed -e 's/sdc1/sda1/g' < source/etc/fstab > $(MOUNTPOINT)/etc/fstab"
-	sync
-	sleep 1
-	umount $(BOOTPOINT)
-	umount $(MOUNTPOINT)
-	@echo "Build complete."
-
-# populate a USB drive with a bootable file system
-microSd-guruplug: stamp-dreamplug-rootfs
-	-umount $(BOOTPOINT)
-	-umount $(MOUNTPOINT)
-	mount $(MOUNTPOINT)
-	sudo mkdir -p $(BOOTPOINT)
-	mount $(BOOTPOINT)
-	sudo rsync -atvz --progress --delete --exclude=boot build/dreamplug/ $(MOUNTPOINT)/
-	cp kernel/* $(BOOTPOINT)/
-	cp build/dreamplug/boot/* $(BOOTPOINT)/
-# we don't need to copy2dream, this is the microSD card.
-	sudo rm $(MOUNTPOINT)/sbin/copy2dream
-# fix fstab for the SD card.
-	sudo sh -c "sed -e 's/sdc1/sda1/g' < source/etc/fstab > $(MOUNTPOINT)/etc/fstab"
-	touch $(MOUNTPOINT)/var/freedombox/dont-tweak-kernel
-	sync
-	sleep 1
-	umount $(BOOTPOINT)
-	umount $(MOUNTPOINT)
-	@echo "Build complete."
-
-
-# build the weekly test image
-weekly-dreamplug: clean-card microSd-dreamplug
-	dd if=$(DEVICE) of=$(IMAGE)-armel bs=1M
-	@echo "Image copied.  The microSD card may now be removed."
-	tar -cjvf $(ARCHIVE)-armel $(IMAGE)-armel
-
-# build the weekly test image
-weekly-guruplug: clean-card microSd-guruplug
-	dd if=$(DEVICE) of=$(IMAGE)-armel bs=1M
-	@echo "Image copied.  The microSD card may now be removed."
-	tar -cjvf $(ARCHIVE)-armel $(IMAGE)-armel
-
-#
-# i386
-#
-
-#
-# amd64
-#
-
-rootfs-amd64: multistrap-configs/fbx-armel.conf \
-		multistrap-configs/fbx-base.conf mk_dreamplug_rootfs bin/projects \
-        bin/finalize
-	sudo ./mk_dreamplug_rootfs multistrap-configs/fbx-amd64.conf
-	touch stamp-dreamplug-rootfs
-
-#
-# meta
-#
-
 clean:
-	rm -f stamp-dreamplug-rootfs
+	rm -f rootfs
 # just in case I tried to build before plugging in the USB drive.
-	-sudo umount `pwd`/build/dreamplug/var/cache/apt/
-	sudo rm -rf build/dreamplug
+	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
+	sudo rm -rf $(BUILD_DIR)
 	-rm $(IMAGE) $(ARCHIVE)
 
-distclean: clean
+distclean: clean clean-card
 	sudo rm -rf build
 
 # remove all data from the microSD card to repopulate it with a pristine image.
-clean-card: clean
+clean-card:
 	-umount $(BOOTPOINT)
 	-umount $(MOUNTPOINT)
 

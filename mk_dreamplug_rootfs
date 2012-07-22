@@ -35,10 +35,16 @@
 # We don't tolerate errors.
 set -e
 
-config=multistrap-configs/fbx-armel.conf
+architecture=armel
 if [ -n "$1" ]
 then
-    config=$1
+    architecture=$1
+fi
+
+config=multistrap-configs/fbx-$architecture.conf
+if [ -n "$2" ]
+then
+    config=$2
 fi
 
 # users
@@ -54,7 +60,7 @@ export userpassword
 # where to build images, etc
 basedir=`pwd`/build
 source=`pwd`/source
-target=$basedir/dreamplug
+target=$basedir/$architecture
 tmpdir=$basedir/tmp
 pkgcache=$tmpdir/aptcache
 homedir=$target/home/$user
