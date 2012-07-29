@@ -18,6 +18,7 @@ ARCHIVE = $(NAME).tar.bz2
 LOOP = /dev/loop0
 
 # populate a tree with DreamPlug root filesystem
+rootfs: rootfs-$(ARCHITECTURE)
 rootfs-$(ARCHITECTURE): multistrap-configs/fbx-base.conf \
 		multistrap-configs/fbx-$(ARCHITECTURE).conf \
 		mk_dreamplug_rootfs \
