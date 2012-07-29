@@ -29,8 +29,10 @@ function tweak-kernel {
 function wifi-ap-setup {
     # configure wireless access point with spinifex's prebuilt firmware
 
+    echo "Sleeping 30s for DHCP"
     sleep 30    # wait for dhcp
 
+    echo "Installing UAP Firmware."
     wget -O /tmp/marvell_wifi_firmware.tar.gz http://www.spinifex.com.au/plugs/downloads/dreamplug/marvell_wifi_firmware.tar.gz
     tar -C /tmp -zxf /tmp/marvell_wifi_firmware.tar.gz
     mkdir -p /lib/firmware/mrvl
