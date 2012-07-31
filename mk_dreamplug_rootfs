@@ -29,9 +29,23 @@
 #
 # Runs multistrap and readies the resulting root filesystem to silently 
 # complete package configuration on the first boot-up.
+#
+# Accepts the multistrap config file name as an argument.
 
 # We don't tolerate errors.
 set -e
+
+architecture=armel
+if [ -n "$1" ]
+then
+    architecture=$1
+fi
+
+config=multistrap-configs/fbx-$architecture.conf
+if [ -n "$2" ]
+then
+    config=$2
+fi
 
 # users
 hostname='freedombox'
@@ -46,7 +60,7 @@ export userpassword
 # where to build images, etc
 basedir=`pwd`/build
 source=`pwd`/source
-target=$basedir/dreamplug
+target=$basedir/$architecture
 tmpdir=$basedir/tmp
 pkgcache=$tmpdir/aptcache
 homedir=$target/home/$user
@@ -68,7 +82,7 @@ mkdir -p $target/usr/bin
 
 # multistrap
 echo "Multistrapping..."
-multistrap -f fbx-armel.conf -d $target
+multistrap -f $config -d $target
 rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
 
 # un-do the bind mount so we don't trip over it later

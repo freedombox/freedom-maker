@@ -11,13 +11,32 @@
 # Short-Description: Finish FBX install on DreamPlug
 ### END INIT INFO
 
-
 function tweak-kernel {
-    kernel_version="$(/bin/ls $mountpoint/boot/vmlinuz-*-kirkwood | sort -rn | head -n1 | sed s#$mountpoint/boot/vmlinuz-##)"
+    # Update the kernel unless requested otherwise.
 
-    mount -t proc proc /proc
-    flash-kernel $kernel_version
-    umount /proc
+    if [ -e /var/freedombox/dont-tweak-kernel ]
+    then
+        rm /var/freedombox/dont-tweak-kernel
+    else
+        kernel_version="$(/bin/ls $mountpoint/boot/vmlinuz-*-kirkwood | sort -rn | head -n1 | sed s#$mountpoint/boot/vmlinuz-##)"
+
+        mount -t proc proc /proc
+        flash-kernel $kernel_version
+        umount /proc
+    fi
+}
+
+function wifi-ap-setup {
+    # configure wireless access point with spinifex's prebuilt firmware
+
+    echo "Sleeping 30s for DHCP"
+    sleep 30    # wait for dhcp
+
+    echo "Installing UAP Firmware."
+    wget -O /tmp/marvell_wifi_firmware.tar.gz http://www.spinifex.com.au/plugs/downloads/dreamplug/marvell_wifi_firmware.tar.gz
+    tar -C /tmp -zxf /tmp/marvell_wifi_firmware.tar.gz
+    mkdir -p /lib/firmware/mrvl
+    cp /tmp/lib/firmware/mrvl/* /lib/firmware/mrvl
 }
 
 function create-keys {
@@ -29,10 +48,17 @@ function remove-self {
     rm -f /etc/init.d/first-run
     rm -f /etc/rc1.d/S01first-run
     rm -f /etc/rc2.d/S01first-run
+    rm /etc/init.d/first-run
+    rm /etc/rc1.d/S01first-run
+    rm /etc/rc2.d/S01first-run
 }
 
-tweak-kernel
 create-keys
+wifi-ap-setup
+
+# the last things we do before quitting.
+tweak-kernel
 remove-self
+
 echo "Kernel flashed.  Rebooting."
 reboot

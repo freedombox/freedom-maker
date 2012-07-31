@@ -1,9 +1,25 @@
 Freedom-Maker  -  Bdale's building tools for the FreedomBox project
 
-The general idea for now is that we're going to populate a USB stick 
-with a Debian 'wheezy' system that can be used to boot a DreamPlug.  Once 
-the plug is running on the USB stick, a script on the stick can be used to 
-copy the stick contents to the internal 2gb microSD card.
+Welcome to the FreedomBox!  This project is the central hub of the FreedomBox
+project, it builds and installs the file-system image that turns any computer
+into a FreedomBox.
+
+There are a couple ways to use this system:
+
+1. If you just want to use a FreedomBox and don't care about changing how it
+   works or mucking about in its insides (if you're like most people), you
+   should get a pre-built image from someone and copy it to an SD card or USB
+   drive.  If you don't have a JTAG or don't know what one is, make sure to ask
+   for the SD card image.
+
+2. If you want to change and build on it, you can use:
+
+   A. A USB stick.  This requires a JTAG, but doesn't require opening up the
+      DreamPlug), or,
+
+   B. A microSD card and adapter.  You can use the one from inside the
+      DreamPlug.  You won't need a JTAG, but you will need to open the DreamPlug
+      and void the warranty.
 
 ***
 *** Warning!  There are no "training wheels" here .. read the scripts and
@@ -12,33 +28,71 @@ copy the stick contents to the internal 2gb microSD card.
 
 # To Use It
 
-Partition a USB stick to have a small FAT partition and large ext2 partition,
-create a /media/freedom mount point, and add entries to /etc/fstab like:
+You'll need to copy the image to the memory card or USB stick:
 
-  /dev/sdb1 /media/freedom/boot vfat	user,noauto	0	0
-  /dev/sdb2 /media/freedom	ext2	user,noauto	0	0
+1. Figure out which device your card actually is.  
 
-This will allow the Makefile to mount and unmount the stick at will.
+   A. Unplug your card.
+   
+   B. Run "df" to show you the list of devices your computer actually knows
+      about.
+      
+   C. Plug your card in.
+   
+   D. Run "df" again, your computer should know about a new device or two: your
+      memory card.  It's probably "/dev/sd(someletter)".  It *won't be*
+      /dev/sda.
 
-Update the file fbx-base.conf setting the source= line to your favorite
-Debian mirror.
+2. Decompress the image:
 
-To populate the stick with bits for a DreamPlug, just plug it in to your
-computer and type:
+    $ tar -xjvf freedombox-unstable_*.tar.bz2
 
-	make
+3. Copy the image to your card.  Whatever you do, make sure you don't copy it to
+   /dev/sda.  That'll break your system.
 
-This will build a file tree under build/dreamplug, representing the
-contents of a root file system, then that content will be copied to the stick.
+    # dd bs=1M if=freedombox-unstable_*.img of=/dev/sd(thesameletter)
 
-Move the USB stick to the DreamPlug, obtain a serial console, and hit reset.
-A good way to access the serial console (actually USB serial emulation
-provided by the optional JTAG dongle), is to use 'screen', like so:
+Now, what you need to do depends on whether you're using the microSD card or USB
+stick method:
+
+- USB drive: You'll hook the JTAG up to the DreamPlug before booting and use the JTAG
+  to control the boot process, so we can boot from the USB drive.
+  
+- microSD card: You'll put the microSD card into the DreamPlug's internal
+  microSD card slot and boot the DreamPlug.  It'll restart once to finish the
+  install process, then it's ready to use.
+
+## Running from a microSD Card
+
+When DD has finished, take the microSD card out of your computer and plug it
+into your DreamPlug.  If you have a JTAG, you can watch it boot.  You'll see it
+restart once during the boot process.  If you don't have a JTAG, wait a while (5
+minutes or less) and it'll be available over SSH (port 22).  You might need to
+use nmap to find it:
+
+    $ nmap -p 22 --open -sV 192.168.0.0/24
+    
+    ...
+    Interesting ports on 192.168.0.13:
+    PORT   STATE SERVICE VERSION
+    22/tcp open  ssh     OpenSSH 6.0p1 Debian 2 (protocol 2.0)
+    Service Info: OS: Linux
+    ...
+
+Once you've found it, SSH into the box:
+    
+    $ ssh root@192.168.0.13
+
+## Running from a USB Stick
+
+Move the USB stick to the DreamPlug, obtain a serial console, and hit reset.  A
+good way to access the serial console (actually USB serial emulation provided by
+the optional JTAG dongle), is to use 'screen', like so:
 
 	screen /dev/ttyUSB0 115200
 
-Interrupt the boot by pressing a key during the autoboot countdown, and type 
-the following to boot from the USB stick:
+Interrupt the boot by pressing a key during the autoboot countdown, and type the
+following to boot from the USB stick:
 
 	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_dtb}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000 0x68f0000;'
 	setenv x_bootcmd_kernel fatload usb 2 0x6400000 uImage 
@@ -49,21 +103,22 @@ the following to boot from the USB stick:
 
 The system should boot to a login prompt, using only the bits on the stick.
 
-The default root password is 'freedom'
+The default root password is 'freedom'.  The normal user is "fbx" and the
+password is "frdm".
 
 - - - - -
 
-To set things up to boot from the internal microSD card, once you're logged 
-into the system booted from root on USB stick you can use:
+To set things up to boot from the internal microSD card, once you're logged into
+the system booted from root on USB stick you can use:
 
 	/sbin/copy2dream
 
-Note that if you don't have a reasonable system date and time set in the 
+Note that if you don't have a reasonable system date and time set in the
 DreamPlug before running this command, you may see a long stream of warnings
 from tar about timestamps being in the future.  It is safe to ignore these.
 
 On reboot, you may want to interrupt the boot and type the following to ensure
-you boot from the internal microSD by default.  This bootcmd line elides the 
+you boot from the internal microSD by default.  This bootcmd line elides the
 time-consuming attempts to boot grom gigE, which makes boot go much faster:
 
 	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_dtb}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000 0x68f0000;'
@@ -73,6 +128,182 @@ time-consuming attempts to boot grom gigE, which makes boot go much faster:
 	setenv x_bootargs_root root=/dev/sda2 rootdelay=10
 	saveenv
 	reset
+
+# To Make It
+
+If you want to build your own image yourself, you're more than welcome to.
+Whether you're using a USB drive or a microSD card, you'll need to ensure that
+it's at least 2 GB in size and that it has two partitons:
+
+1. The stick must start with a 128 MB FAT partition for the boot directory.
+
+2. The rest of the stick is an EXT2 partition, for the main installation.
+
+The rest of the steps you need to follow depend on whether you're using a USB
+stick or a microSD card.
+
+## Building on a USB Stick
+
+Partition a USB stick to have a small FAT partition and large ext2 partition,
+create a /media/freedom mount point, and add entries to /etc/fstab like:
+
+    /dev/sdb1 /media/freedom/boot vfat user,noauto 0 0
+    /dev/sdb2 /media/freedom ext2 user,noauto 0 0
+
+This will allow the Makefile to mount and unmount the stick at will.
+
+If you have a favorite Debian mirror, update the file fbx-base.conf setting the
+source= line.
+
+To populate the stick with bits for a DreamPlug, just plug it in to your
+computer and type:
+
+	make
+
+This will build a file tree under build/dreamplug, representing the contents of
+a root file system, then that content will be copied to the stick.
+
+## Building it on a microSD card.
+
+Changing the image and building your own is a simple 18 step process!  Lots of
+thanks to Nick Hardiman for putting these instructions together.
+
+### Get Ready
+
+1. Start your workstation.
+
+2. Use a Debian OS, the version doesn't matter.  A virtual image, such
+   as a VirtualBox image, is fine.  Usually.
+
+3. Use the root account.
+
+### Prepare an SD Card
+
+4. Find a microSD card with SD card holder.  It must be at least 2GB
+   in size.
+
+5. Insert the card into your workstation.
+
+6. Install a partition editor.  Install parted if you are a masochist.
+
+    # apt-get install parted
+
+7. Create 2 partitions.  Use cfdisk, parted, gparted or similar.
+
+    # cfdisk  /dev/sdb
+
+   a. First partition: 128meg (no smaller or the kernel copy will run
+      out of room and make - see below - will end with an error).
+
+   b. Second partition: The rest of the card (anything over 600 MB
+      should work).
+
+8. Make a note of the SD card’s device name.  Mine is /dev/sdb (my
+   workstation’s layout is simple: one disk called /dev/sda and
+   nothing else defined).
+   
+9. Format the two partitions.
+
+   a. First partition: FAT
+
+    # mkdosfs /dev/sdb1
+
+   b. Second partition: ext3
+
+    # mkfs.ext3 /dev/sdb2
+
+10. Create the mountpoints on your workstation.
+
+    # mkdir -p /media/freedom/boot
+
+11. Mount the second partition.
+
+    # mount /dev/sdb2 /media/freedom/
+
+12. Mount the first partition.
+
+    # mount /dev/sdb1 /media/freedom/boot/
+
+13. Check your work.
+
+    # mount
+
+    sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime)
+    ...
+    /dev/sdb2 on /media/freedom type ext3
+    (rw,relatime,errors=continue,barrier=1,data=ordered)
+    /dev/sdb1 on /media/freedom/boot type vfat
+    (rw,relatime,fmask=0022,dmask=0022,codepage=cp437,iocharset=utf8,shortname=mixed,errors=remount-ro)
+
+### Clone the Git Repository
+
+14. Install git.
+
+    # apt-get install git
+    
+    Reading package lists... Done
+    ...
+    After this operation, 15.3 MB of additional disk space will be used.
+    Do you want to continue [Y/n]?
+    ...
+
+15. Clone Nick Daly’s repository.
+    
+    $ git clone https://github.com/NickDaly/freedom-maker.git
+
+    Cloning into 'freedom-maker'...
+
+
+### Create the Debian OS.
+
+16. Change to the new directory.
+
+    $ cd ~/freedom-maker/
+
+17. Kick off:
+
+    $ make weekly-card
+    
+18. Enter your password when asked by "sudo".  If that fails, run:
+
+    $ su -c "make weekly-card"
+    
+If you do that, you'll need to enter the root password to build the image.
+
+The next part took about an hour, but required no input from me.  Packages were
+downloaded.  Lots of commands were run.  Many harmless errors were ignored:
+
+    sysvinit: restarting...init: timeout opening/writing control channel /run/initctl
+    .init: timeout opening/writing control channel /run/initctl
+    ...
+
+There was good news:
+
+    Multistrap system installed successfully...
+    Copying the source directory to the FreedomBox root.
+
+There was an enormous amount of this:
+
+    bin/bash
+          818092 100%    7.07MB/s    0:00:00 (xfer#1, to-check=1102/1123)
+    bin/cat
+           42736 100%  362.91kB/s    0:00:00 (xfer#2, to-check=1101/1123)
+    bin/chgrp
+           54996 100%  383.62kB/s    0:00:00 (xfer#3, to-check=1100/1123)
+    ...
+
+Finally an image is copied and zipped up for redistribution:
+
+    dd if=/dev/sdb of="freedombox-unstable_`date +%Y.%m%d`.img" bs=1M
+    3781+1 records in
+    3781+1 records out
+    3965190144 bytes (4.0 GB) copied, 266.174 s, 14.9 MB/s
+    Image copied.  The microSD card may now be removed.
+    tar -cjvf "freedombox-unstable_`date +%Y.%m%d`.tar.bz2"
+    "freedombox-unstable_`date +%Y.%m%d`.img"
+    freedombox-unstable_2012.0705.img
+
+The end.  Hooray!  The SD card is ready for the DreamPlug.
 
 # To Understand It
 
