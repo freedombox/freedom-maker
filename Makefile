@@ -87,10 +87,10 @@ clean:
 # just in case I tried to build before plugging in the USB drive.
 	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
 	sudo rm -rf $(BUILD_DIR)
-	-rm $(IMAGE) $(ARCHIVE)
-	-rm rootfs-*
+	-rm -f $(IMAGE) $(ARCHIVE)
+	-rm -f rootfs-* stamp-*
 
-distclean: clean clean-card
+distclean: clean
 	sudo rm -rf build
 
 # remove all data from the microSD card to repopulate it with a pristine image.
