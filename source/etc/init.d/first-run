@@ -41,7 +41,13 @@ function wifi-ap-setup {
 
 function create-keys {
     echo "Creating Keys."
-    echo "Well, not really."
+
+    echo "Creating SSH keys."
+    rm /etc/ssh/ssh_host_*
+    dpkg-reconfigure openssh-server
+
+    echo "Need to create other keys."
+    # gpg --batch --gen-key
 }
 
 function remove-self {
