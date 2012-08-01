@@ -59,7 +59,7 @@ function remove-self {
 }
 
 create-keys
-wifi-ap-setup
+# wifi-ap-setup
 
 # the last things we do before quitting.
 tweak-kernel
