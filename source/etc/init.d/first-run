@@ -48,6 +48,7 @@ function create-keys {
 
     echo "Need to create other keys."
     # gpg --batch --gen-key
+    # see http://lists.gnupg.org/pipermail/gnupg-users/2003-March/017376.html
 }
 
 function remove-self {
