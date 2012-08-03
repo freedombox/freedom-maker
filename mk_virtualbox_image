@@ -1,16 +1,23 @@
 #!/bin/bash
 
 # Ensure git\VBoxManage  is installed
-# Get vmdebootstrap code
+# Get latest vmdebootstrap code
+# Get latest python-cliapp code
 # Run vmdebootstrap script to create image
 # Convert image to vdi hard drive
 
 basedir=`pwd`
 IMAGE=$1
 
-# Get vmdebootstrap code
+# Get latest vmdebootstrap code
 rm -rf vmdebootstrap
 git clone git://gitorious.org/vmdebootstrap/vmdebootstrap.git
+
+# Get latest python-cliapp code
+rm -rf python-cliapp
+bzr branch http://code.liw.fi/cliapp/bzr/trunk/ python-cliapp
+cd python-cliapp
+sudo python setup.py install
 
 # Run vmdebootstrap script to create image
 sudo ./vmdebootstrap/vmdebootstrap --log freedombox.log --log-level debug --image $IMAGE.img --hostname freedombox \
@@ -22,6 +29,10 @@ sudo ./vmdebootstrap/vmdebootstrap --log freedombox.log --log-level debug --imag
 
 # Convert image to vdi hard drive
 VBoxManage convertdd $IMAGE.img $IMAGE.vdi
+
+# Clean up
+rm -rf vmdebootstrap
+rm -rf python-cliapp
 
 #mkdir testing
 #sudo mount -o loop,offset=1048576 freedombox.img testing/
