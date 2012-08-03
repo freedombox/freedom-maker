@@ -83,7 +83,7 @@ endif
 
 # install required files so users don't need to do it themselves.
 stamp-predepend:
-	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial debootstrap extlinux qemu-utils parted mbr kpartx virtualbox bzr"
+	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial debootstrap extlinux qemu-utils parted mbr kpartx virtualbox bzr python-sphinx"
 	touch stamp-predepend
 
 clean:
