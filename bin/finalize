@@ -45,11 +45,6 @@ mknod $target/dev/ptmx c 5 2
 echo "Setting up hostname."
 echo $hostname > $target/etc/hostname
 
-# kludge around Dreamplug kernel support not being available in Debian main yet
-echo "Copy kernel packages to target filesystem"
-cp kernel/*.deb $target/tmp/kernel/
-cp kernel/uImage $target/tmp/kernel/
-
 # prepare to copy, when we do it later.
 chown root:root $target/sbin/copy2dream
 chmod 744 $target/sbin/copy2dream

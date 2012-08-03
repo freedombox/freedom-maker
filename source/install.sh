@@ -2,31 +2,33 @@ echo "Preconfiguring dash - else dash and bash will be left in a broken state"
 /var/lib/dpkg/info/dash.preinst install
 
 # don't leave target image containing apt config of the build host
-# FIXME -- we could do this better, using ftp.debian.org is a temporary hack
-#echo "clean up target apt configuration"
 echo "Configuring all packages"
 export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
 export LC_ALL=C LANGUAGE=C LANG=C
+
+# allow flash-kernel to work without valid /proc contents
+# ** this doesn't *really* work, since there are too many checks that fail
+#    in an emulated environment!  We'll have to do it by hand below anyway...
+export FK_MACHINE="Globalscale Technologies Dreamplug"
+
 dpkg --configure -a
 
 # sshd may be left running by the postinst, clean that up
 /etc/init.d/ssh stop
 
-# post-install operations for kernel packages
-echo "Installing kernel content"
-dpkg --install /tmp/kernel/*.deb
+# process installed kernel to create uImage, uInitrd, dtb
+#  using flash-kernel would be a good approach, except it fails in the cross
+#  build environment due to too many environment checks...
+#FK_MACHINE="Globalscale Technologies Dreamplug" flash-kernel
+#  so, let's do it manually...
 
-# rename deliverables so that flash-kernel is happy using them
-mv /boot/config-3.0.0 /boot/config-3.0.0-kirkwood
-mv /boot/initrd.img-3.0.0 /boot/initrd.img-3.0.0-kirkwood
-mv /boot/System.map-3.0.0 /boot/System.map-3.0.0-kirkwood
-mv /boot/vmlinuz-3.0.0 /boot/vmlinuz-3.0.0-kirkwood
-
-# pre-processed bootable kernel image crafted from above using flash-kernel
-cp /tmp/kernel/uImage /boot/uImage
-
-# update-initramfs -c -k 3.0.0-4
-# flash-kernel 3.0.0-4
+(cd /boot ; \
+    mkimage -A arm -O linux -T kernel -n 'Debian kernel 3.2.0-3-kirkwood' \
+	-a 0x8000 -e 0x8000 -d vmlinuz-3.2.0-3-kirkwood uImage ; \
+    mkimage -A arm -O linux -T ramdisk -C gzip -a 0x0 -e 0x0 \
+	-n 'Debian ramdisk 3.2.0-3-kirkwood' \
+	-d initrd.img-3.2.0-3-kirkwood uInitrd ; \
+    cp /usr/lib/linux-image-3.2.0-3-kirkwood/kirkwood-dreamplug.dtb dtb )
 
 # Establish an initial root password
 echo "Set root password to "$rootpassword

@@ -82,18 +82,18 @@ endif
 #
 
 # install required files so users don't need to do it themselves.
-predepend:
+stamp-predepend:
 	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp"
-	touch predepend
+	touch stamp-predepend
 
 clean:
 # just in case I tried to build before plugging in the USB drive.
 	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
 	sudo rm -rf $(BUILD_DIR)
-	-rm $(IMAGE) $(ARCHIVE)
-	-rm rootfs-*
+	-rm -f $(IMAGE) $(ARCHIVE)
+	-rm -f rootfs-* stamp-*
 
-distclean: clean clean-card
+distclean: clean
 	sudo rm -rf build
 
 # remove all data from the microSD card to repopulate it with a pristine image.

@@ -48,11 +48,13 @@ function create-keys {
 
     echo "Need to create other keys."
     # gpg --batch --gen-key
+    # see http://lists.gnupg.org/pipermail/gnupg-users/2003-March/017376.html
 }
 
 function remove-self {
-    # vanish.
-
+    rm -f /etc/init.d/first-run
+    rm -f /etc/rc1.d/S01first-run
+    rm -f /etc/rc2.d/S01first-run
     rm /etc/init.d/first-run
     rm /etc/rc1.d/S01first-run
     rm /etc/rc2.d/S01first-run
