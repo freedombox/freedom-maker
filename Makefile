@@ -61,7 +61,7 @@ endif
 	@echo "Build complete."
 
 # build a virtualbox image
-virtualbox-image: 
+virtualbox-image:  predepend
 		./mk_virtualbox_image freedombox-unstable_$(TODAY)
 
 # build the weekly test image
@@ -83,7 +83,7 @@ endif
 
 # install required files so users don't need to do it themselves.
 predepend:
-	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial"
+	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp"
 	touch predepend
 
 clean:
