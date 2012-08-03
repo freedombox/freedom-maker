@@ -60,6 +60,9 @@ endif
 	umount $(MOUNTPOINT)
 	@echo "Build complete."
 
+# build a virtualbox image
+virtualbox-image: 
+		./mk_virtualbox_image freedombox-unstable_$(TODAY)
 
 # build the weekly test image
 weekly-image: image
