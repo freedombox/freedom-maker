@@ -29,5 +29,5 @@ echo "Adding a few FreedomBox projects to the image."
 git clone git://github.com/NickDaly/Plinth.git $homedir/plinth
 git clone git://github.com/jvasile/freedombox-privoxy $homedir/freedombox-privoxy
 git clone git://github.com/jvasile/withsqlite.git $homedir/withsqlite
-hg clone https://hg@bitbucket.org/nickdaly/plugserver $homedir/plugserver
+# hg clone https://hg@bitbucket.org/nickdaly/plugserver $homedir/plugserver
 chown -R 1000:1000 $homedir
