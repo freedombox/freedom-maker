@@ -36,7 +36,6 @@ image: rootfs-$(ARCHITECTURE)
 	sudo mkdir -p $(BOOTPOINT)
 	mount $(BOOTPOINT)
 	sudo rsync -atvz --progress --delete --exclude=boot $(BUILD_DIR)/ $(MOUNTPOINT)/
-	cp kernel/* $(BOOTPOINT)/
 	cp $(BUILD_DIR)/boot/* $(BOOTPOINT)/
 ifeq ($(DESTINATION),usb)
 # prevent the first-run script from running during boot.
