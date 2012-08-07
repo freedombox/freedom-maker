@@ -60,8 +60,8 @@ endif
 	@echo "Build complete."
 
 # build a virtualbox image
-virtualbox-image: 
-		./mk_virtualbox_image $(NAME)
+virtualbox-image: stamp-vbox-predepend
+	./mk_virtualbox_image freedombox-unstable_$(TODAY)_virtualbox-i386-hdd
 
 # build the weekly test image
 weekly-image: image
@@ -84,6 +84,10 @@ endif
 stamp-predepend:
 	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial"
 	touch stamp-predepend
+
+stamp-vbox-predepend:
+	sudo sh -c "apt-get install debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp"
+	touch stamp-vbox-predepend
 
 clean:
 # just in case I tried to build before plugging in the USB drive.
