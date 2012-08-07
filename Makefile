@@ -36,7 +36,6 @@ image: rootfs-$(ARCHITECTURE)
 	sudo mkdir -p $(BOOTPOINT)
 	mount $(BOOTPOINT)
 	sudo rsync -atvz --progress --delete --exclude=boot $(BUILD_DIR)/ $(MOUNTPOINT)/
-	cp kernel/* $(BOOTPOINT)/
 	cp $(BUILD_DIR)/boot/* $(BOOTPOINT)/
 ifeq ($(DESTINATION),usb)
 # prevent the first-run script from running during boot.
@@ -61,8 +60,9 @@ endif
 	@echo "Build complete."
 
 # build a virtualbox image
-virtualbox-image:  stamp-predepend
-		./mk_virtualbox_image freedombox-unstable_$(TODAY)
+virtualbox-image: stamp-vbox-predepend
+	./mk_virtualbox_image freedombox-unstable_$(TODAY)_virtualbox-i386-hdd
+
 
 # build the weekly test image
 weekly-image: image
@@ -85,6 +85,10 @@ endif
 stamp-predepend:
 	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial debootstrap extlinux qemu-utils parted mbr kpartx virtualbox bzr python-sphinx"
 	touch stamp-predepend
+
+stamp-vbox-predepend:
+	sudo sh -c "apt-get install debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp apache2"
+	touch stamp-vbox-predepend
 
 clean:
 # just in case I tried to build before plugging in the USB drive.
