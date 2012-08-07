@@ -1,5 +1,5 @@
-- initial boot configuration improvements, as there are a few things we 
-  really do want to defer to first boot, or at least make it trivial to 
+- initial boot configuration improvements, as there are a few things we
+  really do want to defer to first boot, or at least make it trivial to
   fix up per-system
 	- ssh host keys
 	- root password
@@ -9,6 +9,7 @@
 	- channel-server, the buddycloud channels service for XMPP
 	- babeld, loop-free distance-vector routing protocol
 	- tahoe-lafs, secure distributed filesystem
+- virtualbox should build with dreamplug configuration
 
 *** stuff to do for first feature release ***
 
