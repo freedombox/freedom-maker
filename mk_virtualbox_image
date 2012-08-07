@@ -26,7 +26,7 @@ sudo ./vmdebootstrap/vmdebootstrap --log freedombox.log --log-level debug --imag
 	--package build-essential --package checkinstall --package python-simplejson \
 	--mirror http://ftp.us.debian.org/debian/ --package pandoc --package python-cheetah \
 	--package python-argparse \
-	--customize=$basedir/freedombox-customize --root-password=password1 --arch=i386
+	--customize=$basedir/freedombox-customize --root-password=freedom --arch=i386
 
 # Convert image to vdi hard drive
 VBoxManage convertdd $IMAGE.img $IMAGE.vdi

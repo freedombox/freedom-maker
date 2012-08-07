@@ -21,29 +21,29 @@ print 'Customizing freedombox'
 rootdir = sys.argv[1]
 
 # Create a fboxlite account.
-runcmd(['chroot', rootdir, 'adduser', '--gecos', 'freedombox',
-        '--disabled-password', 'freedombox'])
-encrypted = crypt.crypt('password1', '..')
-runcmd(['chroot', rootdir, 'usermod', '-p', encrypted, 'freedombox'])
+runcmd(['chroot', rootdir, 'adduser', '--gecos', 'fbx',
+        '--disabled-password', 'fbx'])
+encrypted = crypt.crypt('frdm', '..')
+runcmd(['chroot', rootdir, 'usermod', '-p', encrypted, 'fbx'])
 
 #Create all projects
 
 runcmd(['chroot', rootdir, 'git', 'clone', 
         'git://github.com/NickDaly/Plinth.git', 
-        '/home/freedombox/plinth'])
+        '/home/fbx/plinth'])
 
 runcmd(['chroot', rootdir, 'git', 'clone', 
         'git://github.com/jvasile/freedombox-privoxy', 
-        '/home/freedombox/freedombox-privoxy'])
+        '/home/fbx/freedombox-privoxy'])
 
 runcmd(['chroot', rootdir, 'git', 'clone', 
         'git://github.com/jvasile/withsqlite.git', 
-        '/home/freedombox/withsqlite'])
+        '/home/fbx/withsqlite'])
 
 runcmd(['chroot', rootdir, 'hg', 'clone', 
         'https://hg@bitbucket.org/nickdaly/plugserver', 
-        '/home/freedombox/plugserver'])
+        '/home/fbx/plugserver'])
 
 runcmd(['chroot', rootdir, 'chown', '-R', 
         '1000:1000', 
-        '/home/freedombox'])
+        '/home/fbx'])
