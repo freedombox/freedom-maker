@@ -5,6 +5,9 @@
 # Run vmdebootstrap script to create image
 # Convert image to vdi hard drive
 
+# don't tolerate errors.
+set -e
+
 basedir=`pwd`
 IMAGE=$1
 
