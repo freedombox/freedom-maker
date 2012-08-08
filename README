@@ -26,6 +26,44 @@ There are a couple ways to use this system:
 ***           understand what they're going to do before you run them...
 ***
 
+# Recent Firmware Necessary!
+
+Modern kernels need a relatively recent version of the u-boot firmware.  If
+you're still old firmware (including what Global Scale ships on the units by
+default), then you need to update, which requires having the JTAG dongle (to
+gain console serial port access).  One way to know you've got old firmware
+is if booting a Linux kernel results in errors about corrupt gzip data and
+a failure to launch the kernel.
+
+Note that re-flashing firmware will erase all configuration variables.  If
+preserving your exising boot config is important, use printenv and make notes
+before proceeding.  Also note that any time you're re-flashing boot firmware,
+there is a slight chance you could 'brick' your device leaving it unbootable.
+If that happens, the JTAG interface can be used to recover.
+
+The instructions for updating firmaware go something like this (thanks to 
+Ian Campbell for his notes):
+
+  Using 2012.04.01-2 which is current Wheezy. Prep by mounting a USB stick.
+
+	wget http://http.debian.net/debian/pool/main/u/u-boot/u-boot_2012.04.01-2_armel.deb
+	dpkg-deb -x u-boot_2012.04.01-2_armel.deb u-boot_2012.04.01-2_armel
+	cp u-boot_2012.04.01-2_armel/usr/lib/u-boot/dreamplug/* /media/usbdisk
+
+  Move the USB stick to your DreamPlug.  Flash the new firmare:
+
+	usb start
+	fatload usb 2 0x6400000 u-boot.kwb
+	sf probe 0
+	sf erase 0x0 0x80000
+	sf write 0x6400000 0x0 0x${filesize}  
+
+  (You must, of course, fill in the size of the file you're loading in hex)
+
+At this point, you should be able to reset the DreamPlug and have it boot to
+a serial console prompt.  If that fails, you'll need real JTAG magic to try 
+again.
+
 # To Use It
 
 You'll need to copy the image to the memory card or USB stick:
