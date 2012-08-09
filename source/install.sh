@@ -19,11 +19,7 @@ dpkg --get-selections > /tmp/selections
 mkdir -p /sourcecode
 cd sourcecode
 cut -f 1 < /tmp/selections | cut -d ':' -f 1 > /tmp/packages
-for i in `cat /tmp/packages`
-do
-  echo "  " $i
-  apt-get source --download-only $i
-done
+apt-get source --download-only `cat /tmp/packages`
 
 # sshd may be left running by the postinst, clean that up
 /etc/init.d/ssh stop
