@@ -64,6 +64,12 @@ At this point, you should be able to reset the DreamPlug and have it boot to
 a serial console prompt.  If that fails, you'll need real JTAG magic to try 
 again.
 
+Note that if you use the 'make usb' target to create a bootable USB stick
+image, we include the required firmware in /boot/dreamplug, so the above
+fatload command might be replaced with:
+
+	fatload usb 2 0x6400000 dreamplug/u-boot.kwb
+
 # To Use It
 
 You'll need to copy the image to the memory card or USB stick:
