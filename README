@@ -132,9 +132,8 @@ the optional JTAG dongle), is to use 'screen', like so:
 Interrupt the boot by pressing a key during the autoboot countdown, and type the
 following to boot from the USB stick:
 
-	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_dtb}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000 0x68f0000;'
+	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
 	setenv x_bootcmd_kernel fatload usb 2 0x6400000 uImage 
-	setenv x_bootcmd_dtb    fatload usb 2 0x68f0000 dtb
 	setenv x_bootcmd_initrd fatload usb 2 0x6900000 uInitrd
 	setenv x_bootargs_root root=/dev/sdc2 rootdelay=10
 	boot
@@ -159,9 +158,8 @@ On reboot, you may want to interrupt the boot and type the following to ensure
 you boot from the internal microSD by default.  This bootcmd line elides the
 time-consuming attempts to boot grom gigE, which makes boot go much faster:
 
-	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_dtb}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000 0x68f0000;'
+	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
 	setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage 
-	setenv x_bootcmd_dtb    fatload usb 0 0x68f0000 dtb
 	setenv x_bootcmd_initrd fatload usb 0 0x6900000 uInitrd
 	setenv x_bootargs_root root=/dev/sda2 rootdelay=10
 	saveenv
