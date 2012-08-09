@@ -11,7 +11,19 @@ export LC_ALL=C LANGUAGE=C LANG=C
 #    in an emulated environment!  We'll have to do it by hand below anyway...
 export FK_MACHINE="Globalscale Technologies Dreamplug"
 
+# configure all packages unpacked earlier by multistrap
 dpkg --configure -a
+
+echo "Adding source packages to filesystem"
+dpkg --get-selections > /tmp/selections
+mkdir -p /sourcecode
+cd sourcecode
+cut -f 1 < /tmp/selections | cut -d ':' -f 1 > /tmp/packages
+for i in `cat /tmp/packages`
+do
+  echo "  " $i
+  apt-get source --download-only $i
+done
 
 # sshd may be left running by the postinst, clean that up
 /etc/init.d/ssh stop
