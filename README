@@ -15,7 +15,7 @@ There are a couple ways to use this system:
 2. If you want to change and build on it, you can use:
 
    A. A USB stick.  This requires a JTAG, but doesn't require opening up the
-      DreamPlug), or,
+      DreamPlug, or,
 
    B. A microSD card and adapter.  You can use the one from inside the
       DreamPlug.  You won't need a JTAG, but you will need to open the DreamPlug
@@ -29,7 +29,7 @@ There are a couple ways to use this system:
 # Recent Firmware Necessary!
 
 Modern kernels need a relatively recent version of the u-boot firmware.  If
-you're still old firmware (including what Global Scale ships on the units by
+you still use old firmware (including what Global Scale ships on the units by
 default), then you need to update, which requires having the JTAG dongle (to
 gain console serial port access).  One way to know you've got old firmware
 is if booting a Linux kernel results in errors about corrupt gzip data and
@@ -41,7 +41,7 @@ before proceeding.  Also note that any time you're re-flashing boot firmware,
 there is a slight chance you could 'brick' your device leaving it unbootable.
 If that happens, the JTAG interface can be used to recover.
 
-The instructions for updating firmaware go something like this (thanks to 
+The instructions for updating firmaware go something like this (thanks to
 Ian Campbell for his notes):
 
   Using 2012.04.01-2 which is current Wheezy. Prep by mounting a USB stick.
@@ -56,12 +56,12 @@ Ian Campbell for his notes):
 	fatload usb 2 0x6400000 u-boot.kwb
 	sf probe 0
 	sf erase 0x0 0x80000
-	sf write 0x6400000 0x0 0x${filesize}  
+	sf write 0x6400000 0x0 0x${filesize}
 
   (You must, of course, fill in the size of the file you're loading in hex)
 
 At this point, you should be able to reset the DreamPlug and have it boot to
-a serial console prompt.  If that fails, you'll need real JTAG magic to try 
+a serial console prompt.  If that fails, you'll need real JTAG magic to try
 again.
 
 Note that if you use the 'make usb' target to create a bootable USB stick
@@ -74,15 +74,15 @@ fatload command might be replaced with:
 
 You'll need to copy the image to the memory card or USB stick:
 
-1. Figure out which device your card actually is.  
+1. Figure out which device your card actually is.
 
    A. Unplug your card.
-   
+
    B. Run "df" to show you the list of devices your computer actually knows
       about.
-      
+
    C. Plug your card in.
-   
+
    D. Run "df" again, your computer should know about a new device or two: your
       memory card.  It's probably "/dev/sd(someletter)".  It *won't be*
       /dev/sda.
@@ -99,9 +99,9 @@ You'll need to copy the image to the memory card or USB stick:
 Now, what you need to do depends on whether you're using the microSD card or USB
 stick method:
 
-- USB drive: You'll hook the JTAG up to the DreamPlug before booting and use the JTAG
-  to control the boot process, so we can boot from the USB drive.
-  
+- USB drive: You'll hook the JTAG up to the DreamPlug before booting and use the
+  JTAG to control the boot process, so we can boot from the USB drive.
+
 - microSD card: You'll put the microSD card into the DreamPlug's internal
   microSD card slot and boot the DreamPlug.  It'll restart once to finish the
   install process, then it's ready to use.
@@ -115,7 +115,7 @@ minutes or less) and it'll be available over SSH (port 22).  You might need to
 use nmap to find it:
 
     $ nmap -p 22 --open -sV 192.168.0.0/24
-    
+
     ...
     Interesting ports on 192.168.0.13:
     PORT   STATE SERVICE VERSION
@@ -124,7 +124,7 @@ use nmap to find it:
     ...
 
 Once you've found it, SSH into the box:
-    
+
     $ ssh root@192.168.0.13
 
 ## Running from a USB Stick
@@ -243,7 +243,7 @@ thanks to Nick Hardiman for putting these instructions together.
 8. Make a note of the SD card’s device name.  Mine is /dev/sdb (my
    workstation’s layout is simple: one disk called /dev/sda and
    nothing else defined).
-   
+
 9. Format the two partitions.
 
    a. First partition: FAT
@@ -282,7 +282,7 @@ thanks to Nick Hardiman for putting these instructions together.
 14. Install git.
 
     # apt-get install git
-    
+
     Reading package lists... Done
     ...
     After this operation, 15.3 MB of additional disk space will be used.
@@ -290,7 +290,7 @@ thanks to Nick Hardiman for putting these instructions together.
     ...
 
 15. Clone Nick Daly’s repository.
-    
+
     $ git clone https://github.com/NickDaly/freedom-maker.git
 
     Cloning into 'freedom-maker'...
@@ -305,11 +305,11 @@ thanks to Nick Hardiman for putting these instructions together.
 17. Kick off:
 
     $ make weekly-card
-    
+
 18. Enter your password when asked by "sudo".  If that fails, run:
 
     $ su -c "make weekly-card"
-    
+
 If you do that, you'll need to enter the root password to build the image.
 
 The next part took about an hour, but required no input from me.  Packages were
