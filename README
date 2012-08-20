@@ -41,7 +41,7 @@ before proceeding.  Also note that any time you're re-flashing boot firmware,
 there is a slight chance you could 'brick' your device leaving it unbootable.
 If that happens, the JTAG interface can be used to recover.
 
-The instructions for updating firmaware go something like this (thanks to 
+The instructions for updating firmaware go something like this (thanks to
 Ian Campbell for his notes):
 
   Using 2012.04.01-2 which is current Wheezy. Prep by mounting a USB stick.
@@ -56,12 +56,12 @@ Ian Campbell for his notes):
 	fatload usb 2 0x6400000 u-boot.kwb
 	sf probe 0
 	sf erase 0x0 0x80000
-	sf write 0x6400000 0x0 0x${filesize}  
+	sf write 0x6400000 0x0 0x${filesize}
 
   (You must, of course, fill in the size of the file you're loading in hex)
 
 At this point, you should be able to reset the DreamPlug and have it boot to
-a serial console prompt.  If that fails, you'll need real JTAG magic to try 
+a serial console prompt.  If that fails, you'll need real JTAG magic to try
 again.
 
 Note that if you use the 'make usb' target to create a bootable USB stick
@@ -74,15 +74,15 @@ fatload command might be replaced with:
 
 You'll need to copy the image to the memory card or USB stick:
 
-1. Figure out which device your card actually is.  
+1. Figure out which device your card actually is.
 
    A. Unplug your card.
-   
+
    B. Run "df" to show you the list of devices your computer actually knows
       about.
-      
+
    C. Plug your card in.
-   
+
    D. Run "df" again, your computer should know about a new device or two: your
       memory card.  It's probably "/dev/sd(someletter)".  It *won't be*
       /dev/sda.
@@ -96,12 +96,17 @@ You'll need to copy the image to the memory card or USB stick:
 
     # dd bs=1M if=freedombox-unstable_*.img of=/dev/sd(thesameletter)
 
+   When picking a device, use the drive-letter destination, like /dev/sdb, not a
+   numbered destination, like /dev/sdb1.  The device-without-a-number refers to
+   the entire device, while the device-with-a-number refers to a specific
+   partition.  We want to use the whole device.
+
 Now, what you need to do depends on whether you're using the microSD card or USB
 stick method:
 
 - USB drive: You'll hook the JTAG up to the DreamPlug before booting and use the JTAG
   to control the boot process, so we can boot from the USB drive.
-  
+
 - microSD card: You'll put the microSD card into the DreamPlug's internal
   microSD card slot and boot the DreamPlug.  It'll restart once to finish the
   install process, then it's ready to use.
@@ -115,7 +120,7 @@ minutes or less) and it'll be available over SSH (port 22).  You might need to
 use nmap to find it:
 
     $ nmap -p 22 --open -sV 192.168.0.0/24
-    
+
     ...
     Interesting ports on 192.168.0.13:
     PORT   STATE SERVICE VERSION
@@ -124,7 +129,7 @@ use nmap to find it:
     ...
 
 Once you've found it, SSH into the box:
-    
+
     $ ssh root@192.168.0.13
 
 ## Running from a USB Stick
@@ -139,7 +144,7 @@ Interrupt the boot by pressing a key during the autoboot countdown, and type the
 following to boot from the USB stick:
 
 	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
-	setenv x_bootcmd_kernel fatload usb 2 0x6400000 uImage 
+	setenv x_bootcmd_kernel fatload usb 2 0x6400000 uImage
 	setenv x_bootcmd_initrd fatload usb 2 0x6900000 uInitrd
 	setenv x_bootargs_root root=/dev/sdc2 rootdelay=10
 	boot
@@ -165,7 +170,7 @@ you boot from the internal microSD by default.  This bootcmd line elides the
 time-consuming attempts to boot grom gigE, which makes boot go much faster:
 
 	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
-	setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage 
+	setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage
 	setenv x_bootcmd_initrd fatload usb 0 0x6900000 uInitrd
 	setenv x_bootargs_root root=/dev/sda2 rootdelay=10
 	saveenv
@@ -243,7 +248,7 @@ thanks to Nick Hardiman for putting these instructions together.
 8. Make a note of the SD card’s device name.  Mine is /dev/sdb (my
    workstation’s layout is simple: one disk called /dev/sda and
    nothing else defined).
-   
+
 9. Format the two partitions.
 
    a. First partition: FAT
@@ -282,7 +287,7 @@ thanks to Nick Hardiman for putting these instructions together.
 14. Install git.
 
     # apt-get install git
-    
+
     Reading package lists... Done
     ...
     After this operation, 15.3 MB of additional disk space will be used.
@@ -290,7 +295,7 @@ thanks to Nick Hardiman for putting these instructions together.
     ...
 
 15. Clone Nick Daly’s repository.
-    
+
     $ git clone https://github.com/NickDaly/freedom-maker.git
 
     Cloning into 'freedom-maker'...
@@ -305,11 +310,11 @@ thanks to Nick Hardiman for putting these instructions together.
 17. Kick off:
 
     $ make weekly-card
-    
+
 18. Enter your password when asked by "sudo".  If that fails, run:
 
     $ su -c "make weekly-card"
-    
+
 If you do that, you'll need to enter the root password to build the image.
 
 The next part took about an hour, but required no input from me.  Packages were
@@ -350,7 +355,7 @@ The end.  Hooray!  The SD card is ready for the DreamPlug.
 # To Understand It
 
 Be aware that this is a *very* imcomplete solution for now, suitable only
-for developers .. you will want to at least do things like create unique 
+for developers .. you will want to at least do things like create unique
 ssh host keys for your device!
 
 Digging into the code should be fairly straightforward.  There are only six
