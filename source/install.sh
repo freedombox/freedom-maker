@@ -30,6 +30,19 @@ apt-get source --download-only `cat /tmp/packages`
 #FK_MACHINE="Globalscale Technologies Dreamplug" flash-kernel
 #  so, let's do it manually...
 
+# flash-kernel's hook-functions provided to mkinitramfs have the unfortunate
+# side-effect of creating /conf/param.conf in the initrd when run from our
+# emulated chroot environment, which means our root= on the kernel command
+# line is completely ignored!  repack the initrd to remove this evil...
+
+mkdir /tmp/initrd-repack
+(cd /tmp/initrd-repack ; \
+    zcat /boot/initrd.img-3.2.0-3-kirkwood | cpio -i ; \
+    rm -f conf/param.conf ; \
+    find . | cpio --quiet -o -H newc | \
+	gzip -9 > /boot/initrd.img-3.2.0-3-kirkwood )
+rm -rf /tmp/initrd-repack
+
 (cd /boot ; \
     cp /usr/lib/linux-image-3.2.0-3-kirkwood/kirkwood-dreamplug.dtb dtb ; \
     cat vmlinuz-3.2.0-3-kirkwood dtb >> temp-kernel ; \
