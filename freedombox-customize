@@ -5,45 +5,45 @@ import os
 import subprocess
 import sys
 
+
+user = "fbx"
+password = "frdm"
+rootdir = sys.argv[1]
+home = "/home/{0}/".format(user)
+
+
+def runchroot(argv):
+    return runcmd(["chroot", rootdir] + argv)
+
 def runcmd(argv, stdin='', ignore_fail=False, **kwargs):
-    p = subprocess.Popen(argv, stdin=subprocess.PIPE, 
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE, 
+    p = subprocess.Popen(argv, stdin=subprocess.PIPE,
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                          **kwargs)
     out, err = p.communicate(stdin)
     if p.returncode != 0:
         msg = 'command failed: %s\n%s\n%s' % (argv, out, err)
         if not ignore_fail:
+            print (msg)
             raise Exception(msg)
     return out
 
-print 'Customizing freedombox'
+if __name__ == "__main__":
+    print 'Customizing freedombox'
 
-rootdir = sys.argv[1]
+    # Create a fboxlite account.
+    runchroot(['adduser', '--gecos', user, '--disabled-password', user])
+    encrypted = crypt.crypt(password, '..')
+    runchroot(['usermod', '-p', encrypted, user])
 
-# Create a fboxlite account.
-runcmd(['chroot', rootdir, 'adduser', '--gecos', 'freedombox',
-        '--disabled-password', 'freedombox'])
-encrypted = crypt.crypt('password1', '..')
-runcmd(['chroot', rootdir, 'usermod', '-p', encrypted, 'freedombox'])
+    # Create all projects
+    runchroot(['git', 'clone', 'git://github.com/NickDaly/Plinth.git',
+               home + 'plinth'])
+    runchroot(['git', 'clone', 'git://github.com/jvasile/freedombox-privoxy',
+               home + 'freedombox-privoxy'])
+    runchroot(['git', 'clone', 'git://github.com/jvasile/withsqlite.git',
+               home + 'withsqlite'])
+    runchroot(['hg', 'clone', 'https://hg@bitbucket.org/nickdaly/plugserver',
+               home + 'plugserver'])
 
-#Create all projects
-
-runcmd(['chroot', rootdir, 'git', 'clone', 
-        'git://github.com/NickDaly/Plinth.git', 
-        '/home/freedombox/plinth'])
-
-runcmd(['chroot', rootdir, 'git', 'clone', 
-        'git://github.com/jvasile/freedombox-privoxy', 
-        '/home/freedombox/freedombox-privoxy'])
-
-runcmd(['chroot', rootdir, 'git', 'clone', 
-        'git://github.com/jvasile/withsqlite.git', 
-        '/home/freedombox/withsqlite'])
-
-runcmd(['chroot', rootdir, 'hg', 'clone', 
-        'https://hg@bitbucket.org/nickdaly/plugserver', 
-        '/home/freedombox/plugserver'])
-
-runcmd(['chroot', rootdir, 'chown', '-R', 
-        '1000:1000', 
-        '/home/freedombox'])
+    # change home directory ownership appropriately
+    runchroot(['chown', '-R', '1000:1000', home])

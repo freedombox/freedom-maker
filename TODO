@@ -1,24 +1,25 @@
-- initial boot configuration improvements, as there are a few things we
-  really do want to defer to first boot, or at least make it trivial to
-  fix up per-system
-	- ssh host keys
-	- root password
-- add Sheeva as a build target
-- add x86 virtualized as a build target (use vmdebootstrap?)
-- investigate and integrate software components that looks interesting
+- [ ] initial boot configuration improvements, as there are a few
+  things we really do want to defer to first boot, or at least make it
+  trivial to fix up per-system
+
+	- [X] ssh host keys
+	- [ ] root password
+- [ ] add Sheeva as a build target
+- [X] add x86 virtualized as a build target (use vmdebootstrap?)
+- [ ] investigate and integrate software components that looks interesting
 	- channel-server, the buddycloud channels service for XMPP
 	- babeld, loop-free distance-vector routing protocol
 	- tahoe-lafs, secure distributed filesystem
-- virtualbox should build with dreamplug configuration
+- [ ] virtualbox should build with dreamplug configuration
 
 *** stuff to do for first feature release ***
 
-  - pre-configured user interface
-	- DHCP and HTTP servers on eth0 and/or eth1
-	- plinth-based initial config interface
+  - [ ] pre-configured user interface
+	- [X] DHCP and HTTP servers on eth0 and/or eth1
+	- [ ] plinth-based initial config interface
 
-  - freedom buddy installed
-  - openvpn server setup
-  - the privoxy fork configured as a transparent proxy
-  - plinth configured to at display these config details and to control
-    whatever is feasible
+  - [ ] freedom buddy installed
+  - [ ] openvpn server setup
+  - [ ] the privoxy fork configured as a transparent proxy
+  - [ ] plinth configured to at display these config details and to
+   control whatever is feasible

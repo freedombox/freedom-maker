@@ -13,7 +13,7 @@ IMAGE=$1
 
 # Get vmdebootstrap code
 rm -rf vmdebootstrap
-git clone git://gitorious.org/vmdebootstrap/vmdebootstrap.git
+git clone git://gitorious.org/~nickdaly/vmdebootstrap/nickdalys-vmdebootstrap.git
 
 # Run vmdebootstrap script to create image
 sudo ./vmdebootstrap/vmdebootstrap --log freedombox.log --log-level debug --image $IMAGE.img --hostname freedombox \
