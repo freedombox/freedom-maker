@@ -21,6 +21,9 @@ cd sourcecode
 cut -f 1 < /tmp/selections | cut -d ':' -f 1 > /tmp/packages
 apt-get source --download-only `cat /tmp/packages`
 
+echo "Installing local binary packages, if any"
+dpkg --install /sourcecode/*.deb
+
 # sshd may be left running by the postinst, clean that up
 /etc/init.d/ssh stop
 
