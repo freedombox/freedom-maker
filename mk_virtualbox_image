@@ -6,12 +6,15 @@
 # Run vmdebootstrap script to create image
 # Convert image to vdi hard drive
 
+# don't tolerate errors.
+set -e
+
 basedir=`pwd`
 IMAGE=$1
 
 # Get latest vmdebootstrap code
 rm -rf vmdebootstrap
-git clone git://gitorious.org/vmdebootstrap/vmdebootstrap.git
+git clone git://gitorious.org/~nickdaly/vmdebootstrap/nickdalys-vmdebootstrap.git vmdebootstrap
 
 # Get latest python-cliapp code
 sudo rm -rf python-cliapp

@@ -11,7 +11,15 @@ export LC_ALL=C LANGUAGE=C LANG=C
 #    in an emulated environment!  We'll have to do it by hand below anyway...
 export FK_MACHINE="Globalscale Technologies Dreamplug"
 
+# configure all packages unpacked earlier by multistrap
 dpkg --configure -a
+
+echo "Adding source packages to filesystem"
+dpkg --get-selections > /tmp/selections
+mkdir -p /sourcecode
+cd sourcecode
+cut -f 1 < /tmp/selections | cut -d ':' -f 1 > /tmp/packages
+apt-get source --download-only `cat /tmp/packages`
 
 # sshd may be left running by the postinst, clean that up
 /etc/init.d/ssh stop
@@ -23,12 +31,14 @@ dpkg --configure -a
 #  so, let's do it manually...
 
 (cd /boot ; \
+    cp /usr/lib/linux-image-3.2.0-3-kirkwood/kirkwood-dreamplug.dtb dtb ; \
+    cat vmlinuz-3.2.0-3-kirkwood dtb >> temp-kernel ; \
     mkimage -A arm -O linux -T kernel -n 'Debian kernel 3.2.0-3-kirkwood' \
-	-a 0x8000 -e 0x8000 -d vmlinuz-3.2.0-3-kirkwood uImage ; \
+	-C none -a 0x8000 -e 0x8000 -d temp-kernel uImage ; \
+    rm -f temp-kernel ; \
     mkimage -A arm -O linux -T ramdisk -C gzip -a 0x0 -e 0x0 \
 	-n 'Debian ramdisk 3.2.0-3-kirkwood' \
-	-d initrd.img-3.2.0-3-kirkwood uInitrd ; \
-    cp /usr/lib/linux-image-3.2.0-3-kirkwood/kirkwood-dreamplug.dtb dtb )
+	-d initrd.img-3.2.0-3-kirkwood uInitrd )
 
 # Establish an initial root password
 echo "Set root password to "$rootpassword

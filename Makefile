@@ -41,6 +41,8 @@ ifeq ($(DESTINATION),usb)
 # prevent the first-run script from running during boot.
 # we'll do this during copy2dream.
 	rm $(MOUNTPOINT)/etc/rc1.d/S01first-run $(MOUNTPOINT)/etc/rc2.d/S01first-run
+# add u-boot binary for the DreamPlug to the FAT partition for easy access
+	cp -r $(MOUNTPOINT)/usr/lib/u-boot/dreamplug $(MOUNTPOINT)/boot
 endif
 ifeq ($(DESTINATION),card)
 # we don't need to copy2dream, this is the microSD card.
