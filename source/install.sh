@@ -15,6 +15,7 @@ export FK_MACHINE="Globalscale Technologies Dreamplug"
 dpkg --configure -a
 
 echo "Adding source packages to filesystem"
+apt-get update
 dpkg --get-selections > /tmp/selections
 mkdir -p /sourcecode
 cd sourcecode
