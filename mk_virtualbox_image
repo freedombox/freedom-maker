@@ -16,12 +16,16 @@ rm -rf vmdebootstrap
 git clone git://gitorious.org/~nickdaly/vmdebootstrap/nickdalys-vmdebootstrap.git vmdebootstrap
 
 # Run vmdebootstrap script to create image
-sudo ./vmdebootstrap/vmdebootstrap --log freedombox.log --log-level debug --image $IMAGE.img --hostname freedombox \
-	--size 1G --verbose --enable-dhcp --package ssh --package apache2 --package git --package mercurial \
-	--package build-essential --package checkinstall --package python-simplejson \
-	--mirror http://ftp.uk.debian.org/debian/ --package pandoc --package python-cheetah \
-	--package python-argparse \
-	--customize=$basedir/freedombox-customize --root-password=password1 --arch=i386
+sudo ./vmdebootstrap/vmdebootstrap \
+    --log freedombox.log --log-level debug \
+    --image $IMAGE.img --hostname freedombox --size 1G --verbose --enable-dhcp \
+    --package ssh --package apache2 --package git --package mercurial \
+	--package build-essential --package checkinstall \
+    --package python-simplejson \
+	--mirror http://ftp.uk.debian.org/debian/ --package pandoc \
+    --package python-cheetah --package python-argparse \
+	--customize=$basedir/freedombox-customize --root-password=freedom \
+    --arch=i386 --distribution=wheezy
 
 # Convert image to vdi hard drive
 VBoxManage convertdd $IMAGE.img $IMAGE.vdi
