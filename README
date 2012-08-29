@@ -15,7 +15,7 @@ There are a couple ways to use this system:
 2. If you want to change and build on it, you can use:
 
    A. A USB stick.  This requires a JTAG, but doesn't require opening up the
-      DreamPlug), or,
+      DreamPlug, or,
 
    B. A microSD card and adapter.  You can use the one from inside the
       DreamPlug.  You won't need a JTAG, but you will need to open the DreamPlug
@@ -29,7 +29,7 @@ There are a couple ways to use this system:
 # Recent Firmware Necessary!
 
 Modern kernels need a relatively recent version of the u-boot firmware.  If
-you're still old firmware (including what Global Scale ships on the units by
+you still use old firmware (including what Global Scale ships on the units by
 default), then you need to update, which requires having the JTAG dongle (to
 gain console serial port access).  One way to know you've got old firmware
 is if booting a Linux kernel results in errors about corrupt gzip data and
@@ -104,8 +104,8 @@ You'll need to copy the image to the memory card or USB stick:
 Now, what you need to do depends on whether you're using the microSD card or USB
 stick method:
 
-- USB drive: You'll hook the JTAG up to the DreamPlug before booting and use the JTAG
-  to control the boot process, so we can boot from the USB drive.
+- USB drive: You'll hook the JTAG up to the DreamPlug before booting and use the
+  JTAG to control the boot process, so we can boot from the USB drive.
 
 - microSD card: You'll put the microSD card into the DreamPlug's internal
   microSD card slot and boot the DreamPlug.  It'll restart once to finish the

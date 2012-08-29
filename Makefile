@@ -48,7 +48,7 @@ ifeq ($(DESTINATION),card)
 # we don't need to copy2dream, this is the microSD card.
 	sudo rm $(MOUNTPOINT)/sbin/copy2dream
 # fix fstab for the SD card.
-	sudo sh -c "sed -e 's/sdc1/sda1/g' < $(BUILD_DIR)/etc/fstab > $(MOUNTPOINT)/etc/fstab"
+	sudo sh -c "sed -e 's/sdc/sda/g' < $(BUILD_DIR)/etc/fstab > $(MOUNTPOINT)/etc/fstab"
 endif
 ifeq ($(MACHINE),guruplug)
 # we can't flash the guru plug's kernel
