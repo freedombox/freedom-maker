@@ -34,7 +34,6 @@ VBoxManage convertdd $IMAGE.img $IMAGE.vdi
 
 # Clean up
 rm -rf vmdebootstrap
-sudo rm -rf python-cliapp
 
 #mkdir testing
 #sudo mount -o loop,offset=1048576 freedombox.img testing/
