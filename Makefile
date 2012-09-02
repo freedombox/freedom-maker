@@ -65,6 +65,7 @@ endif
 virtualbox-image: stamp-vbox-predepend
 	./mk_virtualbox_image freedombox-unstable_$(TODAY)_virtualbox-i386-hdd
 
+
 # build the weekly test image
 weekly-image: image
 # if we aren't installing to an armel system, assume we need a bootloader.
@@ -84,11 +85,11 @@ endif
 
 # install required files so users don't need to do it themselves.
 stamp-predepend:
-	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial"
+	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial "
 	touch stamp-predepend
 
 stamp-vbox-predepend:
-	sudo sh -c "apt-get install debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp"
+	sudo sh -c "apt-get install debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp apache2 virtualbox bzr python-sphinx"
 	touch stamp-vbox-predepend
 
 clean:

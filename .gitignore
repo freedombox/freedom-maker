@@ -4,3 +4,5 @@ rootfs-*
 stamp-dreamplug-rootfs
 trackers
 freedombox-unstable*
+freedombox.log
+stamp-vbox-predepend
