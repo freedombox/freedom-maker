@@ -89,7 +89,7 @@ stamp-predepend:
 	touch stamp-predepend
 
 stamp-vbox-predepend:
-	sudo sh -c "apt-get install debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp apache2 virtualbox bzr python-sphinx"
+	sudo sh -c "apt-get install debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp apache2 virtualbox bzr python-sphinx python-cliapp"
 	touch stamp-vbox-predepend
 
 clean:

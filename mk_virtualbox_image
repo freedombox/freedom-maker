@@ -16,12 +16,6 @@ IMAGE=$1
 rm -rf vmdebootstrap
 git clone git://gitorious.org/~nickdaly/vmdebootstrap/nickdalys-vmdebootstrap.git vmdebootstrap
 
-# Get latest python-cliapp code
-sudo rm -rf python-cliapp
-bzr branch http://code.liw.fi/cliapp/bzr/trunk/ python-cliapp
-cd python-cliapp
-sudo python setup.py install
-
 # Run vmdebootstrap script to create image
 
 sudo ./vmdebootstrap/vmdebootstrap \
