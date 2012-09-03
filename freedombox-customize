@@ -6,11 +6,12 @@ import subprocess
 import sys
 import string
 
-
 user = "fbx"
 password = "frdm"
 rootdir = sys.argv[1]
 home = "/home/{0}/".format(user)
+curr = os.getcwd()
+project_script = "/bin/projects"
 
 
 def runchroot(argv):
@@ -37,4 +38,7 @@ if __name__ == "__main__":
     runchroot(['usermod', '-p', encrypted, user])
 
     # Create all projects
-    runchroot(["bash", "./bin/projects"])
+    os.chdir(rootdir)
+    subprocess.call("{0}{1} {2}".format(curr, project_script,
+                                        rootdir + home).split())
+    os.chdir(curr)
