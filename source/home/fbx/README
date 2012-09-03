@@ -1,0 +1,371 @@
+.. -*- mode: rst; fill-column: 80; -*-
+
+=============================
+ Welcome to your FreedomBox!
+=============================
+
+.. contents::
+
+Getting Help
+============================
+
+This document is intended to give you all the information you need to get
+started with your FreedomBox.  However, if you have any questions after reading
+this document, you can get help by:
+
+* Emailing `freedombox-discuss@lists.alioth.debian.org`_.  You can also `sign
+  up`_ to receive copies of every discussion that happens on the mailing list
+  and `read the archives`_.
+
+* Chatting at `#freedombox@irc.oftc.net`_.
+
+* Reading the wiki_.
+
+* Reading the `FreedomBox Foundation's website`_.
+
+* Reading the `FreedomBox Project Page`_.
+
+.. _freedombox-discuss@lists.alioth.debian.org: mailto:freedombox-discuss@lists.alioth.debian.org
+.. _sign up: http://lists.alioth.debian.org/mailman/listinfo/freedombox-discuss
+.. _read the archives: http://lists.alioth.debian.org/mailman/listinfo/freedombox-discuss
+.. _#freedombox@irc.oftc.net:  irc://irc.oftc.net:6667
+.. _wiki: http://wiki.debian.org/FreedomBox
+.. _FreedomBox Foundation's website: https://freedomboxfoundation.org/
+.. _FreedomBox Project Page: https://alioth.debian.org/projects/freedombox
+
+Using your FreedomBox
+============================
+
+This section describes the basic information you need to know to successfully
+use your FreedomBox.
+
+Quick Start
+------------------------------
+
+#. Plug one end of your ethernet cord into your FreedomBox's eth1_ port (the one
+   toward the end of the box), and plug the other end into your router.
+
+#. Plug your computer into the eth0_ port (the one toward the middle of the box)
+   on the FreedomBox.
+
+#. Plug your FreedomBox into a power outlet.
+
+#. Wait a few minutes while it starts itself for the first time.
+
+#. Start enjoying the Internet.
+
+#. Navigate to your FreedomBox by browsing to::
+
+    http://freedombox
+
+#. Bask in your own awesomeness :)
+
+Now, you can try:
+
+* `Browsing the Internet`_
+* `Hosting a Wiki`_
+* `Publishing with your FreedomBox`_
+
+Other tools are also planned, such as an IM (chat) server, a blog, and more.
+
+Browsing the Internet
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To browse the Internet through your FreedomBox:
+
+#. Plug one end of your ethernet cord into your FreedomBox's eth1_ port (the one
+   toward the end of the box), and plug the other end into your router.
+
+#. Plug your computer into the eth0_ port (the one toward the middle of the box)
+   on the FreedomBox.
+
+#. Start enjoying the Internet.
+
+Hosting a Wiki
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#. `Connect to your FreedomBox`_, as root, because we're going to modify the
+   system by installing some new packages.
+
+#. Install the ikiwiki package::
+
+    $ apt-get install ikiwiki
+
+   Say "yes" when it asks you about installing new packages.
+
+#. Follow the `ikiwiki setup instructions`_, or use the `additional projects`_
+   to automatically configure ikiwiki.
+
+.. _ikiwiki setup instructions: http://ikiwiki.info/setup/
+
+Publishing with your FreedomBox
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Now that you've put a wiki together, you might as well publish it to the
+Internet.  To publish material to the Internet, you need two things:
+
+#. A place to host it.
+
+#. A name, so you can be found.
+
+You already have the place to host data, it's this FreedomBox.  Now, you just
+need a name.
+
+While it's possible to buy your own domain name, it's a rather tedious and
+complicated process.  Many folks have had good luck with "reverse proxies,"
+things like PageKite_.  Other `reverse proxy services`_ are also available.
+
+.. _reverse proxy services: http://alternativeto.net/software/pagekite/
+
+.. _pagekite:
+
+Publishing with PageKite
++++++++++++++++++++++++++++++++
+
+Getting started with PageKite is pretty straightforward.  After you've
+`connected to your FreedomBox`_ you'll need to download and start PageKite.
+
+#. Download PageKite::
+
+    $ curl -s https://pagekite.net/pk/ |sudo bash
+
+#. Start PageKite, replacing ``yourname`` with your site's name::
+
+    $ pagekite.py 80 yourname.pagekite.me
+
+Now, you can access http://yourname.pagekite.me/ from anywhere!
+
+Common Tasks
+-------------------------------
+
+Some tasks require a bit of command line magic.  We've reproduced that magic
+here, so it's easy to refer to, when you need it.
+
+Logging in to your FreedomBox
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When your FreedomBox first starts, it has two accounts: a root account for
+system maintenance, and a normal user who doesn't have the power to mess with
+how the system works.  The default passwords for each of those users are:
+
+:root: freedom
+:fbx: frdm
+
+You'll need this information if you want to log in, as explained in the next
+section.  Also, after you log in, you should probably `change the default
+passwords`_.  Otherwise, anybody else who reads this document could log into
+your box, too.
+
+.. _connected to your freedombox:
+.. _connect to your freedombox:
+
+Connecting to your FreedomBox
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These instructions will teach you how to log in, via ssh, to your FreedomBox.
+
+#. Run an ethernet cord from your computer to your FreedomBox's eth0 port (the
+   one toward the middle).
+
+#. Wait a bit, or until your computer says that it's successfully connected.
+
+#. Run the following command to log in as the administrative, everyday, user::
+
+    $ ssh fbx@freedombox
+
+   To log in as the root user instead, in case you want to perform some serious
+   system maintenance::
+
+    $ ssh root@freedombox
+
+Make a habit of logging in as root *only when you need to*.  If you aren't
+logged in as root, you can't accidentally break everything.  Even if everything
+does break though, don't worry, it can still be fixed, it'll just take a couple
+hours.  See the `Getting Help`_ section for more details.
+
+.. _change the default passwords:
+
+Changing your Password
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To change your password, log in to your FreedomBox as the user whose password
+you want to change.  Then, run the following command:
+
+    $ passwd
+
+That'll ask you for your current password before giving you the opportunity to
+put in a new one.
+
+Updating your FreedomBox
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+These instructions will teach you how to keep your FreedomBox up to date with
+the latest software releases.
+
+#. Ask the box to update itself::
+
+    $ apt-get update; apt-get upgrade
+
+Chances are good the "upgrade" command will ask you if it's alright to install
+some packages and use some disk space.  Say "yes", because that's what you want
+it to do.
+
+If those commands complete successfully, then congratulations, you've just
+updated your FreedomBox!  If they don't complete successfully ask for help, as
+described in the `Getting Help`_ section.
+
+.. _eth0:
+.. _eth1:
+
+Diagram
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Ever wonder what all those holes and fiddly bits were called?
+
+::
+
+      0   1      2  3    4
+      :   :      :  :    :
+         ________________________
+        |    |   || .  |__|      |
+    ----\____|___||___O___O__O___/
+          `                     `
+          :      :    :   :  :
+          5      6    7   8  9
+
+    0. Power Cord
+    1. AC Adapter
+    2. UART
+    3. Reset Hole
+    4. JTAG
+    5. Foot
+    6. USB
+    7. Optical Out
+    8. eth0
+    9. eth1
+
+        10  11  12         1    0
+          ::    :          :    :
+     ________________________
+    |     .. |___|     |     |
+    \______------__||__|_____/----
+     `                     `
+     :       :     :
+     5       13    6
+
+    0. Power Cord
+    1. AC Adapter
+    5. Foot
+    6. USB
+    10. Microphone In
+    11. Headphone Out
+    12. eSATA
+    13. SD
+
+Warnings
+-------------------------------
+
+* If you need to open the box, open it from the side that's not the AC Adapter
+  side.  Be very careful here: the box's two halves are held together, on the
+  adapter side, by a couple fragile wires.
+
+Hacking on your FreedomBox
+============================
+
+Your FreedomBox includes several projects you can check out:
+
+* Freedom Maker
+* Plinth
+* Privoxy
+
+To start using these projects, navigate to the relevant folder in the
+``/home/fbx`` directory and examine their README files.
+
+Projects
+-----------------------------
+
+Freedom Maker
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Freedom Maker is the tool used to create a running FreedomBox system.  It
+creates the bootable system image that lives on the DreamPlug's microSD card.
+
+http://anonscm.debian.org/gitweb/?p=freedombox/freedom-maker.git;a=summary
+
+Plinth
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Plinth is the FreedomBox's administration UI.  It's not done yet, but it will be
+included in future FreedomBox updates when it's finished.
+
+https://github.com/jvasile/Plinth
+
+Privoxy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Privoxy is the FreedomBox's privacy-preserving web-proxy.
+
+https://github.com/jvasile/freedombox-privoxy
+
+Building your own FreedomBox
+----------------------------
+
+Updating DreamPlug's U-Boot
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Instructions from Ian Campbell, using 2012.04.01-2 which is the current version
+in Debian's Wheezy release.
+
+Prepare your system::
+
+    # wget http://http.debian.net/debian/pool/main/u/u-boot/u-boot_2012.04.01-2_armel.deb
+    # dpkg-deb -x u-boot_2012.04.01-2_armel.deb u-boot_2012.04.01-2_armel
+    # cp u-boot_2012.04.01-2_armel/usr/lib/u-boot/dreamplug/* /mnt
+
+Move the thing on /mnt to your dp.  Flash it from within the bootloader::
+
+    > usb start
+    > fatload usb 2 0x6400000 u-boot.kwb
+    > sf probe 0
+    > sf erase 0x0 0x80000
+    > sf write 0x6400000 0x0 0x${filesize}
+
+You must, of course, fill in the size of the file you're loading in hex.  At
+this point, you should be able to reset the DreamPlug and have it boot to a
+serial console prompt.  If that fails, you'll need real JTAG magic to try again.
+
+Note that freedom-maker now includes dreamplug firmware in the FAT partition on
+USB stick targets.  To use a freedom-maker USB stick to update your u-boot,
+ignore the instructions above about how to wget and extract the firmware, and
+just replace the fatload line in the previous section with:
+
+    > fatload usb 2 0x6400000 dreamplug/u-boot.kwb
+
+Building your own File-system Image
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+On another system, download the Freedom-Maker repoistory and follow the README
+to build your own image that you can plug into your DreamPlug::
+
+    $ git clone git://anonscm.debian.org/freedombox/freedom-maker.git ~/freedom-maker
+
+.. _additional projects:
+
+Adding Additional Projects
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are a number of incomplete projects that you might find useful, for
+setting up a wiki, an IM server, and so forth.  To check these out, download the
+repository::
+
+    $ hg clone https://bitbucket.org/nickdaly/plugserver ~/plugserver
+
+Then, read the README.  It's pretty detailed.  A word of warning, though: the
+FreedomBox Foundation folks think that using PHP-based services, like the blog
+service included in that plugserver repository, is a generally poor idea.  Just
+use the wiki instead.
+
+Also, if you can, it may be best to wait until these tools are fully integrated
+into the FreedomBox image.  Otherwise, migrating from these custom tools to the
+officially supported FreedomBox tools may be difficult.  Ultimately, that
+decision is up to you.

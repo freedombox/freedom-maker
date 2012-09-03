@@ -23,12 +23,22 @@
 set -e
 
 
-echo "Adding a few FreedomBox projects to the image."
+if [ -n "$1" ]
+then
+    homedir=$1
+fi
+
+echo "Adding a few FreedomBox projects to $homedir."
 
 git clone git://github.com/NickDaly/Plinth.git $homedir/plinth
 git clone git://github.com/jvasile/freedombox-privoxy $homedir/freedombox-privoxy
 git clone git://github.com/bnewbold/exmachina $homedir/exmachina
 git clone git://github.com/jvasile/withsqlite.git $homedir/withsqlite
-hg clone https://hg@bitbucket.org/nickdaly/plugserver $homedir/plugserver
+# hg clone https://hg@bitbucket.org/nickdaly/plugserver $homedir/plugserver
+git clone git://gitorious.org/freedombuddy/freedombuddy.git $homedir/freedombuddy
+git clone git://gitorious.org/project-publish/project-publish.git $homedir/freedombuddy/publish
+ln -s $homedir/freedombuddy/issues $homedir/freedombuddy/publish/.
+ln -s $homedir/freedombuddy/wiki $homedir/freedombuddy/publish/.
+rst2html $homedir/README $homedir/README.html
 
 chown -R 1000:1000 $homedir
