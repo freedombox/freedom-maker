@@ -320,12 +320,20 @@ Prepare your system::
 
     # wget http://http.debian.net/debian/pool/main/u/u-boot/u-boot_2012.04.01-2_armel.deb
     # dpkg-deb -x u-boot_2012.04.01-2_armel.deb u-boot_2012.04.01-2_armel
-    # cp u-boot_2012.04.01-2_armel/usr/lib/u-boot/dreamplug/* /mnt
+    # cp -r u-boot_2012.04.01-2_armel/usr/lib/u-boot/dreamplug /mnt
 
-Move the thing on /mnt to your dp.  Flash it from within the bootloader::
+Move the USB drive to your DreamPlug, and connect to your system via JTAG.
+Connect the UART DreamPlug port to the JTAG Board's UART port or connect the
+JTAG DreamPlug port to the JTAG Board's JTAG port.  Next, plug the USB cord into
+your main system and access the serial port with::
+
+    # screen /dev/ttyUSB0 115200
+
+Now, interrupt the boot process so you can flash it from within the bootloader,
+before the GNU/Linux system takes over::
 
     > usb start
-    > fatload usb 2 0x6400000 u-boot.kwb
+    > fatload usb 2 0x6400000 dreamplug/u-boot.kwb
     > sf probe 0
     > sf erase 0x0 0x80000
     > sf write 0x6400000 0x0 0x${filesize}
@@ -334,12 +342,10 @@ You must, of course, fill in the size of the file you're loading in hex.  At
 this point, you should be able to reset the DreamPlug and have it boot to a
 serial console prompt.  If that fails, you'll need real JTAG magic to try again.
 
-Note that freedom-maker now includes dreamplug firmware in the FAT partition on
+Note that freedom-maker now includes DreamPlug firmware in the FAT partition on
 USB stick targets.  To use a freedom-maker USB stick to update your u-boot,
 ignore the instructions above about how to wget and extract the firmware, and
-just replace the fatload line in the previous section with:
-
-    > fatload usb 2 0x6400000 dreamplug/u-boot.kwb
+just connect to the DreamPlug and follow the bootloader instructions.
 
 Building your own File-system Image
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
