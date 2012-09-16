@@ -313,8 +313,12 @@ Building your own FreedomBox
 Updating DreamPlug's U-Boot
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Instructions from Ian Campbell, using 2012.04.01-2 which is the current version
-in Debian's Wheezy release.
+You can also review these instructions online:
+
+    http://wiki.debian.org/FreedomBox/Firmware
+
+These instructions are from Ian Campbell, using uboot version 2012.04.01-2,
+which is the current version in Debian's Wheezy release.
 
 Prepare your system::
 

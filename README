@@ -41,34 +41,50 @@ before proceeding.  Also note that any time you're re-flashing boot firmware,
 there is a slight chance you could 'brick' your device leaving it unbootable.
 If that happens, the JTAG interface can be used to recover.
 
-The instructions for updating firmaware go something like this (thanks to
-Ian Campbell for his notes):
+## Updating DreamPlug's U-Boot
 
-  Using 2012.04.01-2 which is current Wheezy. Prep by mounting a USB stick.
+You can also review these instructions online:
 
-	wget http://http.debian.net/debian/pool/main/u/u-boot/u-boot_2012.04.01-2_armel.deb
-	dpkg-deb -x u-boot_2012.04.01-2_armel.deb u-boot_2012.04.01-2_armel
-	cp u-boot_2012.04.01-2_armel/usr/lib/u-boot/dreamplug/* /media/usbdisk
+    http://wiki.debian.org/FreedomBox/Firmware
 
-  Move the USB stick to your DreamPlug.  Flash the new firmare:
+These instructions are from Ian Campbell, using uboot version 2012.04.01-2,
+which is the current version in Debian's Wheezy release.
 
-	usb start
-	fatload usb 2 0x6400000 u-boot.kwb
-	sf probe 0
-	sf erase 0x0 0x80000
-	sf write 0x6400000 0x0 0x${filesize}
+Prepare your system::
 
-  (You must, of course, fill in the size of the file you're loading in hex)
+    # wget http://http.debian.net/debian/pool/main/u/u-boot/u-boot_2012.04.01-2_armel.deb
+    # dpkg-deb -x u-boot_2012.04.01-2_armel.deb u-boot_2012.04.01-2_armel
+    # cp -r u-boot_2012.04.01-2_armel/usr/lib/u-boot/dreamplug /mnt
 
-At this point, you should be able to reset the DreamPlug and have it boot to
-a serial console prompt.  If that fails, you'll need real JTAG magic to try
-again.
+Move the USB drive to your DreamPlug, and connect to your system via the JTAG
+dongle.  Connect the UART DreamPlug port to the JTAG Board's UART port or
+connect the JTAG DreamPlug port to the JTAG Board's JTAG port.  Next, plug the
+USB cord into your main system and access the serial port with::
 
-Note that if you use the 'make usb' target to create a bootable USB stick
-image, we include the required firmware in /boot/dreamplug, so the above
-fatload command might be replaced with:
+    # screen /dev/ttyUSB0 115200
 
-	fatload usb 2 0x6400000 dreamplug/u-boot.kwb
+Now, interrupt the boot process so you can flash it from within the bootloader,
+before the GNU/Linux system takes over::
+
+    > usb start
+    > fatload usb 2 0x6400000 dreamplug/u-boot.kwb
+    > sf probe 0
+    > sf erase 0x0 0x80000
+    > sf write 0x6400000 0x0 0x${filesize}
+
+You must, of course, fill in the size of the file you're loading in hex.  To
+convert the file's size to hex, try entering the file size into the following
+search:
+
+    https://duckduckgo.com/?q=10 in hex
+
+At this point, you should be able to reset the DreamPlug and have it boot to a
+serial console prompt.  If that fails, you'll need real JTAG magic to try again.
+
+Note that freedom-maker now includes DreamPlug firmware in the FAT partition on
+USB stick targets.  To use a freedom-maker USB stick to update your u-boot,
+ignore the instructions above about how to wget and extract the firmware, and
+just connect to the DreamPlug and follow the bootloader instructions.
 
 # To Use It
 
