@@ -2,9 +2,9 @@
 
 # armel amd64 i386
 ARCHITECTURE = armel
-# dreamplug guruplug
+# dreamplug guruplug virtualbox
 MACHINE = dreamplug
-# card usb
+# card usb hdd
 DESTINATION = card
 BUILD = $(MACHINE)-$(ARCHITECTURE)-$(DESTINATION)
 BUILD_DIR = build/$(ARCHITECTURE)
@@ -64,7 +64,8 @@ endif
 # build a virtualbox image
 virtualbox-image: stamp-vbox-predepend
 	./mk_virtualbox_image freedombox-unstable_$(TODAY)_virtualbox-i386-hdd
-
+	tar -cjvf freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi.tar.bz2 freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi
+	gpg --output freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi.tar.bz2.sig --detach-sig freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi.tar.bz2
 
 # build the weekly test image
 plugserver-image: image
@@ -78,6 +79,7 @@ endif
 	dd if=$(DEVICE) of=$(IMAGE) bs=1M
 	@echo "Image copied.  The microSD card may now be removed."
 	tar -cjvf $(ARCHIVE) $(IMAGE)
+	gpg --output $(ARCHIVE).sig --detach-sig $(ARCHIVE)
 
 #
 # meta
