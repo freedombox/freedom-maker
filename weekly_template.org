@@ -1,0 +1,190 @@
+# -*- mode: org; fill-column: 80; mode: auto-fill; -*-
+
+#+TITLE:     FreedomBox Weekly Image Report
+#+AUTHOR:    Nick Daly
+#+EMAIL:     nick.m.daly@gmail.com
+#+DATE:      2012-09-16 Sun
+#+LANGUAGE:  en
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+
+* Release Todos [0/7]                                              :noexport:
+  SCHEDULED: <2012-09-16 Sun ++1w> DEADLINE: <2012-09-16 Sun ++1w>
+
+** TODO Change the [[weekly_template.org::6][date]]
+
+** TODO Change the [[Hi%20folks,%20welcome%20to%20the%20Nth%20weekly%20FreedomBox%20test%20image%20and][number]]
+
+** TODO Recompile [[weekly_template.org::74][gpg-verify]]
+
+** TODO Recompile [[weekly_template.org::88][checksums]]
+
+** TODO List unresolved [[*Issues][issues]]
+
+** TODO List new [[*Changes][changes]]
+
+** TODO Update [[*Outstanding%20TODOs][outstanding TODOs]]
+
+** TODO Export the thing to text.
+
+* Introduction
+
+Hi folks, welcome to the Nth weekly FreedomBox test image and
+progress report.
+
+These images include several FreedomBox-related projects.  The changes
+are changes made by project contributors in the last week that have
+made it into the test image.  The outstanding TODOs are the changes
+needed before the beta-release is complete.  If you'd like to
+contribute in any way, fork and send me a pull request.
+
+The image is available at:
+
+    https://www.betweennowhere.net/tracker
+
+    https://www.betweennowhere.net/tracker/freedombox-unstable.torrent
+
+    https://www.betweennowhere.net/tracker/freedombox-unstable.tar.bz2
+
+Today's image was produced with:
+
+    : $ make weekly-image
+
+* How do I try it out?
+
+  There are two ways you can test it out.  The easy way is to use
+  VirtualBox and run the image in a virtual machine.  These
+  instructions have more details:
+
+    http://wiki.debian.org/FreedomBox/VirtualBoxImages
+
+  You can also install the image to your DreamPlug directly.  If
+  you've bought your own DreamPlug, you'll probably need to flash the
+  firmware, which requires a JTAG.  Follow these instructions:
+
+    http://wiki.debian.org/FreedomBox/Firmware
+
+* Verification
+
+   You can validate that the files have been downloaded correctly and
+   haven't changed since I've published them by checking the files'
+   signatures.
+
+   First, download my key:
+
+: $ gpg --keyserver hkp://keys.gnupg.net --recv-key D95C32042EE54FFDB25EC3489F2733F40928D23A
+
+   Then, verify each file's signature:
+
+#+source: verify-files
+#+headers: :results output
+#+begin_src sh :exports none
+ls -1 *sig
+#+end_src
+#+name: gpg-verify
+#+begin_src python :results output :var files=verify-files :exports none
+  for afile in files.splitlines():
+      print ("$ gpg --verify {0}.sig {0}".format(afile))
+#+end_src
+#+results: gpg-verify
+: $ gpg --verify freedombox-unstable_2012.0915_dreamplug-armel-card.img.tar.bz2.sig.sig freedombox-unstable_2012.0915_dreamplug-armel-card.img.tar.bz2.sig
+: $ gpg --verify freedombox-unstable_2012.0915_virtualbox-i386-hdd.vdi.tar.bz2.sig.sig freedombox-unstable_2012.0915_virtualbox-i386-hdd.vdi.tar.bz2.sig
+
+   The checksums for each file, useful for additional verification,
+   also follow.
+#+name: checksums
+#+source: checksums
+#+begin_src python :var files=verify-files :exports none
+  import subprocess
+
+  def get_sums(afile):
+      data = list()
+
+      for executable in ("md5sum", "sha512sum"):
+          x = subprocess.Popen([executable, afile], stdout=subprocess.PIPE)
+          x.wait()
+          data.append(x.communicate()[0].split()[0])
+
+      return data
+
+  all_data = list()
+
+  for file in files.splitlines():
+      file = file.strip()
+      if not file: continue
+      all_data.append([file] + get_sums(file))
+
+  return all_data
+#+end_src
+
+** ~freedombox-unstable_2012.0915_dreamplug-armel-card.img.tar.bz2.sig~
+
+| md5sum    | 317b93f3f3ea0b20b0be2ddc7f23e8c6                                                                                                 |
+| sha512sum | 54169616ca41934092e4a7eb68e72afcec8c7dc40d995802cfd18ceed4880c096fe76a541e790f8926244062ecb7b3c25e565b622704e26aad94cca05fbd6330 |
+
+** ~freedombox-unstable_2012.0915_virtualbox-i386-hdd.vdi.tar.bz2.sig~
+
+| md5sum    | ad8f344501954e9769d7aab88614b7f5                                                                                                 |
+| sha512sum | e82e5e788b33dab5699b7096e991d1f3468da3f21304e522a4079168adad61702d6aaca6e768ed47292fb7e0016e29f618d29de6c98f61bdfcda27f71754fa10 |
+
+* Issues
+
+
+* Changes
+
+
+* Outstanding TODOs
+
+** Freedom Maker: https://github.com/nickdaly/freedom-maker
+
+   The FBX image build tool.
+
+   - The setup process generates GPG keys for user.
+   - Setup generates GPG and SSL keys for the box itself.
+
+** Plinth: https://github.com/nickdaly/plinth
+
+   The UI layer.
+
+   - Turn DHCP (for clients) on/off through Plinth
+   - Select DHCP or Static IP in Plinth
+   - Integrate basic OpenVPN settings into Plinth
+   - Integrate Dnsmasq into Plinth
+   - Integrate FreedomBuddy into Plinth.
+   - Hook FreedomBuddy into SSH.
+   - Add more OpenVPN FreedomBuddy setup instructions.
+
+** FreedomBox Privoxy: https://github.com/jvasile/freedombox-privoxy
+
+   A privacy-focused web-proxy.
+
+   - Privoxy should use the released HTTPS Everywhere regexp ruleset.
+   - Add enabling and disabling Privoxy to the Plinth UI.
+
+** FreedomBuddy: https://gitorious.org/freedombuddy/freedombuddy
+
+   A resilient communication tool.
+
+   - Build an SSH-VPN connector.
+   - Fix Outstanding FIXMEs
+
+** Project Publish: https://gitorious.org/project-publish/project-publish
+
+   An easy-to-use publishing tool.
+
+   - *Complete*
+
+** PlugServer Setup: https://bitbucket.org/nickdaly/plugserver
+
+   A configuration tool.
+
+   - *Complete*
+
+** With SQLite: https://github.com/jvasile/withsqlite
+
+   A database-management Python package.
+
+   - *Complete*
+
+Enjoy!
+Nick
