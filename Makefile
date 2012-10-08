@@ -24,6 +24,7 @@ rootfs-$(ARCHITECTURE): multistrap-configs/fbx-base.conf \
 		mk_dreamplug_rootfs \
 		bin/projects bin/finalize bin/projects-chroot
 	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
+	ln -sf source/etc/fstab-$(DESTINATION) source/etc/fstab
 	sudo ./mk_dreamplug_rootfs $(ARCHITECTURE) multistrap-configs/fbx-$(ARCHITECTURE).conf
 	touch rootfs-$(ARCHITECTURE)
 
@@ -47,8 +48,6 @@ endif
 ifeq ($(DESTINATION),card)
 # we don't need to copy2dream, this is the microSD card.
 	sudo rm $(MOUNTPOINT)/sbin/copy2dream
-# fix fstab for the SD card.
-	sudo sh -c "sed -e 's/sdc/sda/g' < $(BUILD_DIR)/etc/fstab > $(MOUNTPOINT)/etc/fstab"
 endif
 ifeq ($(MACHINE),guruplug)
 # we can't flash the guru plug's kernel
