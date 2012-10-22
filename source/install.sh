@@ -58,13 +58,18 @@ rm -rf /tmp/initrd-repack
 	-d initrd.img-3.2.0-3-kirkwood uInitrd )
 
 # Establish an initial root password
-echo "Set root password to "$rootpassword
+echo "Set root password to $rootpassword"
 echo root:$rootpassword | /usr/sbin/chpasswd
 
 # Create a default user
-echo "Creating fbx user, password: $userpassword"
+echo "Creating normal user: $user, password: $userpassword"
 useradd $user
 echo $user:$userpassword | /usr/sbin/chpasswd
+
+# Create a system/maintenance user
+echo "Creating maintenance user: $sysuser, password: $syspassword"
+useradd $sysuser
+echo $sysuser:$syspassword | /usr/sbin/chpasswd
 
 # By default, spawn a console on the serial port
 echo "Adding a getty on the serial port"

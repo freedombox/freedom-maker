@@ -52,10 +52,14 @@ hostname='freedombox'
 rootpassword='freedom'
 user='fbx'
 userpassword='frdm'
+sysuser='plinth'
+syspassword='config'
 export hostname
 export rootpassword
 export user
 export userpassword
+export sysuser
+export syspassword
 
 # where to build images, etc
 basedir=`pwd`/build

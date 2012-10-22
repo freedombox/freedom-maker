@@ -8,6 +8,8 @@ import string
 
 user = "fbx"
 password = "frdm"
+sysuser='plinth'
+syspassword='config'
 rootdir = sys.argv[1]
 home = "/home/{0}/".format(user)
 curr = os.getcwd()
@@ -29,13 +31,20 @@ def runcmd(argv, stdin='', ignore_fail=False, **kwargs):
             raise Exception(msg)
     return out
 
-if __name__ == "__main__":
-    print 'Customizing freedombox'
+def make_user(user, password):
+    """Create a user with specified password."""
 
-    # Create a fboxlite account.
     runchroot(['adduser', '--gecos', user, '--disabled-password', user])
     encrypted = crypt.crypt(password, '..')
     runchroot(['usermod', '-p', encrypted, user])
+
+
+if __name__ == "__main__":
+    print 'Customizing freedombox'
+
+    # Create user accounts
+    make_user(user, password)
+    make_user(sysuser, syspassword)
 
     # Create all projects
     os.chdir(rootdir)
