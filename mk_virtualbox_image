@@ -20,7 +20,7 @@ git clone git://gitorious.org/~nickdaly/vmdebootstrap/nickdalys-vmdebootstrap.gi
 
 sudo ./vmdebootstrap/vmdebootstrap \
     --log freedombox.log --log-level debug \
-    --image $IMAGE.img --hostname freedombox --size 1G --verbose --enable-dhcp \
+    --image $IMAGE.img --hostname freedombox --size 2G --verbose --enable-dhcp \
     --package ssh --package apache2 --package git --package mercurial \
 	--package build-essential --package checkinstall \
     --package python-simplejson \
