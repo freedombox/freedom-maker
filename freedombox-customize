@@ -14,6 +14,7 @@ rootdir = sys.argv[1]
 home = "/home/{0}/".format(user)
 curr = os.getcwd()
 project_script = "/bin/projects"
+source="{0}/source/".format(curr)
 
 
 def runchroot(argv):
@@ -45,6 +46,10 @@ if __name__ == "__main__":
     # Create user accounts
     make_user(user, password)
     make_user(sysuser, syspassword)
+
+    # Sync up Source folder
+    # copy!
+    os.system('rsync -av '+source+' '+rootdir)
 
     # Create all projects
     os.chdir(rootdir)
