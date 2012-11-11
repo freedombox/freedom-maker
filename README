@@ -87,9 +87,9 @@ following search:
 
 This handy table lists the file sizes for all versions we know of:
 
-| Modification Date   | File Size | Hex Size | md5sum |
-|---------------------+-----------+----------+--------|
-| May 31, 2012, 21:19 |    196076 |    2FDEC | 4312c71b98049eab73332a3f283a1c5c
+    | Modification Date   | File Size | Hex Size | md5sum |
+    |---------------------+-----------+----------+--------|
+    | May 31, 2012, 21:19 |    196076 |    2FDEC | 4312c71b98049eab73332a3f283a1c5c
 
 At this point, you should be able to reset the DreamPlug and have it boot to a
 serial console prompt.  If that fails, you'll need real JTAG magic to try again.
