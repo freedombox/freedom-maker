@@ -14,7 +14,7 @@ IMAGE=$1
 
 # Get latest vmdebootstrap code
 rm -rf vmdebootstrap
-git clone git://gitorious.org/~nickdaly/vmdebootstrap/nickdalys-vmdebootstrap.git vmdebootstrap
+git clone git://gitorious.org/vmdebootstrap/vmdebootstrap.git
 
 # Run vmdebootstrap script to create image
 
