@@ -1,4 +1,4 @@
-Freedom-Maker  -  Bdale's building tools for the FreedomBox project
+**Freedom-Maker - Bdale's Building Tools for the FreedomBox Project**
 
 Welcome to the FreedomBox!  This project is the central hub of the FreedomBox
 project, it builds and installs the file-system image that turns any computer
@@ -6,11 +6,17 @@ into a FreedomBox.
 
 There are a couple ways to use this system:
 
-1. If you just want to use a FreedomBox and don't care about changing how it
-   works or mucking about in its insides (if you're like most people), you
-   should get a pre-built image from someone and copy it to an SD card or USB
-   drive.  If you don't have a JTAG or don't know what one is, make sure to ask
-   for the SD card image.
+1. If you just want to use a FreedomBox and don't care about changing
+   how it works or mucking about in its insides (if you're like most
+   people), you should use one of the pre-built systems we've already
+   put together.
+
+   If you don't have a DreamPlug or don't know what one is, make sure
+   to ask for a copy of the VirtualBox image.  If you do have a
+   DreamPlug, then you should get a pre-built image from someone and
+   copy it to an SD card or USB drive.  If you don't have a JTAG or
+   don't know what one is, make sure to ask for the SD card (not the
+   USB) version.
 
 2. If you want to change and build on it, you can use:
 
@@ -21,10 +27,10 @@ There are a couple ways to use this system:
       DreamPlug.  You won't need a JTAG, but you will need to open the DreamPlug
       and void the warranty.
 
-***
-*** Warning!  There are no "training wheels" here .. read the scripts and
-***           understand what they're going to do before you run them...
-***
+# Warning!
+
+There are no training wheels.  Read the scripts and understand what
+they're going to do before you run them.
 
 # Recent Firmware Necessary!
 
@@ -72,11 +78,18 @@ before the GNU/Linux system takes over::
     > sf erase 0x0 0x80000
     > sf write 0x6400000 0x0 0x${filesize}
 
-You must, of course, fill in the size of the file you're loading in hex.  To
-convert the file's size to hex, try entering the file size into the following
-search:
+You must, of course, fill in the size of u-boot.kwb file you're loading in hex.
+To convert the file's size to hex, try entering the file size in bytes (which
+you can get from running `ls -l u-boot.kwb` at a command prompt) into the
+following search:
 
     https://duckduckgo.com/?q=10 in hex
+
+This handy table lists the file sizes for all versions we know of:
+
+| Modification Date   | File Size | Hex Size | md5sum |
+|---------------------+-----------+----------+--------|
+| May 31, 2012, 21:19 |    196076 |    2FDEC | 4312c71b98049eab73332a3f283a1c5c
 
 At this point, you should be able to reset the DreamPlug and have it boot to a
 serial console prompt.  If that fails, you'll need real JTAG magic to try again.
