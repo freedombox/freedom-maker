@@ -3,7 +3,7 @@
 #+TITLE:     FreedomBox Weekly Image Report
 #+AUTHOR:    Nick Daly
 #+EMAIL:     nick.m.daly@gmail.com
-#+DATE:      2012-09-16 Sun
+#+DATE:      2012-11-11 Sun
 #+LANGUAGE:  en
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
@@ -29,26 +29,26 @@
 
 * Introduction
 
-Hi folks, welcome to the Nth weekly FreedomBox test image and
-progress report.
+  Hi folks, welcome to the Nth weekly FreedomBox test image and
+  progress report.
 
-These images include several FreedomBox-related projects.  The changes
-are changes made by project contributors in the last week that have
-made it into the test image.  The outstanding TODOs are the changes
-needed before the beta-release is complete.  If you'd like to
-contribute in any way, fork and send me a pull request.
+  These images include several FreedomBox-related projects.  The
+  changes are changes made by project contributors in the last week
+  that have made it into the test image.  The outstanding TODOs are
+  the changes needed before the beta-release is complete.  If you'd
+  like to contribute in any way, fork and send me a pull request.
 
-The image is available at:
+  The image is available at:
 
-    https://www.betweennowhere.net/tracker
+      https://www.betweennowhere.net/tracker
 
-    https://www.betweennowhere.net/tracker/freedombox-unstable.torrent
+      https://www.betweennowhere.net/tracker/freedombox-unstable.torrent
 
-    https://www.betweennowhere.net/tracker/freedombox-unstable.tar.bz2
+      https://www.betweennowhere.net/tracker/freedombox-unstable.tar.bz2
 
-Today's image was produced with:
+  Today's image was produced with:
 
-    : $ make weekly-image
+      : $ make weekly-image
 
 * How do I try it out?
 
@@ -66,15 +66,15 @@ Today's image was produced with:
 
 * Verification
 
-   You can validate that the files have been downloaded correctly and
-   haven't changed since I've published them by checking the files'
-   signatures.
+  You can validate that the files have been downloaded correctly and
+  haven't changed since I've published them by checking the files'
+  signatures.
 
-   First, download my key:
+  First, download my key:
 
 : $ gpg --keyserver hkp://keys.gnupg.net --recv-key D95C32042EE54FFDB25EC3489F2733F40928D23A
 
-   Then, verify each file's signature:
+  Then, verify each file's signature:
 
 #+source: verify-files
 #+headers: :results output
@@ -90,8 +90,8 @@ ls -1 *sig
 : $ gpg --verify freedombox-unstable_2012.0915_dreamplug-armel-card.img.tar.bz2.sig.sig freedombox-unstable_2012.0915_dreamplug-armel-card.img.tar.bz2.sig
 : $ gpg --verify freedombox-unstable_2012.0915_virtualbox-i386-hdd.vdi.tar.bz2.sig.sig freedombox-unstable_2012.0915_virtualbox-i386-hdd.vdi.tar.bz2.sig
 
-   The checksums for each file, useful for additional verification,
-   also follow.
+  The checksums for each file, useful for additional verification,
+  also follow.
 #+name: checksums
 #+source: checksums
 #+begin_src python :var files=verify-files :exports none
