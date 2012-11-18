@@ -105,6 +105,75 @@ USB stick targets.  To use a freedom-maker USB stick to update your u-boot,
 ignore the instructions above about how to wget and extract the firmware, and
 just connect to the DreamPlug and follow the bootloader instructions.
 
+## Unbricking a DreamPlug
+
+These instructions were copied and edited from:
+
+https://www.newit.co.uk/forum/index.php?PHPSESSID=t9b8s83gen1h10m65p0s3q4md6&topic=2835.0
+
+These instructions should get you from a Bricked DreamPlug to getting uboot
+running in RAM ready to restore your system from USB/TFTP.
+
+0. Edit your /etc/apt/sources.list to make sure you're using Wheezy or later.
+
+1. First, install the required packages:
+
+    $ sudo apt-get install openocd telnet screen
+
+2. Connect & Power up your device with the mini usb cable and JTAG.
+
+3. Open a terminal session and connect to the plug console:
+
+   $ sudo screen /dev/ttyUSB0 115200
+
+4. Open a 2nd terminal session.
+
+    $ wget http://www.downloadsnewit.co.uk/u-boot/recovery/dreamplug/u-boot.elf
+    $ sudo openocd -f /usr/share/openocd/scripts/board/sheevaplug.cfg -s /usr/share/openocd/scripts
+
+5. You should see output similar to this:
+
+    Open On-Chip Debugger 0.4.0 (2010-10-08-15:52)
+    Licensed under GNU GPL v2
+    For bug reports, read
+       http://openocd.berlios.de/doc/doxygen/bugs.html
+    2000 kHz
+    trst_and_srst separate srst_gates_jtag trst_push_pull srst_open_drain
+    jtag_nsrst_delay: 200
+    jtag_ntrst_delay: 200
+    dcc downloads are enabled
+    Warn : use 'feroceon.cpu' as target identifier, not '0'
+    Info : clock speed 2000 kHz
+    Info : JTAG tap: feroceon.cpu tap/device found: 0x20a023d3 (mfg: 0x1e9, part: 0x0a02, ver: 0x2)
+    Info : Embedded ICE version 0
+    Info : feroceon.cpu: hardware has 1 breakpoint/watchpoint unit
+
+6. If you are using a JTAG and getting errors at this point replug or even swap
+   JTAG cables and retry.
+
+7. Next open a 3rd terminal session.
+
+    $ telnet localhost 4444
+
+8. Output should look like this:
+
+    Trying ::1...
+    Trying 127.0.0.1...
+    Connected to localhost.
+    Escape character is '^]'.
+    Open On-Chip Debugger
+    >
+
+9. Then, in that third seesion, run:
+
+    reset;sheevaplug_init;load_image u-boot.elf;resume 0x00600000
+
+10. Now you should see Uboot starting to run in the 1st terminal session and you
+    are ready to start restoring your plug.
+
+11. DON'T turn off your DreamPlug.  Follow the "Updating the DreamPlug's U-Boot"
+    instructions.
+
 # To Use It
 
 You'll need to copy the image to the memory card or USB stick:
