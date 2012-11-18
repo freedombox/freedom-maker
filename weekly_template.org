@@ -8,6 +8,8 @@
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
 
+Hi folks, welcome to the Nth weekly FreedomBox test image and progress report.
+
 * Release Todos [0/7]                                              :noexport:
   SCHEDULED: <2012-09-16 Sun ++1w> DEADLINE: <2012-09-16 Sun ++1w>
 
@@ -27,16 +29,15 @@
 
 ** TODO Export the thing to text.
 
+** TODO Export to HTML
+
 * Introduction
 
-  Hi folks, welcome to the Nth weekly FreedomBox test image and
-  progress report.
-
-  These images include several FreedomBox-related projects.  The
-  changes are changes made by project contributors in the last week
-  that have made it into the test image.  The outstanding TODOs are
-  the changes needed before the beta-release is complete.  If you'd
-  like to contribute in any way, fork and send me a pull request.
+  These images include several FreedomBox-related projects.  The changes are
+  changes made by project contributors in the last week that have made it into
+  the test image.  The outstanding TODOs are the changes needed before the
+  beta-release is complete.  If you'd like to contribute in any way, fork and
+  send me a pull request.
 
   The image is available at:
 
