@@ -79,6 +79,12 @@ before the GNU/Linux system takes over::
     > sf write 0x6400000 0x0 0x${filesize}
 
 You must, of course, fill in the size of u-boot.kwb file you're loading in hex.
+That will make the last command look like:
+
+    > sf write 0x6400000 0x0 0x2FDEC
+
+Note that there is no `$` in that command.
+
 To convert the file's size to hex, try entering the file size in bytes (which
 you can get from running `ls -l u-boot.kwb` at a command prompt) into the
 following search:
