@@ -1,3 +1,14 @@
+#! /bin/sh
+
+#
+# Copyright 2011, Bdale Garbee.
+#
+# install.sh: FreedomBox system configuration for a DreamPlug image.
+#
+
+# no errors!  bad errors!  bad!
+set -e
+
 echo "Preconfiguring dash - else dash and bash will be left in a broken state"
 /var/lib/dpkg/info/dash.preinst install
 
@@ -12,7 +23,8 @@ export LC_ALL=C LANGUAGE=C LANG=C
 export FK_MACHINE="Globalscale Technologies Dreamplug"
 
 # configure all packages unpacked earlier by multistrap
-dpkg --configure -a
+# ignore the failures, since we're still on the host machine.
+dpkg --configure -a || true
 
 echo "Adding source packages to filesystem"
 apt-get update
@@ -26,7 +38,8 @@ echo "Installing local binary packages, if any"
 dpkg --install /sourcecode/*.deb
 
 # sshd may be left running by the postinst, clean that up
-/etc/init.d/ssh stop
+# ignore the failures, since we're still on the host machine.
+/init.d/ssh stop || true
 
 # process installed kernel to create uImage, uInitrd, dtb
 #  using flash-kernel would be a good approach, except it fails in the cross
@@ -40,22 +53,24 @@ dpkg --install /sourcecode/*.deb
 # line is completely ignored!  repack the initrd to remove this evil...
 
 mkdir /tmp/initrd-repack
+
 (cd /tmp/initrd-repack ; \
-    zcat /boot/initrd.img-3.2.0-3-kirkwood | cpio -i ; \
+    zcat /boot/$initRd | cpio -i ; \
     rm -f conf/param.conf ; \
     find . | cpio --quiet -o -H newc | \
-	gzip -9 > /boot/initrd.img-3.2.0-3-kirkwood )
+	gzip -9 > /boot/$initRd )
+
 rm -rf /tmp/initrd-repack
 
 (cd /boot ; \
-    cp /usr/lib/linux-image-3.2.0-3-kirkwood/kirkwood-dreamplug.dtb dtb ; \
-    cat vmlinuz-3.2.0-3-kirkwood dtb >> temp-kernel ; \
-    mkimage -A arm -O linux -T kernel -n 'Debian kernel 3.2.0-3-kirkwood' \
+    cp /usr/lib/$kernelVersion/kirkwood-dreamplug.dtb dtb ; \
+    cat $vmlinuz dtb >> temp-kernel ; \
+    mkimage -A arm -O linux -T kernel -n "Debian kernel ${version}" \
 	-C none -a 0x8000 -e 0x8000 -d temp-kernel uImage ; \
     rm -f temp-kernel ; \
-    mkimage -A arm -O linux -T ramdisk -C gzip -a 0x0 -e 0x0 \
-	-n 'Debian ramdisk 3.2.0-3-kirkwood' \
-	-d initrd.img-3.2.0-3-kirkwood uInitrd )
+    mkimage -A arm -O linux -T ramdisk -C none -a 0x0 -e 0x0 \
+	-n "Debian ramdisk ${version}" \
+	-d $initRd uInitrd )
 
 # Establish an initial root password
 echo "Set root password to $rootpassword"
