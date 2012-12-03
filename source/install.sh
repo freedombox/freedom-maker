@@ -68,7 +68,7 @@ rm -rf /tmp/initrd-repack
     mkimage -A arm -O linux -T kernel -n "Debian kernel ${version}" \
 	-C none -a 0x8000 -e 0x8000 -d temp-kernel uImage ; \
     rm -f temp-kernel ; \
-    mkimage -A arm -O linux -T ramdisk -C none -a 0x0 -e 0x0 \
+    mkimage -A arm -O linux -T ramdisk -C gzip -a 0x0 -e 0x0 \
 	-n "Debian ramdisk ${version}" \
 	-d $initRd uInitrd )
 
