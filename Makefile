@@ -24,7 +24,8 @@ rootfs-$(ARCHITECTURE): multistrap-configs/fbx-base.conf \
 		mk_dreamplug_rootfs \
 		bin/projects bin/finalize bin/projects-chroot
 	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
-	ln -sf source/etc/fstab-$(DESTINATION) source/etc/fstab
+	ln -sf fstab-$(DESTINATION) fstab
+	mv fstab source/etc
 	sudo ./mk_dreamplug_rootfs $(ARCHITECTURE) multistrap-configs/fbx-$(ARCHITECTURE).conf
 	touch rootfs-$(ARCHITECTURE)
 
