@@ -49,14 +49,17 @@ If that happens, the JTAG interface can be used to recover.
 
 ## Updating DreamPlug's U-Boot
 
+MAKE SURE YOU READ AND UNDERSTAND THIS SECTION IN ITS ENTIRETY BEFORE STARTING.
+
 You can also review these instructions online:
 
     http://wiki.debian.org/FreedomBox/Firmware
 
 These instructions are from Ian Campbell, using uboot version 2012.04.01-2,
-which is the current version in Debian's Wheezy release.
+which is the current version in Debian's Wheezy release (as of December 12,
+2012).
 
-Prepare your system::
+First, prepare your system::
 
     # wget http://http.debian.net/debian/pool/main/u/u-boot/u-boot_2012.04.01-2_armel.deb
     # dpkg-deb -x u-boot_2012.04.01-2_armel.deb u-boot_2012.04.01-2_armel
@@ -70,24 +73,36 @@ USB cord into your main system and access the serial port with::
     # screen /dev/ttyUSB0 115200
 
 Now, interrupt the boot process so you can flash it from within the bootloader,
-before the GNU/Linux system takes over::
+before the GNU/Linux system takes over so you can actually write the new uBoot
+file.  If you get to the "sf erase" step, *make sure to complete the "sf write"
+step before turning off your plug.* If you turn off your plug before finishing
+the write step, your plug will be unbootable.
+
+Load and write the new bootloader::
 
     > usb start
     > fatload usb 2 0x6400000 dreamplug/u-boot.kwb
     > sf probe 0
     > sf erase 0x0 0x80000
-    > sf write 0x6400000 0x0 0x${filesize}
+    > sf write 0x6400000 0x0 0xFILESIZE
 
 You must, of course, fill in the size of u-boot.kwb file you're loading in hex.
-That will make the last command look like:
+Use this chart to determine what size to use for the last line:
+
+    | File Size | Code Line                      |
+    |-----------+--------------------------------|
+    |    196076 | sf write 0x6400000 0x0 0x2FDEC |
+
+If your u-boot.kwb was 196076 bytes, the last command would look like:
 
     > sf write 0x6400000 0x0 0x2FDEC
 
-Note that there is no `$` in that command.
+### My File Size Isn't Listed!
 
-To convert the file's size to hex, try entering the file size in bytes (which
-you can get from running `ls -l u-boot.kwb` at a command prompt) into the
-following search:
+If your file size isn't listed, we'll need to figure out what should go in the
+last line manually.  To convert the file's size to hex, try entering the file
+size in bytes (which you can get from running `ls -l u-boot.kwb` at a command
+prompt) into the following search:
 
     https://duckduckgo.com/?q=10 in hex
 
@@ -112,7 +127,9 @@ These instructions were copied and edited from:
 https://www.newit.co.uk/forum/index.php?PHPSESSID=t9b8s83gen1h10m65p0s3q4md6&topic=2835.0
 
 These instructions should get you from a Bricked DreamPlug to getting uboot
-running in RAM ready to restore your system from USB/TFTP.
+running in RAM ready to restore your system from USB/TFTP.  They should be used
+if you erased your DreamPlug's bootloader and shut it off before writing the new
+bootloader.
 
 0. Edit your /etc/apt/sources.list to make sure you're using Wheezy or later.
 
