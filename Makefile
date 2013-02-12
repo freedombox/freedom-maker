@@ -76,7 +76,7 @@ ifneq ($(DEVICE),/dev/sda)
 	sudo grub-install $(DEVICE)
 endif
 endif
-	dd if=$(DEVICE) of=$(IMAGE) bs=1M
+	dd if=$(DEVICE) of=$(IMAGE) bs=1M count=1900
 	@echo "Image copied.  The microSD card may now be removed."
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	gpg --output $(ARCHIVE).sig --detach-sig $(ARCHIVE)
