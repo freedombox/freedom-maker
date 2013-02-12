@@ -23,8 +23,8 @@ rootfs: rootfs-$(ARCHITECTURE)
 rootfs-$(ARCHITECTURE): multistrap-configs/fbx-base.conf \
 		multistrap-configs/fbx-$(ARCHITECTURE).conf \
 		mk_dreamplug_rootfs \
-        bin/projects bin/finalize bin/projects-chroot \
-        stamp-predepend
+		bin/projects bin/finalize bin/projects-chroot \
+		stamp-predepend
 
 	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
 	ln -sf fstab-$(DESTINATION) fstab
