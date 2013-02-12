@@ -71,9 +71,11 @@ Hi folks, welcome to the Nth weekly FreedomBox test image and progress report.
   These are the users and their passwords:
 
   - root :: freedom
+
       The root user.
 
   - fbx :: frdm
+
       The normal user.  All the FreedomBox tools are stored in =/home/fbx=.
 
   - plinth :: config
@@ -161,7 +163,7 @@ ls -1 *bz2
      - How do we guarantee sufficient random data?  Maybe somediddly
        like: ~wget -m -k -K -E -Q 10m -l 10 -w 5s wiki.debian.org~
 
-  - Setup generates GPG and SSL keys for the box itself.
+   - Setup generates GPG and SSL keys for the box itself.
 
 ** Plinth: https://github.com/nickdaly/plinth
 
