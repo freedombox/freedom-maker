@@ -10,27 +10,31 @@
 
 Hi folks, welcome to the Nth weekly FreedomBox test image and progress report.
 
-* Release Todos [0/7]                                              :noexport:
-  SCHEDULED: <2012-09-16 Sun ++1w> DEADLINE: <2012-09-16 Sun ++1w>
+* TODO Release Todos [0/10]                                        :noexport:
+  SCHEDULED: <2013-02-24 Sun ++1w> DEADLINE: <2012-11-04 Sun ++1w -2d>
 
 ** TODO Change the [[weekly_template.org::6][date]]
 
 ** TODO Change the [[Hi%20folks,%20welcome%20to%20the%20Nth%20weekly%20FreedomBox%20test%20image%20and][number]]
 
-** TODO Recompile [[weekly_template.org::74][gpg-verify]]
-
-** TODO Recompile [[weekly_template.org::88][checksums]]
-
 ** TODO List unresolved [[*Issues][issues]]
 
 ** TODO List new [[*Changes][changes]]
 
-** TODO Update [[*Outstanding%20TODOs][outstanding TODOs]]
+** TODO Update TODOs [0/2]
+
+   - [ ] [[*Outstanding%20TODOs][outstanding TODOs]]
+
+   - [ ] [[http://wiki.debian.org/FreedomBox/BetaReleaseTodos][Wiki TODOs]]
+
+** TODO Spell check!!!
+
+** TODO Recompile [[weekly_template.org::74][gpg-verify]]
+
+** TODO Recompile [[weekly_template.org::88][checksums]]
 
 ** TODO Export the thing to text.
-
 ** TODO Export to HTML
-
 * Introduction
 
   These images include several FreedomBox-related projects.  The changes are
@@ -53,34 +57,45 @@ Hi folks, welcome to the Nth weekly FreedomBox test image and progress report.
 
 * How do I try it out?
 
-  There are two ways you can test it out.  The easy way is to use
-  VirtualBox and run the image in a virtual machine.  These
-  instructions have more details:
+  There are two ways you can test it out.  The easy way is to use VirtualBox and
+  run the image in a virtual machine.  These instructions have more details:
 
-    http://wiki.debian.org/FreedomBox/VirtualBoxImages
+      http://wiki.debian.org/FreedomBox/VirtualBoxImages
 
-  You can also install the image to your DreamPlug directly.  If
-  you've bought your own DreamPlug, you'll probably need to flash the
-  firmware, which requires a JTAG.  Follow these instructions:
+  You can also install the image to your DreamPlug directly.  If you've bought
+  your own DreamPlug, you'll probably need to flash the firmware, which requires
+  a JTAG.  Follow these instructions:
 
-    http://wiki.debian.org/FreedomBox/Firmware
+      http://wiki.debian.org/FreedomBox/Firmware
+
+  These are the users and their passwords:
+
+  - root :: freedom
+      The root user.
+
+  - fbx :: frdm
+      The normal user.  All the FreedomBox tools are stored in =/home/fbx=.
+
+  - plinth :: config
+
+      The system maintenance user.  Generic FreedomBox maintenance will be
+      conducted by this user.
 
 * Verification
 
-  You can validate that the files have been downloaded correctly and
-  haven't changed since I've published them by checking the files'
-  signatures.
+  You can validate that the files have been downloaded correctly and haven't
+  changed since I've published them by checking the files' signatures.
 
   First, download my key:
 
-: $ gpg --keyserver hkp://keys.gnupg.net --recv-key D95C32042EE54FFDB25EC3489F2733F40928D23A
+      : $ gpg --keyserver hkp://keys.gnupg.net --recv-key D95C32042EE54FFDB25EC3489F2733F40928D23A
 
   Then, verify each file's signature:
 
 #+source: verify-files
 #+headers: :results output
 #+begin_src sh :exports none
-ls -1 *sig
+ls -1 *bz2
 #+end_src
 #+name: gpg-verify
 #+begin_src python :results output :var files=verify-files :exports none
@@ -91,8 +106,7 @@ ls -1 *sig
 : $ gpg --verify freedombox-unstable_2012.0915_dreamplug-armel-card.img.tar.bz2.sig.sig freedombox-unstable_2012.0915_dreamplug-armel-card.img.tar.bz2.sig
 : $ gpg --verify freedombox-unstable_2012.0915_virtualbox-i386-hdd.vdi.tar.bz2.sig.sig freedombox-unstable_2012.0915_virtualbox-i386-hdd.vdi.tar.bz2.sig
 
-  The checksums for each file, useful for additional verification,
-  also follow.
+  The checksums for each file, useful for additional verification, also follow.
 #+name: checksums
 #+source: checksums
 #+begin_src python :var files=verify-files :exports none
@@ -118,21 +132,19 @@ ls -1 *sig
   return all_data
 #+end_src
 
-** ~freedombox-unstable_2012.0915_dreamplug-armel-card.img.tar.bz2.sig~
+** ~freedombox-unstable_2012.1021_dreamplug-armel-card.img.tar.bz2~
 
 | md5sum    | 317b93f3f3ea0b20b0be2ddc7f23e8c6                                                                                                 |
 | sha512sum | 54169616ca41934092e4a7eb68e72afcec8c7dc40d995802cfd18ceed4880c096fe76a541e790f8926244062ecb7b3c25e565b622704e26aad94cca05fbd6330 |
 
-** ~freedombox-unstable_2012.0915_virtualbox-i386-hdd.vdi.tar.bz2.sig~
+** ~freedombox-unstable_2012.1021_virtualbox-i386-hdd.vdi.tar.bz2~
 
 | md5sum    | ad8f344501954e9769d7aab88614b7f5                                                                                                 |
 | sha512sum | e82e5e788b33dab5699b7096e991d1f3468da3f21304e522a4079168adad61702d6aaca6e768ed47292fb7e0016e29f618d29de6c98f61bdfcda27f71754fa10 |
 
 * Issues
 
-
 * Changes
-
 
 * Outstanding TODOs
 
@@ -141,12 +153,21 @@ ls -1 *sig
    The FBX image build tool.
 
    - The setup process generates GPG keys for user.
-   - Setup generates GPG and SSL keys for the box itself.
+
+     - Consider reworking the [[http://lists.gnupg.org/pipermail/gnupg-users/2003-March/017376.html][batch script]] for this purpose.
+
+       - What about licensing?
+
+     - How do we guarantee sufficient random data?  Maybe somediddly
+       like: ~wget -m -k -K -E -Q 10m -l 10 -w 5s wiki.debian.org~
+
+  - Setup generates GPG and SSL keys for the box itself.
 
 ** Plinth: https://github.com/nickdaly/plinth
 
    The UI layer.
 
+   - Links should work for remote clients.
    - Turn DHCP (for clients) on/off through Plinth
    - Select DHCP or Static IP in Plinth
    - Integrate basic OpenVPN settings into Plinth
@@ -155,12 +176,18 @@ ls -1 *sig
    - Hook FreedomBuddy into SSH.
    - Add more OpenVPN FreedomBuddy setup instructions.
 
+
+** ExMachina: http://gitorious.org/exmachina/exmachina
+
+   - Verify patches from [[betweennowhere.net/blog]].
+
 ** FreedomBox Privoxy: https://github.com/jvasile/freedombox-privoxy
 
    A privacy-focused web-proxy.
 
-   - Privoxy should use the released HTTPS Everywhere regexp ruleset.
    - Add enabling and disabling Privoxy to the Plinth UI.
+   - Integrate with the [[https://gitweb.torproject.org/https-everywhere.git/tree/HEAD:/utils][HTTPS Everywhere Checker]] and the [[https://github.com/hiviah/https-everywhere-checker][other HTTPS Everywhere
+     Checker]].
 
 ** FreedomBuddy: https://gitorious.org/freedombuddy/freedombuddy
 
@@ -168,6 +195,8 @@ ls -1 *sig
 
    - Build an SSH-VPN connector.
    - Fix Outstanding FIXMEs
+   - Hook into Plinth.
+   - Add more OpenVPN FreedomBuddy setup instructions.
 
 ** Project Publish: https://gitorious.org/project-publish/project-publish
 
