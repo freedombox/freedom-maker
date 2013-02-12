@@ -101,7 +101,7 @@ clean:
 	-rm -f $(IMAGE) $(ARCHIVE)
 	-rm -f rootfs-* stamp-*
 
-distclean: clean
+distclean: clean clean-card
 	sudo rm -rf build
 
 # remove all data from the microSD card to repopulate it with a pristine image.
