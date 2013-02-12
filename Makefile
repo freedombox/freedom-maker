@@ -13,6 +13,7 @@ BOOTPOINT = $(MOUNTPOINT)/boot
 DEVICE = /dev/sdb
 TODAY = `date +%Y.%m%d`
 NAME = freedombox-unstable_$(TODAY)_$(BUILD)
+WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
 IMAGE = $(NAME).img
 ARCHIVE = $(NAME).tar.bz2
 LOOP = /dev/loop0
@@ -89,11 +90,11 @@ endif
 
 # install required files so users don't need to do it themselves.
 stamp-vbox-predepend: stamp-predepend
-	sudo sh -c "apt-get install debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp apache2 virtualbox bzr python-sphinx"
+	sudo sh -c "apt-get install debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp apache2 virtualbox"
 	touch stamp-vbox-predepend
 
 stamp-predepend:
-	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial python-docutils"
+	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial python-docutils mktorrent"
 	touch stamp-predepend
 
 clean:
@@ -122,3 +123,11 @@ clean-card:
 	umount $(MOUNTPOINT)
 
 weekly-image: distclean clean-card plugserver-image virtualbox-image
+   mkdir -p $(WEEKLY_DIR)
+   mv *bz2 *sig $(WEEKLY_DIR)
+   cp weekly_template.org $(WEEKLY_DIR)/README.org
+   echo "http://betweennowhere.net/freedombox-images/$(WEEKLY_DIR)" > torrent/webseed
+   echo "When the README has been updated, hit Enter."
+   read X
+   mktorrent -a `cat torrent/trackers` -w `cat torrent/webseed` $(WEEKLY_DIR)
+   mv $(WEEKLY_DIR).torrent torrent/
