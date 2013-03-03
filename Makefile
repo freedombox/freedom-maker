@@ -7,6 +7,7 @@ MACHINE = dreamplug
 # card usb hdd
 DESTINATION = card
 BUILD = $(MACHINE)-$(ARCHITECTURE)-$(DESTINATION)
+STAMP = build/stamp
 BUILD_DIR = build/$(ARCHITECTURE)
 MOUNTPOINT = /media/freedom
 BOOTPOINT = $(MOUNTPOINT)/boot
@@ -19,22 +20,22 @@ ARCHIVE = $(NAME).tar.bz2
 LOOP = /dev/loop0
 
 # populate a tree with DreamPlug root filesystem
-rootfs: rootfs-$(ARCHITECTURE)
-rootfs-$(ARCHITECTURE): multistrap-configs/fbx-base.conf \
+rootfs: $(STAMP)-rootfs-$(ARCHITECTURE)
+$(STAMP)-rootfs-$(ARCHITECTURE): multistrap-configs/fbx-base.conf \
 		multistrap-configs/fbx-$(ARCHITECTURE).conf \
 		mk_dreamplug_rootfs \
 		bin/projects bin/finalize bin/projects-chroot \
-		stamp-predepend
+		$(STAMP)-predepend
 
 	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
 	ln -sf fstab-$(DESTINATION) fstab
 	mv fstab source/etc
 	sudo ./mk_dreamplug_rootfs $(ARCHITECTURE) multistrap-configs/fbx-$(ARCHITECTURE).conf
-	touch rootfs-$(ARCHITECTURE)
+	touch $(STAMP)-rootfs-$(ARCHITECTURE)
 
 # copy DreamPlug root filesystem to a usb stick or microSD card
 # stick assumed to have 2 partitions, 128meg FAT and the rest ext3 partition
-image: rootfs-$(ARCHITECTURE)
+image: $(STAMP)-rootfs-$(ARCHITECTURE)
 	-umount $(BOOTPOINT)
 	-umount $(MOUNTPOINT)
 	mount $(MOUNTPOINT)
@@ -65,7 +66,7 @@ endif
 	@echo "Build complete."
 
 # build a virtualbox image
-virtualbox-image: stamp-vbox-predepend
+virtualbox-image: $(STAMP)-vbox-predepend
 	./mk_virtualbox_image freedombox-unstable_$(TODAY)_virtualbox-i386-hdd
 	tar -cjvf freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi.tar.bz2 freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi
 	gpg --output freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi.tar.bz2.sig --detach-sig freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi.tar.bz2
@@ -89,20 +90,20 @@ endif
 #
 
 # install required files so users don't need to do it themselves.
-stamp-vbox-predepend: stamp-predepend
+$(STAMP)-vbox-predepend: $(STAMP)-predepend
 	sudo sh -c "apt-get install debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp apache2 virtualbox"
-	touch stamp-vbox-predepend
+	touch $(STAMP)-vbox-predepend
 
-stamp-predepend:
+$(STAMP)-predepend:
 	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial python-docutils mktorrent"
-	touch stamp-predepend
+	touch $(STAMP)-predepend
 
 clean:
 # just in case I tried to build before plugging in the USB drive.
 	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
 	sudo rm -rf $(BUILD_DIR)
 	-rm -f $(IMAGE) $(ARCHIVE)
-	-rm -f rootfs-* stamp-*
+	-rm -f $(STAMP)-rootfs-* $(STAMP)-*
 
 distclean: clean clean-card
 	sudo rm -rf build
