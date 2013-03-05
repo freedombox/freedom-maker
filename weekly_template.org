@@ -9,9 +9,14 @@
 #+EXPORT_EXCLUDE_TAGS: noexport
 
 Hi folks, welcome to the Nth weekly FreedomBox test image and progress report.
+These images are a way to test the current (incomplete) FreedomBox build.
 
 * TODO Release Todos [0/10]                                        :noexport:
-  SCHEDULED: <2013-02-24 Sun ++1w> DEADLINE: <2012-11-04 Sun ++1w -2d>
+  SCHEDULED: <2013-03-10 Sun ++1w> DEADLINE: <2013-03-03 Sun ++1w -2d>
+  - State "DONE"       from "TODO"       [2013-02-26 Tue 20:22]
+  :PROPERTIES:
+  :LAST_REPEAT: [2013-02-26 Tue 20:22]
+  :END:
 
 ** TODO Change the [[weekly_template.org::6][date]]
 
@@ -45,11 +50,13 @@ Hi folks, welcome to the Nth weekly FreedomBox test image and progress report.
 
   The image is available at:
 
-      https://www.betweennowhere.net/tracker
+      https://download.internetmachines.co.uk/tracker/freedombox-images/
 
       https://www.betweennowhere.net/tracker/freedombox-unstable.torrent
 
       https://www.betweennowhere.net/tracker/freedombox-unstable.tar.bz2
+
+      https://www.betweennowhere.net/tracker/freedombox-images/
 
   Today's image was produced with:
 
