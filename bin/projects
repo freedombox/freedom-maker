@@ -39,6 +39,6 @@ git clone git://gitorious.org/freedombuddy/freedombuddy.git $homedir/freedombudd
 git clone git://gitorious.org/project-publish/project-publish.git $homedir/freedombuddy/publish
 ln -s $homedir/freedombuddy/issues $homedir/freedombuddy/publish/.
 ln -s $homedir/freedombuddy/wiki $homedir/freedombuddy/publish/.
-rst2html $homedir/README $homedir/README.html
+# rst2html $homedir/README $homedir/README.html
 
 chown -R 1000:1000 $homedir
