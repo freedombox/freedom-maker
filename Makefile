@@ -27,8 +27,7 @@ rootfs-$(ARCHITECTURE): multistrap-configs/fbx-base.conf \
 		stamp-predepend
 
 	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
-	ln -sf fstab-$(DESTINATION) fstab
-	mv fstab source/etc
+	ln -sf fstab-$(DESTINATION) source/etc/fstab
 	sudo ./mk_dreamplug_rootfs $(ARCHITECTURE) multistrap-configs/fbx-$(ARCHITECTURE).conf
 	touch rootfs-$(ARCHITECTURE)
 
@@ -103,6 +102,7 @@ clean:
 	sudo rm -rf $(BUILD_DIR)
 	-rm -f $(IMAGE) $(ARCHIVE)
 	-rm -f rootfs-* stamp-*
+	-rm -f source/etc/fstab
 
 distclean: clean clean-card
 	sudo rm -rf build
