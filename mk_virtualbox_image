@@ -21,7 +21,7 @@ git clone git://gitorious.org/vmdebootstrap/vmdebootstrap.git
 sudo ./vmdebootstrap/vmdebootstrap \
     --log freedombox.log --log-level debug \
     --image $IMAGE.img --hostname freedombox --size 2G --verbose --enable-dhcp \
-    --package ssh --package apache2 --package git --package mercurial \
+    --package ssh --package apache2 --package git \
 	--package build-essential --package checkinstall \
     --package python-simplejson \
 	--mirror http://ftp.uk.debian.org/debian/ --package pandoc \
