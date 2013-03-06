@@ -90,11 +90,11 @@ endif
 
 # install required files so users don't need to do it themselves.
 stamp-vbox-predepend: stamp-predepend
-	sudo sh -c "apt-get install debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp apache2 virtualbox"
+#	sudo sh -c "apt-get install debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp apache2 virtualbox"
 	touch stamp-vbox-predepend
 
 stamp-predepend:
-	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git python-docutils"
+#	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git python-docutils"
 	touch stamp-predepend
 
 clean:
