@@ -1,33 +1,33 @@
 #!/bin/bash
-# 
+#
 # Copyright 2011 by Bdale Garbee <bdale@gag.com>
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-# 
+#
 
 # based on work by <ivan@sanchezortega.es>, who released his script under
 # the following license terms:
 #  ----------------------------------------------------------------------------
 #  "THE BEER-WARE LICENSE" (Revision 42):
-#  As long as you retain this notice you can do whatever you want with 
-#  this stuff. If we meet some day, and you think this stuff is worth it, 
+#  As long as you retain this notice you can do whatever you want with
+#  this stuff. If we meet some day, and you think this stuff is worth it,
 #  you can buy me a beer in return.
 #  ----------------------------------------------------------------------------
 
 # mk_dreamplug_rootfs
 #
-# Runs multistrap and readies the resulting root filesystem to silently 
+# Runs multistrap and readies the resulting root filesystem to silently
 # complete package configuration on the first boot-up.
 #
 # Accepts the multistrap config file name as an argument.
@@ -35,27 +35,34 @@
 # We don't tolerate errors.
 set -e
 
+# take positional arguments.
 architecture=armel
 if [ -n "$1" ]
 then
     architecture=$1
 fi
+export architecture
 
 config=multistrap-configs/fbx-$architecture.conf
 if [ -n "$2" ]
 then
     config=$2
 fi
+export config
 
 # users
 hostname='freedombox'
 rootpassword='freedom'
 user='fbx'
 userpassword='frdm'
+sysuser='plinth'
+syspassword='config'
 export hostname
 export rootpassword
 export user
 export userpassword
+export sysuser
+export syspassword
 
 # where to build images, etc
 basedir=`pwd`/build
@@ -80,22 +87,30 @@ mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt
 mkdir -p $target/var/cache/apt/archives
 mkdir -p $target/usr/bin
 
-# multistrap
-echo "Multistrapping..."
 multistrap -f $config -d $target
 rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
 
 # un-do the bind mount so we don't trip over it later
 umount $target/var/cache/apt/
 
-# copy!
 echo "Copying the source directory to the FreedomBox root."
 rsync -av $source/ $target
 
-# add projects to the image to make it a useful FreedomBox.
+echo "Configuring projects to turn this into a useful FreedomBox."
 bin/projects
 
-# cleanup and finalize the image so it boots correctly.
+# what kernel-related files we'll build.
+kernelVersion=`grep linux-image- $config | sed 's/.*\(linux-image-[^ ]*\).*/\1/'`
+version=`echo $kernelVersion | sed 's/linux-image-\(.*\)/\1/'`
+initRd=initrd.img-$version
+vmlinuz=vmlinuz-$version
+export kernelVersion
+export version
+export initRd
+export vmlinuz
+
+# this touches the kernel, the initrd, and the uimage
+echo "Clean up and finalize the image so it boots correctly."
 bin/finalize
 
 # finish!

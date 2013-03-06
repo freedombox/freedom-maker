@@ -1,6 +1,6 @@
-/dev/sda2 /		auto	relatime,rw	0	0
+/dev/sdc2 /		auto	relatime,rw	0	0
 proc	  /proc		proc	none		0	0
 sys	  /sys		sysfs	none		0	0
 none	  /dev/pts	devpts	defaults	0	0
 tmpfs     /tmp          tmpfs   rw,nosuid,nodev 0       0
-/dev/sda1 /boot  	vfat	defaults	0	0
+/dev/sdc1 /boot  	vfat	defaults	0	0
