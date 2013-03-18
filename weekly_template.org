@@ -3,7 +3,7 @@
 #+TITLE:     FreedomBox Weekly Image Report
 #+AUTHOR:    Nick Daly
 #+EMAIL:     nick.m.daly@gmail.com
-#+DATE:      2012-11-11 Sun
+#+DATE:      2013-03-18 Mon
 #+LANGUAGE:  en
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
@@ -61,6 +61,10 @@ These images are a way to test the current (incomplete) FreedomBox build.
   Today's image was produced with:
 
       : $ make weekly-image
+
+* What Does it Do?
+
+  Right now, it serves as a privacy protecting proxy.
 
 * How do I try it out?
 
@@ -151,26 +155,45 @@ ls -1 *bz2
 | md5sum    | ad8f344501954e9769d7aab88614b7f5                                                                                                 |
 | sha512sum | e82e5e788b33dab5699b7096e991d1f3468da3f21304e522a4079168adad61702d6aaca6e768ed47292fb7e0016e29f618d29de6c98f61bdfcda27f71754fa10 |
 
-* Issues
-
 * Changes
 
+  - Freedom Maker images should build correctly, more frequently (sorry, Jack).
+
+  - FreedomBuddy hit 0.4.  Please test it!
+
 * Outstanding TODOs
+
+** Unsorted
+
+  The following ten items should be changed in the weekly images.
 
 ** Freedom Maker: https://github.com/nickdaly/freedom-maker
 
    The FBX image build tool.
 
    - The setup process generates GPG keys for user.
-
-     - Consider reworking the [[http://lists.gnupg.org/pipermail/gnupg-users/2003-March/017376.html][batch script]] for this purpose.
-
-       - What about licensing?
-
-     - How do we guarantee sufficient random data?  Maybe somediddly
-       like: ~wget -m -k -K -E -Q 10m -l 10 -w 5s wiki.debian.org~
-
    - Setup generates GPG and SSL keys for the box itself.
+   - Link network/interfaces per machine target
+   - Add fbx to /etc/sudoers
+   - Update the login message.
+   - Make Plinth Easy to Launch
+
+     - Make plinth in FM during image build process, or,
+
+     - Build some giant startup script to run Plinth that handles
+       everything:
+
+       - make-ing plinth
+       - other requirements
+
+       Plinth's own start.sh should handle its own local installation,
+       nothing else.  The big script should assume ~/exmachina is
+       available.
+
+     - Consider moving ./build dependencies to ../
+
+       This'll help unify the dependencies at the file level.  Might not be
+       worth it, as everything's moving to .debs soon.
 
 ** Plinth: https://github.com/nickdaly/plinth
 
@@ -184,7 +207,21 @@ ls -1 *bz2
    - Integrate FreedomBuddy into Plinth.
    - Hook FreedomBuddy into SSH.
    - Add more OpenVPN FreedomBuddy setup instructions.
+   - Include missing dependencies.
 
+     - psmisc
+     - python2.7
+     - libpython2.7
+     - sudo
+
+   - Move =/build/= to =/vendor/=, update references in:
+
+     - plinth/start.sh
+     - plinth/Makefile
+
+   - Don't POST password on login fails.
+   - CherryPy HTTPRedirects Shouldn't Change Server names.
+   - Use Publish to publish Plinth's Source
 
 ** ExMachina: http://gitorious.org/exmachina/exmachina
 
