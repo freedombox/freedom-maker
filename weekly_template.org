@@ -11,7 +11,7 @@
 Hi folks, welcome to the Nth weekly FreedomBox test image and progress report.
 These images are a way to test the current (incomplete) FreedomBox build.
 
-* TODO Release Todos [0/10]                                        :noexport:
+* TODO Release Todos [0/11]                                        :noexport:
   SCHEDULED: <2013-03-10 Sun ++1w> DEADLINE: <2013-03-03 Sun ++1w -2d>
   - State "DONE"       from "TODO"       [2013-02-26 Tue 20:22]
   :PROPERTIES:
@@ -21,6 +21,8 @@ These images are a way to test the current (incomplete) FreedomBox build.
 ** TODO Change the [[weekly_template.org::6][date]]
 
 ** TODO Change the [[Hi%20folks,%20welcome%20to%20the%20Nth%20weekly%20FreedomBox%20test%20image%20and][number]]
+
+** TODO List new [[*What%20Does%20it%20Do?][capabilities]]
 
 ** TODO List unresolved [[*Issues][issues]]
 
