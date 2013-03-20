@@ -87,7 +87,9 @@ mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt
 mkdir -p $target/var/cache/apt/archives
 mkdir -p $target/usr/bin
 
+echo "Multistrapping..."
 multistrap -f $config -d $target
+echo "Finished multistrapping!"
 rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
 
 # un-do the bind mount so we don't trip over it later

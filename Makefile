@@ -23,14 +23,15 @@ LOOP = /dev/loop0
 rootfs: $(STAMP)-rootfs-$(ARCHITECTURE)
 $(STAMP)-rootfs-$(ARCHITECTURE): multistrap-configs/fbx-base.conf \
 		multistrap-configs/fbx-$(ARCHITECTURE).conf \
-		mk_dreamplug_rootfs \
+		bin/mk_dreamplug_rootfs \
 		bin/projects bin/finalize bin/projects-chroot \
 		$(STAMP)-predepend
 
+	mkdir -p build
 	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
 	ln -sf fstab-$(DESTINATION) fstab
 	mv fstab source/etc
-	sudo ./mk_dreamplug_rootfs $(ARCHITECTURE) multistrap-configs/fbx-$(ARCHITECTURE).conf
+	sudo bin/mk_dreamplug_rootfs $(ARCHITECTURE) multistrap-configs/fbx-$(ARCHITECTURE).conf
 	touch $(STAMP)-rootfs-$(ARCHITECTURE)
 
 # copy DreamPlug root filesystem to a usb stick or microSD card
@@ -67,7 +68,7 @@ endif
 
 # build a virtualbox image
 virtualbox-image: $(STAMP)-vbox-predepend
-	./mk_virtualbox_image freedombox-unstable_$(TODAY)_virtualbox-i386-hdd
+	bin/mk_virtualbox_image freedombox-unstable_$(TODAY)_virtualbox-i386-hdd
 	tar -cjvf freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi.tar.bz2 freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi
 	gpg --output freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi.tar.bz2.sig --detach-sig freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi.tar.bz2
 
@@ -95,6 +96,7 @@ $(STAMP)-vbox-predepend: $(STAMP)-predepend
 	touch $(STAMP)-vbox-predepend
 
 $(STAMP)-predepend:
+	mkdir -p build
 	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial python-docutils mktorrent"
 	touch $(STAMP)-predepend
 
@@ -128,7 +130,9 @@ weekly-image: distclean clean-card plugserver-image virtualbox-image
 	mv *bz2 *sig $(WEEKLY_DIR)
 	cp weekly_template.org $(WEEKLY_DIR)/README.org
 	echo "http://betweennowhere.net/freedombox-images/$(WEEKLY_DIR)" > torrent/webseed
-	echo "When the README has been updated, hit Enter."
+	@echo ""
+	@echo "----------"
+	@echo "When the README has been updated, hit Enter."
 	read X
 	mktorrent -a `cat torrent/trackers` -w `cat torrent/webseed` $(WEEKLY_DIR)
 	mv $(WEEKLY_DIR).torrent torrent/
