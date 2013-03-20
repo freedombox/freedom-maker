@@ -165,10 +165,6 @@ ls -1 *bz2
 
 * Outstanding TODOs
 
-** Unsorted
-
-  The following ten items should be changed in the weekly images.
-
 ** Freedom Maker: https://github.com/nickdaly/freedom-maker
 
    The FBX image build tool.
