@@ -159,10 +159,6 @@ ls -1 *bz2
 
 * Changes
 
-  - Freedom Maker images should build correctly, more frequently (sorry, Jack).
-
-  - FreedomBuddy hit 0.4.  Please test it!
-
 * Outstanding TODOs
 
 ** Freedom Maker: https://github.com/nickdaly/freedom-maker
