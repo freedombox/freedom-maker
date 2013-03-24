@@ -184,11 +184,6 @@ ls -1 *bz2
        nothing else.  The big script should assume ~/exmachina is
        available.
 
-     - Consider moving ./build dependencies to ../
-
-       This'll help unify the dependencies at the file level.  Might not be
-       worth it, as everything's moving to .debs soon.
-
 ** Plinth: https://github.com/nickdaly/plinth
 
    The UI layer.
@@ -226,8 +221,6 @@ ls -1 *bz2
    A privacy-focused web-proxy.
 
    - Add enabling and disabling Privoxy to the Plinth UI.
-   - Integrate with the [[https://gitweb.torproject.org/https-everywhere.git/tree/HEAD:/utils][HTTPS Everywhere Checker]] and the [[https://github.com/hiviah/https-everywhere-checker][other HTTPS Everywhere
-     Checker]].
 
 ** FreedomBuddy: https://gitorious.org/freedombuddy/freedombuddy
 
