@@ -13,7 +13,7 @@ MOUNTPOINT = /media/freedom
 BOOTPOINT = $(MOUNTPOINT)/boot
 DEVICE = /dev/sdb
 TODAY = `date +%Y.%m%d`
-NAME = freedombox-unstable_$(TODAY)_$(BUILD)
+NAME = build/freedombox-unstable_$(TODAY)_$(BUILD)
 WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
 IMAGE = $(NAME).img
 ARCHIVE = $(NAME).tar.bz2
@@ -68,9 +68,9 @@ endif
 
 # build a virtualbox image
 virtualbox-image: $(STAMP)-vbox-predepend
-	bin/mk_virtualbox_image freedombox-unstable_$(TODAY)_virtualbox-i386-hdd
-	tar -cjvf freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi.tar.bz2 freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi
-	gpg --output freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi.tar.bz2.sig --detach-sig freedombox-unstable_$(TODAY)_virtualbox-i386-hdd.vdi.tar.bz2
+	bin/mk_virtualbox_image $(NAME)
+	tar -cjvf $(ARCHIVE) $(NAME).vdi
+	gpg --output $(ARCHIVE).sig --detach-sig $(ARCHIVE)
 
 # build the weekly test image
 plugserver-image: image
