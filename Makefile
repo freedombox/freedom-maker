@@ -125,7 +125,7 @@ clean-card:
 	sudo rm -rf $(MOUNTPOINT)/*
 	umount $(MOUNTPOINT)
 
-weekly-image: distclean clean-card plugserver-image virtualbox-image
+weekly-image: plugserver-image virtualbox-image
 	mkdir -p $(WEEKLY_DIR)
 	mv *bz2 *sig $(WEEKLY_DIR)
 	cp weekly_template.org $(WEEKLY_DIR)/README.org
