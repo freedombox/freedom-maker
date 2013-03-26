@@ -13,6 +13,13 @@
 #
 # set -e
 
+RUNONCE=/var/freedombox/installed
+
+if [ -e $RUNONCE ]
+then
+    exit
+fi
+
 echo "Preconfiguring dash - else dash and bash will be left in a broken state"
 /var/lib/dpkg/info/dash.preinst install
 
@@ -94,11 +101,13 @@ echo $sysuser:$syspassword | /usr/sbin/chpasswd
 echo "Adding a getty on the serial port"
 echo "T0:12345:respawn:/sbin/getty -L ttyS0 115200 vt100" >> /etc/inittab
 
-echo "Deleting this very same script"
-rm -f /install.sh
+echo -n "Preventing this initial configuration script from running again...  "
+touch $RUNONCE
+echo "Done."
 
-echo "Syncing filesystem just in case something didn't get written"
+echo -n "Syncing filesystem just in case something didn't get written..."
 sync
+echo "Done."
 
 echo "End configuration progress by exiting from the chroot"
 exit
