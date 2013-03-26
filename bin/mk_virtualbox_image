@@ -6,19 +6,24 @@
 # Run vmdebootstrap script to create image
 # Convert image to vdi hard drive
 
-# don't tolerate errors.
-set -e
-
 basedir=`pwd`
 IMAGE=$1
 
-# Get latest vmdebootstrap code
-rm -rf vmdebootstrap
-git clone git://gitorious.org/vmdebootstrap/vmdebootstrap.git
+# don't tolerate errors.
+set -e
+
+# Get latest vmdebootstrap code.
+if [ ! -d "${basedir}/vendor/vmdebootstrap" ]
+then
+    git clone git://gitorious.org/vmdebootstrap/vmdebootstrap.git \
+        vendor/vmdebootstrap
+else
+    git pull vendor/vmdebootstrap origin master
+fi
 
 # Run vmdebootstrap script to create image
 
-sudo ./vmdebootstrap/vmdebootstrap \
+sudo ./vendor/vmdebootstrap/vmdebootstrap \
     --log freedombox.log --log-level debug \
     --image $IMAGE.img --hostname freedombox --size 2G --verbose --enable-dhcp \
     --package ssh --package apache2 --package git --package mercurial \
@@ -26,14 +31,11 @@ sudo ./vmdebootstrap/vmdebootstrap \
     --package python-simplejson \
 	--mirror http://ftp.uk.debian.org/debian/ --package pandoc \
     --package python-cheetah --package python-argparse \
-	--customize=$basedir/bin/freedombox-customize --root-password=freedom \
+	--customize="$basedir/bin/freedombox-customize" --root-password=freedom \
     --arch=i386 --distribution=wheezy
 
 # Convert image to vdi hard drive
 VBoxManage convertdd $IMAGE.img $IMAGE.vdi
-
-# Clean up
-rm -rf vmdebootstrap
 
 #mkdir testing
 #sudo mount -o loop,offset=1048576 freedombox.img testing/
