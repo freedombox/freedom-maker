@@ -12,7 +12,7 @@ BUILD_DIR = build/$(ARCHITECTURE)
 MOUNTPOINT = /media/freedom
 BOOTPOINT = $(MOUNTPOINT)/boot
 DEVICE = /dev/sdb
-TODAY = `date +%Y.%m%d`
+TODAY =: `date +%Y.%m%d`
 NAME = build/freedombox-unstable_$(TODAY)_$(BUILD)
 WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
 IMAGE = $(NAME).img
@@ -27,7 +27,6 @@ $(STAMP)-rootfs-$(ARCHITECTURE): multistrap-configs/fbx-base.conf \
 		bin/projects bin/finalize bin/projects-chroot \
 		$(STAMP)-predepend
 
-	mkdir -p build
 	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
 	ln -sf fstab-$(DESTINATION) fstab
 	mv fstab source/etc
@@ -96,7 +95,7 @@ $(STAMP)-vbox-predepend: $(STAMP)-predepend
 	touch $(STAMP)-vbox-predepend
 
 $(STAMP)-predepend:
-	mkdir -p build
+	mkdir -p build vendor
 	sudo sh -c "apt-get install multistrap qemu-user-static u-boot-tools git mercurial python-docutils mktorrent"
 	touch $(STAMP)-predepend
 
