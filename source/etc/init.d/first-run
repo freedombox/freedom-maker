@@ -11,7 +11,12 @@
 # Short-Description: Finish FBX install on DreamPlug
 ### END INIT INFO
 
-RUNONCE=/var/freedombox/installed
+RUNONCE=/var/freedombox/first-run
+
+if [ -e $RUNONCE ]
+then
+    exit
+fi
 
 function tweak-kernel {
     # Update the kernel unless requested otherwise.
@@ -73,6 +78,8 @@ function mark-complete {
 }
 
 function remove-self {
+    # remove this file.
+
     echo "Removing Self..."
     rm -f /etc/init.d/first-run
     rm -f /etc/rc1.d/S01first-run
@@ -82,11 +89,6 @@ function remove-self {
     rm /etc/rc2.d/S01first-run
     echo "Done Removing Self."
 }
-
-if [ -e $RUNONCE ]
-then
-    exit
-fi
 
 create-keys
 # wifi-ap-setup

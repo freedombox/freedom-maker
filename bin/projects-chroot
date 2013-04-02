@@ -1,1 +1,22 @@
-#! /bin/sh
+#! /bin/bash
+
+function plugserver_setup {
+    # get ready to install stuff with the plugserver scripts
+
+    cd /home/fbx/plugserver/setup/
+    . shared.sh
+
+    armed
+    prerequisite_install
+    prerequisite_config
+}
+
+function plugserver_install {
+    # actually install the stuff.
+
+    cd /home/fbx/plugserver/setup/
+    bash wiki/setup.sh 1
+}
+
+# plugserver_setup
+# plugserver_install

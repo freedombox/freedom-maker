@@ -27,6 +27,10 @@ if [ -n "$1" ]
 then
     homedir=$1
 fi
+if [ -n "$2" ]
+then
+    user=$2
+fi
 
 echo "Adding a few FreedomBox projects to $homedir."
 
