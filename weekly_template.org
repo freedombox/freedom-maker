@@ -41,7 +41,9 @@ These images are a way to test the current (incomplete) FreedomBox build.
 ** TODO Recompile [[weekly_template.org::88][checksums]]
 
 ** TODO Export the thing to text.
+
 ** TODO Export to HTML
+
 * Introduction
 
   These images include several FreedomBox-related projects.  The changes are
@@ -156,6 +158,8 @@ ls -1 *bz2
 
 | md5sum    | ad8f344501954e9769d7aab88614b7f5                                                                                                 |
 | sha512sum | e82e5e788b33dab5699b7096e991d1f3468da3f21304e522a4079168adad61702d6aaca6e768ed47292fb7e0016e29f618d29de6c98f61bdfcda27f71754fa10 |
+
+* Issues
 
 * Changes
 

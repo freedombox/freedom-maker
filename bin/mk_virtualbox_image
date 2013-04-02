@@ -8,18 +8,23 @@
 
 basedir=`pwd`
 IMAGE=$1
+vendor_dir="${basedir}/vendor"
+vmdebootstrap_dir="${vendor_dir}/vmdebootstrap"
 
 # don't tolerate errors.
 set -e
 
 # Get latest vmdebootstrap code.
-if [ ! -d "${basedir}/vendor/vmdebootstrap" ]
+if [ ! -d $vmdebootstrap_dir ]
 then
-    git clone git://gitorious.org/vmdebootstrap/vmdebootstrap.git \
-        vendor/vmdebootstrap
+    mkdir -p $vendor_dir
+    pushd $vendor_dir
+    git clone git://gitorious.org/vmdebootstrap/vmdebootstrap.git
 else
-    git pull vendor/vmdebootstrap origin master
+    pushd $vmdebootstrap_dir
+    git pull origin master
 fi
+popd
 
 # Run vmdebootstrap script to create image
 
