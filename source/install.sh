@@ -43,7 +43,7 @@ dpkg --install /sourcecode/*.deb
 
 # sshd may be left running by the postinst, clean that up
 # ignore the failures, since we're still on the host machine.
-/init.d/ssh stop || true
+/etc/init.d/ssh stop || true
 
 # process installed kernel to create uImage, uInitrd, dtb
 #  using flash-kernel would be a good approach, except it fails in the cross
