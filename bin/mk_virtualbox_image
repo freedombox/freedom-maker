@@ -32,7 +32,7 @@ sudo ./vendor/vmdebootstrap/vmdebootstrap \
     --log freedombox.log --log-level debug \
     --image $IMAGE.img --hostname freedombox --size 2G --verbose --enable-dhcp \
     --package ssh --package apache2 --package git --package mercurial \
-	--package build-essential --package checkinstall \
+	--package build-essential --package checkinstall --package sudo \
     --package python-simplejson \
 	--mirror http://ftp.uk.debian.org/debian/ --package pandoc \
     --package python-cheetah --package python-argparse \
