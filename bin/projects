@@ -34,7 +34,7 @@ fi
 
 echo "Adding a few FreedomBox projects to $homedir."
 
-git clone git://github.com/NickDaly/Plinth.git $homedir/plinth
+git clone git://github.com/jvasile/Plinth.git $homedir/plinth
 git clone git://github.com/jvasile/freedombox-privoxy $homedir/freedombox-privoxy
 git clone git://gitorious.org/exmachina/exmachina.git $homedir/exmachina
 git clone git://github.com/jvasile/withsqlite.git $homedir/withsqlite
