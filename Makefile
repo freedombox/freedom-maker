@@ -91,7 +91,7 @@ endif
 
 # install required files so users don't need to do it themselves.
 $(STAMP)-vbox-predepend: $(STAMP)-predepend
-	sudo sh -c "apt-get install debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp apache2 virtualbox"
+	sudo sh -c "apt-get install debootstrap extlinux qemu-utils parted mbr kpartx python-cliapp virtualbox"
 	touch $(STAMP)-vbox-predepend
 
 $(STAMP)-predepend:
