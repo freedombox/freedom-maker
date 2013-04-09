@@ -3,7 +3,7 @@
 #+TITLE:     FreedomBox Weekly Image Report
 #+AUTHOR:    Nick Daly
 #+EMAIL:     nick.m.daly@gmail.com
-#+DATE:      2013-03-18 Mon
+#+DATE:      
 #+LANGUAGE:  en
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
@@ -149,15 +149,15 @@ ls -1 *bz2
   return all_data
 #+end_src
 
-** ~freedombox-unstable_2012.1021_dreamplug-armel-card.img.tar.bz2~
+** ~ ~
 
-| md5sum    | 317b93f3f3ea0b20b0be2ddc7f23e8c6                                                                                                 |
-| sha512sum | 54169616ca41934092e4a7eb68e72afcec8c7dc40d995802cfd18ceed4880c096fe76a541e790f8926244062ecb7b3c25e565b622704e26aad94cca05fbd6330 |
+| md5sum    | |
+| sha512sum | |
 
-** ~freedombox-unstable_2012.1021_virtualbox-i386-hdd.vdi.tar.bz2~
+** ~ ~
 
-| md5sum    | ad8f344501954e9769d7aab88614b7f5                                                                                                 |
-| sha512sum | e82e5e788b33dab5699b7096e991d1f3468da3f21304e522a4079168adad61702d6aaca6e768ed47292fb7e0016e29f618d29de6c98f61bdfcda27f71754fa10 |
+| md5sum    | |
+| sha512sum | |
 
 * Issues
 
@@ -165,93 +165,8 @@ ls -1 *bz2
 
 * Outstanding TODOs
 
-** Freedom Maker: https://github.com/nickdaly/freedom-maker
-
-   The FBX image build tool.
-
-   - The setup process generates GPG keys for user.
-   - Setup generates GPG and SSL keys for the box itself.
-   - Link network/interfaces per machine target
-   - Add fbx to /etc/sudoers
-   - Update the login message.
-   - Make Plinth Easy to Launch
-
-     - Make plinth in FM during image build process, or,
-
-     - Build some giant startup script to run Plinth that handles
-       everything:
-
-       - make-ing plinth
-       - other requirements
-
-       Plinth's own start.sh should handle its own local installation,
-       nothing else.  The big script should assume ~/exmachina is
-       available.
-
-** Plinth: https://github.com/nickdaly/plinth
-
-   The UI layer.
-
-   - Links should work for remote clients.
-   - Turn DHCP (for clients) on/off through Plinth
-   - Select DHCP or Static IP in Plinth
-   - Integrate basic OpenVPN settings into Plinth
-   - Integrate Dnsmasq into Plinth
-   - Integrate FreedomBuddy into Plinth.
-   - Hook FreedomBuddy into SSH.
-   - Add more OpenVPN FreedomBuddy setup instructions.
-   - Include missing dependencies.
-
-     - psmisc
-     - python2.7
-     - libpython2.7
-     - sudo
-
-   - Move =/build/= to =/vendor/=, update references in:
-
-     - plinth/start.sh
-     - plinth/Makefile
-
-   - Don't POST password on login fails.
-   - CherryPy HTTPRedirects Shouldn't Change Server names.
-   - Use Publish to publish Plinth's Source
-
-** ExMachina: http://gitorious.org/exmachina/exmachina
-
-   - Verify patches from [[betweennowhere.net/blog]].
-
-** FreedomBox Privoxy: https://github.com/jvasile/freedombox-privoxy
-
-   A privacy-focused web-proxy.
-
-   - Add enabling and disabling Privoxy to the Plinth UI.
-
-** FreedomBuddy: https://gitorious.org/freedombuddy/freedombuddy
-
-   A resilient communication tool.
-
-   - Build an SSH-VPN connector.
-   - Fix Outstanding FIXMEs
-   - Hook into Plinth.
-   - Add more OpenVPN FreedomBuddy setup instructions.
-
-** Project Publish: https://gitorious.org/project-publish/project-publish
-
-   An easy-to-use publishing tool.
-
-   - *Complete*
-
-** PlugServer Setup: https://bitbucket.org/nickdaly/plugserver
-
-   A configuration tool.
-
-   - *Complete*
-
-** With SQLite: https://github.com/jvasile/withsqlite
-
-   A database-management Python package.
-
-   - *Complete*
+  See the [[http://wiki.debian.org/FreedomBox/BetaReleaseTodos][beta-release TODOs]] and the [[http://wiki.debian.org/FreedomBox/1.0Todos][1.0-release TODOs]] for details.  Please take
+  entries off the list and help finish them.
 
 Enjoy!
 Nick
