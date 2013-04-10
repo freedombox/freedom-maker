@@ -17,6 +17,7 @@ NAME = build/freedombox-unstable_$(TODAY)_$(BUILD)
 WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
 IMAGE = $(NAME).img
 ARCHIVE = $(NAME).tar.bz2
+SIGNATURE = $(ARCHIVE).sig
 LOOP = /dev/loop0
 
 # populate a tree with DreamPlug root filesystem
@@ -67,9 +68,18 @@ endif
 
 # build a virtualbox image
 virtualbox-image: $(STAMP)-vbox-predepend
+	$(eval TEMP_ARCHITECTURE=$(ARCHITECTURE))
+	$(eval TEMP_MACHINE$(MACHINE))
+	$(eval TEMP_DESTINATION$(DESTINATION))
+	$(eval ARCHITECTURE=i386)
+	$(eval MACHINE=virtualbox)
+	$(eval DESTINATION=hdd)
 	bin/mk_virtualbox_image $(NAME)
 	tar -cjvf $(ARCHIVE) $(NAME).vdi
-	gpg --output $(ARCHIVE).sig --detach-sig $(ARCHIVE)
+	gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
+	$(eval ARCHITECTURE=$(TEMP_ARCHITECTURE))
+	$(eval MACHINE=$(TEMP_MACHINE)
+	$(eval DESTINATION=$(TEMP_DESTINATION)
 
 # build the weekly test image
 plugserver-image: image
@@ -83,7 +93,7 @@ endif
 	dd if=$(DEVICE) of=$(IMAGE) bs=1M count=1900
 	@echo "Image copied.  The microSD card may now be removed."
 	tar -cjvf $(ARCHIVE) $(IMAGE)
-	gpg --output $(ARCHIVE).sig --detach-sig $(ARCHIVE)
+	gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 
 #
 # meta
