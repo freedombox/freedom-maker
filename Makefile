@@ -1,4 +1,4 @@
-# /usr/bin/make
+#! /usr/bin/make
 
 # armel amd64 i386
 ARCHITECTURE = armel
@@ -57,7 +57,6 @@ ifeq ($(DESTINATION),card)
 endif
 ifeq ($(MACHINE),guruplug)
 # we can't flash the guru plug's kernel
-	mkdir -p $(MOUNTPOINT)/var/freedombox/
 	touch $(MOUNTPOINT)/var/freedombox/dont-tweak-kernel
 endif
 	sync
@@ -113,8 +112,7 @@ clean:
 # just in case I tried to build before plugging in the USB drive.
 	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
 	sudo rm -rf $(BUILD_DIR)
-	-rm -f $(IMAGE) $(ARCHIVE)
-	-rm -f $(STAMP)-rootfs-* $(STAMP)-*
+	-rm -f $(IMAGE) $(ARCHIVE) $(STAMP)-*
 
 distclean: clean clean-card
 	sudo rm -rf build
