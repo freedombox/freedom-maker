@@ -136,7 +136,7 @@ clean-card:
 
 weekly-image: plugserver-image virtualbox-image
 	mkdir -p $(WEEKLY_DIR)
-	mv *bz2 *sig $(WEEKLY_DIR)
+	mv build/*bz2 build/*sig $(WEEKLY_DIR)
 	cp weekly_template.org $(WEEKLY_DIR)/README.org
 	echo "http://betweennowhere.net/freedombox-images/$(WEEKLY_DIR)" > torrent/webseed
 	@echo ""
