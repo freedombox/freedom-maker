@@ -75,7 +75,7 @@ virtualbox-image: $(STAMP)-vbox-predepend
 	$(eval DESTINATION=hdd)
 	bin/mk_virtualbox_image $(NAME)
 	tar -cjvf $(ARCHIVE) $(NAME).vdi
-	gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
+	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	$(eval ARCHITECTURE=$(TEMP_ARCHITECTURE))
 	$(eval MACHINE=$(TEMP_MACHINE)
 	$(eval DESTINATION=$(TEMP_DESTINATION)
@@ -92,7 +92,7 @@ endif
 	dd if=$(DEVICE) of=$(IMAGE) bs=1M count=1900
 	@echo "Image copied.  The microSD card may now be removed."
 	tar -cjvf $(ARCHIVE) $(IMAGE)
-	gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
+	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 
 #
 # meta
