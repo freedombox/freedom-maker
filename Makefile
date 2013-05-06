@@ -67,18 +67,18 @@ endif
 
 # build a virtualbox image
 virtualbox-image: $(STAMP)-vbox-predepend
-	$(eval TEMP_ARCHITECTURE=$(ARCHITECTURE))
-	$(eval TEMP_MACHINE$(MACHINE))
-	$(eval TEMP_DESTINATION$(DESTINATION))
-	$(eval ARCHITECTURE=i386)
-	$(eval MACHINE=virtualbox)
-	$(eval DESTINATION=hdd)
+	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
+	$(eval TEMP_MACHINE = $(MACHINE))
+	$(eval TEMP_DESTINATION = $(DESTINATION))
+	$(eval ARCHITECTURE = i386)
+	$(eval MACHINE = virtualbox)
+	$(eval DESTINATION = hdd)
 	bin/mk_virtualbox_image $(NAME)
 	tar -cjvf $(ARCHIVE) $(NAME).vdi
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
-	$(eval ARCHITECTURE=$(TEMP_ARCHITECTURE))
-	$(eval MACHINE=$(TEMP_MACHINE)
-	$(eval DESTINATION=$(TEMP_DESTINATION)
+	$(eval ARCHITECTURE = $(TEMP_ARCHITECTURE))
+	$(eval MACHINE = $(TEMP_MACHINE))
+	$(eval DESTINATION = $(TEMP_DESTINATION))
 
 # build the weekly test image
 plugserver-image: image
