@@ -11,53 +11,83 @@
 # Short-Description: Finish FBX install on DreamPlug
 ### END INIT INFO
 
+RUNONCE=/var/freedombox/first-run
+
+if [ -e $RUNONCE ]
+then
+    exit
+fi
+
 function tweak-kernel {
     # Update the kernel unless requested otherwise.
 
+    echo -n "Flashing Kernel..."
+
     if [ -e /var/freedombox/dont-tweak-kernel ]
     then
-        rm /var/freedombox/dont-tweak-kernel
+        echo "Skipped Flashing Kernel."
+        return
     else
         kernel_version="$(/bin/ls $mountpoint/boot/vmlinuz-*-kirkwood | sort -rn | head -n1 | sed s#$mountpoint/boot/vmlinuz-##)"
 
         mount -t proc proc /proc
         flash-kernel $kernel_version
         umount /proc
+
+        echo "Done Flashing Kernel."
     fi
 }
 
 function wifi-ap-setup {
     # configure wireless access point with spinifex's prebuilt firmware
 
-    echo "Sleeping 30s for DHCP"
+    echo "Configuring WIFI..."
+
+    echo "  Sleeping 30s for DHCP"
     sleep 30    # wait for dhcp
 
-    echo "Installing UAP Firmware."
+    echo "  Installing UAP Firmware."
     wget -O /tmp/marvell_wifi_firmware.tar.gz http://www.spinifex.com.au/plugs/downloads/dreamplug/marvell_wifi_firmware.tar.gz
     tar -C /tmp -zxf /tmp/marvell_wifi_firmware.tar.gz
     mkdir -p /lib/firmware/mrvl
     cp /tmp/lib/firmware/mrvl/* /lib/firmware/mrvl
+
+    echo "Done Configuring WIFI."
 }
 
 function create-keys {
-    echo "Creating Keys."
+    echo "Creating Keys..."
 
-    echo "Creating SSH keys."
+    echo "  Creating SSH keys."
     rm /etc/ssh/ssh_host_*
     dpkg-reconfigure openssh-server
 
-    echo "Need to create other keys."
+    echo "  Need to create other keys."
     # gpg --batch --gen-key
     # see http://lists.gnupg.org/pipermail/gnupg-users/2003-March/017376.html
+
+    echo "Done Creating Keys."
+}
+
+function mark-complete {
+    # Prevent this initial configuration script from running again.
+
+    echo "Marking Complete..."
+    touch $RUNONCE
+    echo "Done Marking Complete."
 }
 
 function remove-self {
+    # remove this file.
+
+    echo "Removing Self..."
     rm -f /etc/init.d/first-run
     rm -f /etc/rc1.d/S01first-run
     rm -f /etc/rc2.d/S01first-run
     rm /etc/init.d/first-run
     rm /etc/rc1.d/S01first-run
     rm /etc/rc2.d/S01first-run
+    echo "Done Removing Self."
 }
 
 create-keys
@@ -65,7 +95,7 @@ create-keys
 
 # the last things we do before quitting.
 tweak-kernel
-remove-self
+mark-complete
 
-echo "Kernel flashed.  Rebooting."
+# we're done, reboot.
 reboot

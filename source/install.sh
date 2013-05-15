@@ -6,8 +6,12 @@
 # install.sh: FreedomBox system configuration for a DreamPlug image.
 #
 
-# no errors!  bad errors!  bad!
-set -e
+# Most of the commands in this file will fail because the commands make
+# invalid assumptions about the runtime environment.  Therefore, failing
+# on error is a terrible idea for this script.  This is why the line
+# below is commented out:
+#
+# set -e
 
 echo "Preconfiguring dash - else dash and bash will be left in a broken state"
 /var/lib/dpkg/info/dash.preinst install
@@ -27,7 +31,7 @@ export FK_MACHINE="Globalscale Technologies Dreamplug"
 dpkg --configure -a || true
 
 echo "Adding source packages to filesystem"
-apt-get update
+apt-get update || true
 dpkg --get-selections > /tmp/selections
 mkdir -p /sourcecode
 cd sourcecode
@@ -39,7 +43,7 @@ dpkg --install /sourcecode/*.deb
 
 # sshd may be left running by the postinst, clean that up
 # ignore the failures, since we're still on the host machine.
-/init.d/ssh stop || true
+/etc/init.d/ssh stop || true
 
 # process installed kernel to create uImage, uInitrd, dtb
 #  using flash-kernel would be a good approach, except it fails in the cross
@@ -90,11 +94,9 @@ echo $sysuser:$syspassword | /usr/sbin/chpasswd
 echo "Adding a getty on the serial port"
 echo "T0:12345:respawn:/sbin/getty -L ttyS0 115200 vt100" >> /etc/inittab
 
-echo "Deleting this very same script"
-rm -f /install.sh
-
-echo "Syncing filesystem just in case something didn't get written"
+echo -n "Syncing filesystem just in case something didn't get written..."
 sync
+echo "Done."
 
 echo "End configuration progress by exiting from the chroot"
 exit

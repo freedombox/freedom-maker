@@ -3,19 +3,26 @@
 #+TITLE:     FreedomBox Weekly Image Report
 #+AUTHOR:    Nick Daly
 #+EMAIL:     nick.m.daly@gmail.com
-#+DATE:      2012-11-11 Sun
+#+DATE:      
 #+LANGUAGE:  en
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
 
 Hi folks, welcome to the Nth weekly FreedomBox test image and progress report.
+These images are a way to test the current (incomplete) FreedomBox build.
 
-* TODO Release Todos [0/10]                                        :noexport:
-  SCHEDULED: <2013-02-24 Sun ++1w> DEADLINE: <2012-11-04 Sun ++1w -2d>
+* TODO Release Todos [0/11]                                        :noexport:
+  SCHEDULED: <2013-03-10 Sun ++1w> DEADLINE: <2013-03-03 Sun ++1w -2d>
+  - State "DONE"       from "TODO"       [2013-02-26 Tue 20:22]
+  :PROPERTIES:
+  :LAST_REPEAT: [2013-02-26 Tue 20:22]
+  :END:
 
 ** TODO Change the [[weekly_template.org::6][date]]
 
 ** TODO Change the [[Hi%20folks,%20welcome%20to%20the%20Nth%20weekly%20FreedomBox%20test%20image%20and][number]]
+
+** TODO List new [[*What%20Does%20it%20Do?][capabilities]]
 
 ** TODO List unresolved [[*Issues][issues]]
 
@@ -34,7 +41,9 @@ Hi folks, welcome to the Nth weekly FreedomBox test image and progress report.
 ** TODO Recompile [[weekly_template.org::88][checksums]]
 
 ** TODO Export the thing to text.
+
 ** TODO Export to HTML
+
 * Introduction
 
   These images include several FreedomBox-related projects.  The changes are
@@ -45,15 +54,21 @@ Hi folks, welcome to the Nth weekly FreedomBox test image and progress report.
 
   The image is available at:
 
-      https://www.betweennowhere.net/tracker
+      https://download.internetmachines.co.uk/tracker/freedombox-images/
 
       https://www.betweennowhere.net/tracker/freedombox-unstable.torrent
 
       https://www.betweennowhere.net/tracker/freedombox-unstable.tar.bz2
 
+      https://www.betweennowhere.net/tracker/freedombox-images/
+
   Today's image was produced with:
 
       : $ make weekly-image
+
+* What Does it Do?
+
+  Right now, it serves as a privacy protecting proxy.
 
 * How do I try it out?
 
@@ -134,15 +149,15 @@ ls -1 *bz2
   return all_data
 #+end_src
 
-** ~freedombox-unstable_2012.1021_dreamplug-armel-card.img.tar.bz2~
+** ~ ~
 
-| md5sum    | 317b93f3f3ea0b20b0be2ddc7f23e8c6                                                                                                 |
-| sha512sum | 54169616ca41934092e4a7eb68e72afcec8c7dc40d995802cfd18ceed4880c096fe76a541e790f8926244062ecb7b3c25e565b622704e26aad94cca05fbd6330 |
+| md5sum    | |
+| sha512sum | |
 
-** ~freedombox-unstable_2012.1021_virtualbox-i386-hdd.vdi.tar.bz2~
+** ~ ~
 
-| md5sum    | ad8f344501954e9769d7aab88614b7f5                                                                                                 |
-| sha512sum | e82e5e788b33dab5699b7096e991d1f3468da3f21304e522a4079168adad61702d6aaca6e768ed47292fb7e0016e29f618d29de6c98f61bdfcda27f71754fa10 |
+| md5sum    | |
+| sha512sum | |
 
 * Issues
 
@@ -150,73 +165,8 @@ ls -1 *bz2
 
 * Outstanding TODOs
 
-** Freedom Maker: https://github.com/nickdaly/freedom-maker
-
-   The FBX image build tool.
-
-   - The setup process generates GPG keys for user.
-
-     - Consider reworking the [[http://lists.gnupg.org/pipermail/gnupg-users/2003-March/017376.html][batch script]] for this purpose.
-
-       - What about licensing?
-
-     - How do we guarantee sufficient random data?  Maybe somediddly
-       like: ~wget -m -k -K -E -Q 10m -l 10 -w 5s wiki.debian.org~
-
-   - Setup generates GPG and SSL keys for the box itself.
-
-** Plinth: https://github.com/nickdaly/plinth
-
-   The UI layer.
-
-   - Links should work for remote clients.
-   - Turn DHCP (for clients) on/off through Plinth
-   - Select DHCP or Static IP in Plinth
-   - Integrate basic OpenVPN settings into Plinth
-   - Integrate Dnsmasq into Plinth
-   - Integrate FreedomBuddy into Plinth.
-   - Hook FreedomBuddy into SSH.
-   - Add more OpenVPN FreedomBuddy setup instructions.
-
-
-** ExMachina: http://gitorious.org/exmachina/exmachina
-
-   - Verify patches from [[betweennowhere.net/blog]].
-
-** FreedomBox Privoxy: https://github.com/jvasile/freedombox-privoxy
-
-   A privacy-focused web-proxy.
-
-   - Add enabling and disabling Privoxy to the Plinth UI.
-   - Integrate with the [[https://gitweb.torproject.org/https-everywhere.git/tree/HEAD:/utils][HTTPS Everywhere Checker]] and the [[https://github.com/hiviah/https-everywhere-checker][other HTTPS Everywhere
-     Checker]].
-
-** FreedomBuddy: https://gitorious.org/freedombuddy/freedombuddy
-
-   A resilient communication tool.
-
-   - Build an SSH-VPN connector.
-   - Fix Outstanding FIXMEs
-   - Hook into Plinth.
-   - Add more OpenVPN FreedomBuddy setup instructions.
-
-** Project Publish: https://gitorious.org/project-publish/project-publish
-
-   An easy-to-use publishing tool.
-
-   - *Complete*
-
-** PlugServer Setup: https://bitbucket.org/nickdaly/plugserver
-
-   A configuration tool.
-
-   - *Complete*
-
-** With SQLite: https://github.com/jvasile/withsqlite
-
-   A database-management Python package.
-
-   - *Complete*
+  See the [[http://wiki.debian.org/FreedomBox/BetaReleaseTodos][beta-release TODOs]] and the [[http://wiki.debian.org/FreedomBox/1.0Todos][1.0-release TODOs]] for details.  Please take
+  entries off the list and help finish them.
 
 Enjoy!
 Nick

@@ -326,7 +326,7 @@ source= line.
 To populate the stick with bits for a DreamPlug, just plug it in to your
 computer and type:
 
-	make
+	make DESTINATION=usb plugserver-image
 
 This will build a file tree under build/dreamplug, representing the contents of
 a root file system, then that content will be copied to the stick.
@@ -356,6 +356,9 @@ thanks to Nick Hardiman for putting these instructions together.
 
     # apt-get install parted
 
+   If you don't hate yourself, use GParted, click through the relevant
+   bits and skip on to step 10.
+
 7. Create 2 partitions.  Use cfdisk, parted, gparted or similar.
 
     # cfdisk  /dev/sdb
@@ -363,7 +366,7 @@ thanks to Nick Hardiman for putting these instructions together.
    a. First partition: 128meg (no smaller or the kernel copy will run
       out of room and make - see below - will end with an error).
 
-   b. Second partition: The rest of the card (anything over 600 MB
+   b. Second partition: The rest of the card (anything over 800 MB
       should work).
 
 8. Make a note of the SD card’s device name.  Mine is /dev/sdb (my
@@ -430,11 +433,11 @@ thanks to Nick Hardiman for putting these instructions together.
 
 17. Kick off:
 
-    $ make weekly-card
+    $ make weekly-image
 
 18. Enter your password when asked by "sudo".  If that fails, run:
 
-    $ su -c "make weekly-card"
+    $ su -c "make weekly-image"
 
 If you do that, you'll need to enter the root password to build the image.
 
@@ -483,7 +486,8 @@ Digging into the code should be fairly straightforward.  There are only six
 files you need to be aware of:
 
 - /Makefile: The makefile that describes and builds the system.
-- /mk_dreamplug_rootfs: Builds the DreamPlug's root file-system.
+- /bin/mk_dreamplug_rootfs: Builds the DreamPlug's root file-system.
+- /bin/mk_virtualbox_image: Builds the VirtualBox image.
 - /bin/projects: The place for external projects to hook into and customize
   themselves before they're copied to the image.
 - /bin/finalize: Finalizes and prepares the build for booting.
@@ -495,22 +499,26 @@ files you need to be aware of:
 
 There are three major targets to be aware of:
 
-- dreamstick: The default target.  This loads an image to a USB drive that can
-  be used to install the FreedomBox without opening up your DreamPlug and
+- plugserver-image: The default target.  This loads an image to a USB drive that
+  can be used to install the FreedomBox without opening up your DreamPlug and
   voiding the warranty.  You'll need a JTAG, though.
-- weekly-card: The target used to produce the weekly FreedomBox test release.
+- weekly-image: The target used to produce the weekly FreedomBox test release.
   This will copy the image to a card that can be popped directly into the
   microSD card slot in the DreamPlug.  The DreamPlug will boot happily without
   needing a JTAG.
-- stamp-dreamplug-rootfs: The root file system itself.  It doesn't get installed
-  anywhere (that's done by the other two targets), but is a good way to test
-  whether the image will actually build, without waiting for all that pesky
-  hardware I/O.
+- rootfs: The root file system itself.  It doesn't get installed anywhere
+  (that's done by the other two targets), but is a good way to test whether the
+  image will actually build, without waiting for all that pesky hardware I/O.
 
-## mk_dreamplug_rootfs
+## /bin/mk_dreamplug_rootfs
 
-Starts building the system by creating all the destination directories and
-installing the base system.
+Starts building the DreamPlug system image by creating all the destination
+directories and installing the base system.
+
+## /bin/mk_virtualbox_image
+
+Starts building the VirtualBox system image by creating all the destination
+directories and installing the base system.
 
 ## /bin/projects
 

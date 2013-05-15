@@ -1,5 +1,6 @@
 *~
 build
+vendor
 stamp-predepend
 rootfs-*
 stamp-dreamplug-rootfs
