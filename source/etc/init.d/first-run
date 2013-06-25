@@ -73,6 +73,7 @@ function mark-complete {
     # Prevent this initial configuration script from running again.
 
     echo "Marking Complete..."
+    mkdir -p "${RUNONCE%/*}"
     touch $RUNONCE
     echo "Done Marking Complete."
 }
