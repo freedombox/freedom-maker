@@ -36,7 +36,7 @@ sudo ./vendor/vmdebootstrap/vmdebootstrap \
     --package python-simplejson \
 	--mirror http://ftp.uk.debian.org/debian/ --package pandoc \
     --package python-cheetah --package python-argparse \
-	--customize="$basedir/bin/freedombox-customize" --root-password=freedom \
+	--customize="$basedir/bin/virtualbox-customize" --root-password=freedom \
     --arch=i386 --distribution=wheezy
 
 # Convert image to vdi hard drive
