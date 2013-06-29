@@ -34,6 +34,10 @@ they're going to do before you run them.
 
 # Recent Firmware Necessary!
 
+If you received your DreamPlug from GlobalScale during or after fall of 2012,
+you probably don't need to reflash your DreamPlug and can try skipping directly
+to the *To Use It* section.
+
 Modern kernels need a relatively recent version of the u-boot firmware.  If
 you still use old firmware (including what Global Scale ships on the units by
 default), then you need to update, which requires having the JTAG dongle (to
@@ -45,7 +49,8 @@ Note that re-flashing firmware will erase all configuration variables.  If
 preserving your exising boot config is important, use printenv and make notes
 before proceeding.  Also note that any time you're re-flashing boot firmware,
 there is a slight chance you could 'brick' your device leaving it unbootable.
-If that happens, the JTAG interface can be used to recover.
+If that happens, the JTAG interface can be used to recover.  See the *Errors* ->
+*Unbricking a DreamPlug* section of this document.
 
 ## Updating DreamPlug's U-Boot
 
@@ -114,82 +119,18 @@ This handy table lists the file sizes for all versions we know of:
 
 At this point, you should be able to reset the DreamPlug and have it boot to a
 serial console prompt.  If that fails, you'll need real JTAG magic to try again.
+That JTAG magic is described in the *Errors* -> *Unbricking a DreamPlug* section
+at the end of this document.
 
 Note that freedom-maker now includes DreamPlug firmware in the FAT partition on
 USB stick targets.  To use a freedom-maker USB stick to update your u-boot,
 ignore the instructions above about how to wget and extract the firmware, and
 just connect to the DreamPlug and follow the bootloader instructions.
 
-## Unbricking a DreamPlug
-
-These instructions were copied and edited from:
-
-https://www.newit.co.uk/forum/index.php?PHPSESSID=t9b8s83gen1h10m65p0s3q4md6&topic=2835.0
-
-These instructions should get you from a Bricked DreamPlug to getting uboot
-running in RAM ready to restore your system from USB/TFTP.  They should be used
-if you erased your DreamPlug's bootloader and shut it off before writing the new
-bootloader.
-
-0. Edit your /etc/apt/sources.list to make sure you're using Wheezy or later.
-
-1. First, install the required packages:
-
-    $ sudo apt-get install openocd telnet screen
-
-2. Connect & Power up your device with the mini usb cable and JTAG.
-
-3. Open a terminal session and connect to the plug console:
-
-   $ sudo screen /dev/ttyUSB0 115200
-
-4. Open a 2nd terminal session.
-
-    $ wget http://www.downloadsnewit.co.uk/u-boot/recovery/dreamplug/u-boot.elf
-    $ sudo openocd -f /usr/share/openocd/scripts/board/sheevaplug.cfg -s /usr/share/openocd/scripts
-
-5. You should see output similar to this:
-
-    Open On-Chip Debugger 0.4.0 (2010-10-08-15:52)
-    Licensed under GNU GPL v2
-    For bug reports, read
-       http://openocd.berlios.de/doc/doxygen/bugs.html
-    2000 kHz
-    trst_and_srst separate srst_gates_jtag trst_push_pull srst_open_drain
-    jtag_nsrst_delay: 200
-    jtag_ntrst_delay: 200
-    dcc downloads are enabled
-    Warn : use 'feroceon.cpu' as target identifier, not '0'
-    Info : clock speed 2000 kHz
-    Info : JTAG tap: feroceon.cpu tap/device found: 0x20a023d3 (mfg: 0x1e9, part: 0x0a02, ver: 0x2)
-    Info : Embedded ICE version 0
-    Info : feroceon.cpu: hardware has 1 breakpoint/watchpoint unit
-
-6. If you are using a JTAG and getting errors at this point replug or even swap
-   JTAG cables and retry.
-
-7. Next open a 3rd terminal session.
-
-    $ telnet localhost 4444
-
-8. Output should look like this:
-
-    Trying ::1...
-    Trying 127.0.0.1...
-    Connected to localhost.
-    Escape character is '^]'.
-    Open On-Chip Debugger
-    >
-
-9. Then, in that third seesion, run:
-
-    reset;sheevaplug_init;load_image u-boot.elf;resume 0x00600000
-
-10. Now you should see Uboot starting to run in the 1st terminal session and you
-    are ready to start restoring your plug.
-
-11. DON'T turn off your DreamPlug.  Follow the "Updating the DreamPlug's U-Boot"
-    instructions.
+After you restore your microSD card to the DreamPlug, you should try booting it.
+If the boot fails because of an "Invalid boot device", you'll need to interrupt
+the boot process again to update the firmware with the settings described in the
+*Errors* -> *Unbricking a DreamPlug* section, at the end of this document.
 
 # To Use It
 
@@ -288,7 +229,7 @@ from tar about timestamps being in the future.  It is safe to ignore these.
 
 On reboot, you may want to interrupt the boot and type the following to ensure
 you boot from the internal microSD by default.  This bootcmd line elides the
-time-consuming attempts to boot grom gigE, which makes boot go much faster:
+time-consuming attempts to boot from gigE, which makes boot go much faster:
 
 	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
 	setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage
@@ -545,3 +486,110 @@ This is executed from a chroot during the build process to do configuration that
 needs to be done on the device itself.  You shouldn't need to modify this.  If
 you're installing a project that needs to change how the system configures
 itself, you're probably doing something wrong.
+
+# Errors
+
+This section documents known errors with the process and what you can do about
+them.
+
+## Invalid boot device
+
+If, while booting your DreamPlug, you receive this error message:
+
+    2 Storage Device(s) found
+
+    ** Invalid boot device **
+
+    ** Invalid boot device **
+    Wrong Image Format for bootm command
+    ERROR: can't get kernel image!
+
+Make sure you've updated your DreamPlug to boot from the internal microSD card.
+You'll need to plug in the JTAG and interrupt the boot process to paste in these
+commands:
+
+	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
+	setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage
+	setenv x_bootcmd_initrd fatload usb 0 0x6900000 uInitrd
+	setenv x_bootargs_root root=/dev/sda2 rootdelay=10
+	saveenv
+	reset
+
+## Unbricking a DreamPlug
+
+You should first try to follow the (simpler instructions from
+GlobalScale)[https://code.google.com/p/dreamplug/downloads/detail?name=DreamPlug-Reflash%20uboot%20guide_%20Aug-28-2012.pdf&can=2&q=].
+Search for the "[Reflash uboot
+guide](https://code.google.com/p/dreamplug/downloads/list)" if the link doesn't
+work.
+
+If those instructions don't work, you should then try these instructions.
+
+These instructions were copied and edited from:
+
+https://www.newit.co.uk/forum/index.php?PHPSESSID=t9b8s83gen1h10m65p0s3q4md6&topic=2835.0
+
+These instructions should get you from a Bricked DreamPlug to getting uboot
+running in RAM ready to restore your system from USB/TFTP.  They should be used
+if you erased your DreamPlug's bootloader and shut it off before writing the new
+bootloader.
+
+0. Edit your /etc/apt/sources.list to make sure you're using Wheezy or later.
+
+1. First, install the required packages:
+
+    $ sudo apt-get install openocd telnet screen
+
+2. Connect & Power up your device with the mini usb cable and JTAG.
+
+3. Open a terminal session and connect to the plug console:
+
+   $ sudo screen /dev/ttyUSB0 115200
+
+4. Open a 2nd terminal session.
+
+    $ wget http://www.downloadsnewit.co.uk/u-boot/recovery/dreamplug/u-boot.elf
+    $ sudo openocd -f /usr/share/openocd/scripts/board/sheevaplug.cfg -s /usr/share/openocd/scripts
+
+5. You should see output similar to this:
+
+    Open On-Chip Debugger 0.4.0 (2010-10-08-15:52)
+    Licensed under GNU GPL v2
+    For bug reports, read
+       http://openocd.berlios.de/doc/doxygen/bugs.html
+    2000 kHz
+    trst_and_srst separate srst_gates_jtag trst_push_pull srst_open_drain
+    jtag_nsrst_delay: 200
+    jtag_ntrst_delay: 200
+    dcc downloads are enabled
+    Warn : use 'feroceon.cpu' as target identifier, not '0'
+    Info : clock speed 2000 kHz
+    Info : JTAG tap: feroceon.cpu tap/device found: 0x20a023d3 (mfg: 0x1e9, part: 0x0a02, ver: 0x2)
+    Info : Embedded ICE version 0
+    Info : feroceon.cpu: hardware has 1 breakpoint/watchpoint unit
+
+6. If you are using a JTAG and getting errors at this point replug or even swap
+   JTAG cables and retry.
+
+7. Next open a 3rd terminal session.
+
+    $ telnet localhost 4444
+
+8. Output should look like this:
+
+    Trying ::1...
+    Trying 127.0.0.1...
+    Connected to localhost.
+    Escape character is '^]'.
+    Open On-Chip Debugger
+    >
+
+9. Then, in that third seesion, run:
+
+    reset;sheevaplug_init;load_image u-boot.elf;resume 0x00600000
+
+10. Now you should see Uboot starting to run in the 1st terminal session and you
+    are ready to start restoring your plug.
+
+11. DON'T turn off your DreamPlug.  Follow the "Updating the DreamPlug's U-Boot"
+    instructions.
