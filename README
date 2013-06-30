@@ -202,6 +202,9 @@ the optional JTAG dongle), is to use 'screen', like so:
 
 	screen /dev/ttyUSB0 115200
 
+If ``screen`` fails, see the *Errors* -> *Troubleshooting Screen* section at the
+end of this document.
+
 Interrupt the boot by pressing a key during the autoboot countdown, and type the
 following to boot from the USB stick:
 
@@ -514,6 +517,29 @@ commands:
 	setenv x_bootargs_root root=/dev/sda2 rootdelay=10
 	saveenv
 	reset
+
+## Troubleshooting Screen
+
+If screen fails when you're running:
+
+    $ sudo screen /dev/ttyUSB0 115200
+    
+First, verify that the ``usbserial`` module is loaded:
+
+    $ sudo modprobe usbserial
+    $ sudo lsmod | grep usbserial
+    
+Then, make sure your JTAG is plugged into both your DreamPlug and USB ports and
+verify that you can access the ``/dev/ttyUSB0`` device:
+
+    $ sudo tail -f /dev/ttyUSB0
+
+If that fails, you can try creating the device:
+
+    $ sudo mknod /dev/ttyUSB0 c 188 0
+
+You may then be able to access the device via tail or screen.  If not, then
+[DIYF](https://duckduckgo.com).
 
 ## Unbricking a DreamPlug
 
