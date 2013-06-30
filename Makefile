@@ -24,13 +24,12 @@ LOOP = /dev/loop0
 rootfs: $(STAMP)-rootfs-$(ARCHITECTURE)
 $(STAMP)-rootfs-$(ARCHITECTURE): multistrap-configs/fbx-base.conf \
 		multistrap-configs/fbx-$(ARCHITECTURE).conf \
-		bin/mk_dreamplug_rootfs \
+		bin/mk_dreamplug_rootfs bin/fix-symlinks \
 		bin/projects bin/finalize bin/projects-chroot \
 		$(STAMP)-predepend
 
 	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
-	ln -sf fstab-$(DESTINATION) fstab
-	mv fstab source/etc
+	bin/fix-symlinks $(MACHINE) $(DESTINATION)
 	sudo bin/mk_dreamplug_rootfs $(ARCHITECTURE) multistrap-configs/fbx-$(ARCHITECTURE).conf
 	touch $(STAMP)-rootfs-$(ARCHITECTURE)
 

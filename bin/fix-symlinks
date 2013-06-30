@@ -1,0 +1,65 @@
+#! /bin/bash
+#
+# Copyright 2013 by Nick Daly <nick.m.daly@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+# fix-symlinks
+#
+# Prepare symlinks for appropriate machine in /source directory.
+
+# We don't tolerate errors.
+set -e
+
+if [ -n "$1" ]
+then
+    machine=$1
+else
+    machine="dreamplug"
+fi
+if [ -n "$2" ]
+then
+    destination=$2
+else
+    destination="card"
+fi
+
+function symlink_fix {
+    # fix symlinks for specified file.
+    #
+    # $1: symlink to fix
+    # $2: source file to use
+    # $3: directory to change to.
+    # 
+
+    if [ -n "$3" ]
+    then
+        pushd "$3"
+    fi
+
+    ln -sf "$2" "$1"
+
+    if [ -n "$3" ]
+    then
+        popd "$3"
+    fi
+}
+
+pushd source/etc
+
+symlink_fix fstab fstab-$destination
+symlink_fix interfaces interfaces-$machine network
+
+popd
