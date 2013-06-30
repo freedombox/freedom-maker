@@ -1,0 +1,25 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eth0
+iface eth0 inet static
+    address 192.168.1.1
+    netmask 255.255.255.0
+
+allow-hotplug eth1
+iface eth1 inet dhcp
+
+# auto uap0
+# iface uap0 inet static
+#     address 192.168.2.1
+#     netmask 255.255.255.0
+#     post-up uaputl sys_cfg_ssid "freedombox"
+#     post-up uaputl sys_cfg_protocol 32  # WPA2
+#     post-up uaputl sys_cfg_wpa_passphrase "freedombox123"
+#     post-up uaputl sys_cfg_cipher 8 8   # AES CCMP
+#     post-up uaputl bss_start
