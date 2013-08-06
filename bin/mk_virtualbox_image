@@ -31,11 +31,12 @@ popd
 sudo ./vendor/vmdebootstrap/vmdebootstrap \
     --log freedombox.log --log-level debug \
     --image $IMAGE.img --hostname freedombox --size 8G --verbose --enable-dhcp \
-    --package ssh --package apache2 --package git --package mercurial \
+    --package ssh --package apache2 --package devio --package dialog --package dnsmasq --package dosfstools --package haveged --package git --package jwchat --package liblua5.1-sec1 --package locales --package locales-all --package mercurial \
 	--package build-essential --package checkinstall --package sudo \
     --package python-simplejson \
-	--mirror http://ftp.uk.debian.org/debian/ --package pandoc \
-    --package python-cheetah --package python-argparse \
+	--mirror http://ftp.uk.debian.org/debian/ --package monkeysphere --package pandoc --package parted --package prosody \
+    --package python-augeas --package python-beautifulsoup --package python-cheetah --package python-argparse --package python-lxml --package python-bjsonrpc --package python-cherrypy3 --package libpython2.7 \
+    --package psmisc --package resolvconf --package wajig --package zile \
 	--customize="$basedir/bin/virtualbox-customize" --root-password=freedom \
     --arch=i386 --distribution=wheezy
 
