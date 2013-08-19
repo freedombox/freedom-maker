@@ -26,19 +26,26 @@ else
 fi
 popd
 
+packages="ssh apache2 devio dialog dnsmasq dosfstools haveged git
+  jwchat liblua5.1-sec1 locales locales-all mercurial build-essential
+  checkinstall sudo python-simplejson monkeysphere pandoc parted
+  prosody python-augeas python-beautifulsoup python-cheetah
+  python-argparse python-lxml python-bjsonrpc python-cherrypy3
+  libpython2.7 psmisc resolvconf wajig zile"
+
+for p in $packages; do
+    pkgopts="$pkgopts --package $p"
+done
+
 # Run vmdebootstrap script to create image
 
 sudo ./vendor/vmdebootstrap/vmdebootstrap \
     --log freedombox.log --log-level debug \
     --image $IMAGE.img --hostname freedombox --size 8G --verbose --enable-dhcp \
-    --package ssh --package apache2 --package devio --package dialog --package dnsmasq --package dosfstools --package haveged --package git --package jwchat --package liblua5.1-sec1 --package locales --package locales-all --package mercurial \
-	--package build-essential --package checkinstall --package sudo \
-    --package python-simplejson \
-	--mirror http://ftp.uk.debian.org/debian/ --package monkeysphere --package pandoc --package parted --package prosody \
-    --package python-augeas --package python-beautifulsoup --package python-cheetah --package python-argparse --package python-lxml --package python-bjsonrpc --package python-cherrypy3 --package libpython2.7 \
-    --package psmisc --package resolvconf --package wajig --package zile \
-	--customize="$basedir/bin/virtualbox-customize" --root-password=freedom \
-    --arch=i386 --distribution=wheezy
+    --mirror http://ftp.uk.debian.org/debian/ \
+    --customize="$basedir/bin/virtualbox-customize" --root-password=freedom \
+    --arch=i386 --distribution=wheezy \
+    $pkgopts
 
 # Convert image to vdi hard drive
 VBoxManage convertdd $IMAGE.img $IMAGE.vdi
