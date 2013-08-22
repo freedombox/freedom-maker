@@ -26,6 +26,11 @@ export LC_ALL=C LANGUAGE=C LANG=C
 #    in an emulated environment!  We'll have to do it by hand below anyway...
 export FK_MACHINE="Globalscale Technologies Dreamplug"
 
+# Divert flash-kernel to make sure all packages can be configured.
+# Without this, initramfs-tools and flash-kernel will fail to
+# configure and some times block other packages from being installed.
+dpkg-divert --divert /usr/sbin/flash-kernel.orig --rename /usr/sbin/flash-kernel
+
 # configure all packages unpacked earlier by multistrap
 # ignore the failures, since we're still on the host machine.
 dpkg --configure -a || true
@@ -44,6 +49,9 @@ dpkg --install /sourcecode/*.deb
 # sshd may be left running by the postinst, clean that up
 # ignore the failures, since we're still on the host machine.
 /etc/init.d/ssh stop || true
+
+# Undo divert now that every package should be configured correctly.
+dpkg-divert --rename --remove /usr/sbin/flash-kernel
 
 # process installed kernel to create uImage, uInitrd, dtb
 #  using flash-kernel would be a good approach, except it fails in the cross
