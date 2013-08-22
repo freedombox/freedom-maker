@@ -4,10 +4,11 @@
 
 ### BEGIN INIT INFO
 # Provides:          first-run
-# Default-Start:     1 2
-# Required-Start:    2
-# Required-Stop:
+# Default-Start:     2 3 4 5
 # Default-Stop:
+# Required-Start:    $network $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Required-Stop:
 # Short-Description: Finish FBX install on DreamPlug
 ### END INIT INFO
 
@@ -91,12 +92,20 @@ function remove-self {
     echo "Done Removing Self."
 }
 
-create-keys
-# wifi-ap-setup
+case "$1" in
+    start)
+        create-keys
+        # wifi-ap-setup
 
-# the last things we do before quitting.
-tweak-kernel
-mark-complete
+        # the last things we do before quitting.
+        tweak-kernel
+        mark-complete
 
-# we're done, reboot.
-reboot
+        # we're done, reboot.
+        reboot
+        ;;
+    *)
+        log_success_msg "Usage: /etc/init.d/first-run {start}"
+        exit 1
+        ;;
+esac
