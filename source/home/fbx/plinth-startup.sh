@@ -9,7 +9,7 @@ cat > /etc/apache2/sites-available/plinth <<END
                 ProxyPass http://127.0.0.1:8000/
                 Order allow,deny
                 Allow from 10.0.0.0/8
-                Allow from 172.16.0.0/12
+		Allow from 172.16.0.0/12
                 Allow from 192.168.0.0/16
         </Location>
 
