@@ -26,12 +26,9 @@ else
 fi
 popd
 
-packages="ssh apache2 devio dialog dnsmasq dosfstools haveged git
-  jwchat liblua5.1-sec1 locales locales-all mercurial build-essential
-  checkinstall sudo python-simplejson monkeysphere pandoc parted
-  prosody python-augeas python-beautifulsoup python-cheetah
-  python-argparse python-lxml python-bjsonrpc python-cherrypy3
-  libpython2.7 psmisc resolvconf wajig zile"
+# read packages from multistrap's configs.
+packages=`grep "^packages=" multistrap-configs/fbx-base.conf`
+packages="${packages##packages=}"
 
 for p in $packages; do
     pkgopts="$pkgopts --package $p"
