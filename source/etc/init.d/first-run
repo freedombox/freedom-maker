@@ -8,7 +8,6 @@
 # Default-Stop:
 # Required-Start:    $network $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
-# Required-Stop:
 # Short-Description: Finish FBX install on DreamPlug
 ### END INIT INFO
 
@@ -114,6 +113,9 @@ case "$1" in
         # we're done, reboot.
         reboot
         ;;
+    stop|restart|force-reload)
+	# Do nothing
+	;;
     *)
         log_success_msg "Usage: /etc/init.d/first-run {start}"
         exit 1
