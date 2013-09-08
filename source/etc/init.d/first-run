@@ -19,7 +19,11 @@ then
 fi
 
 function tweak-kernel {
-    # Update the kernel unless requested otherwise.
+    # Update the kernel if package flash-kernel is install unless
+    # requested otherwise.
+    if ! type flash-kernel ; then
+	return
+    fi
 
     echo -n "Flashing Kernel..."
 
