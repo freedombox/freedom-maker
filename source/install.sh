@@ -31,6 +31,18 @@ export FK_MACHINE="Globalscale Technologies Dreamplug"
 # configure and some times block other packages from being installed.
 dpkg-divert --divert /usr/sbin/flash-kernel.orig --rename /usr/sbin/flash-kernel
 
+# Make sure configuring packages do not start any services
+if [ ! -e /usr/sbin/policy-rc.d ] ; then
+    cat > /usr/sbin/policy-rc.d <<EOF
+#!/bin/sh
+exit 101
+EOF
+    chmod a+rx /usr/sbin/policy-rc.d
+    policyrcd=true
+else
+    policyrcd=false
+fi
+
 # configure all packages unpacked earlier by multistrap
 # ignore the failures, since we're still on the host machine.
 dpkg --configure -a || true
@@ -47,9 +59,10 @@ apt-get source --download-only `cat /tmp/packages`
 echo "Installing local binary packages, if any"
 dpkg --install /sourcecode/*.deb
 
-# sshd may be left running by the postinst, clean that up
-# ignore the failures, since we're still on the host machine.
-/etc/init.d/ssh stop || true
+# Allow services to start after upgrading
+if $policyrcd ; then
+    rm /usr/sbin/policy-rc.d
+fi
 
 # Undo divert now that every package should be configured correctly.
 dpkg-divert --rename --remove /usr/sbin/flash-kernel
