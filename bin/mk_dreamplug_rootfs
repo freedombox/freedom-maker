@@ -95,6 +95,17 @@ rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
 # un-do the bind mount so we don't trip over it later
 umount $target/var/cache/apt/
 
+# Use host DNS setup by defualt, to make sure apt work in the chroot.
+cat /etc/resolv.conf > $target/etc/resolv.conf
+
+# Use HTTP source and suite from multistrap configuraiton.
+suite=$(awk -F = '/suite=/ {print $2}' multistrap-configs/fbx-base.conf)
+source=$(awk -F = '/source=/ {print $2}' multistrap-configs/fbx-base.conf)
+cat > $target/etc/apt/sources.list <<EOF
+deb $source $suite main
+deb-src $source $suite main
+EOF
+
 echo "Copying the source directory to the FreedomBox root."
 rsync -av $source/ $target
 
