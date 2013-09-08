@@ -36,14 +36,14 @@ done
 
 # Read APT source and suite from multistrap config too.
 suite=$(awk -F = '/suite=/ {print $2}' multistrap-configs/fbx-base.conf)
-source=$(awk -F = '/source=/ {print $2}' multistrap-configs/fbx-base.conf)
+aptsource=$(awk -F = '/source=/ {print $2}' multistrap-configs/fbx-base.conf)
 
 # Run vmdebootstrap script to create image
 
 sudo ./vendor/vmdebootstrap/vmdebootstrap \
     --log freedombox.log --log-level debug \
     --image $IMAGE.img --hostname freedombox --size 8G --verbose --enable-dhcp \
-    --mirror $source \
+    --mirror $aptsource \
     --customize="$basedir/bin/virtualbox-customize" --root-password=freedom \
     --arch=i386 --distribution=$suite \
     $pkgopts
