@@ -35,11 +35,12 @@ dpkg-divert --divert /usr/sbin/flash-kernel.orig --rename /usr/sbin/flash-kernel
 # ignore the failures, since we're still on the host machine.
 dpkg --configure -a || true
 
-echo "Adding source packages to filesystem"
+srctargetdir=/usr/src/packages
+echo "Adding source packages to filesystemin $targetdir"
 apt-get update || true
 dpkg --get-selections > /tmp/selections
-mkdir -p /sourcecode
-cd sourcecode
+mkdir -p $srctargetdir
+cd $srctargetdir
 cut -f 1 < /tmp/selections | cut -d ':' -f 1 > /tmp/packages
 apt-get source --download-only `cat /tmp/packages`
 
