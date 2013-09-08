@@ -57,7 +57,12 @@ cut -f 1 < /tmp/selections | cut -d ':' -f 1 > /tmp/packages
 apt-get source --download-only `cat /tmp/packages`
 
 echo "Installing local binary packages, if any"
-dpkg --install /sourcecode/*.deb
+apt-get update
+for deb in /sourcecode/*.deb ; do
+    echo "installing $deb with wajig"
+    wajig install -y $deb
+    echo "done installing $deb using wajig"
+done
 
 # Allow services to start after upgrading
 if $policyrcd ; then
