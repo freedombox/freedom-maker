@@ -100,10 +100,10 @@ cat /etc/resolv.conf > $target/etc/resolv.conf
 
 # Use HTTP source and suite from multistrap configuraiton.
 suite=$(awk -F = '/suite=/ {print $2}' multistrap-configs/fbx-base.conf)
-source=$(awk -F = '/source=/ {print $2}' multistrap-configs/fbx-base.conf)
+aptsource=$(awk -F = '/source=/ {print $2}' multistrap-configs/fbx-base.conf)
 cat > $target/etc/apt/sources.list <<EOF
-deb $source $suite main
-deb-src $source $suite main
+deb $aptsource $suite main
+deb-src $aptsource $suite main
 EOF
 
 echo "Copying the source directory to the FreedomBox root."
