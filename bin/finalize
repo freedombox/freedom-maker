@@ -49,17 +49,21 @@ echo $hostname > $target/etc/hostname
 chown root:root $target/sbin/copy2dream
 chmod 744 $target/sbin/copy2dream
 
+# prepare to configure the basic system in chroot
+cp bin/dreamplug-customize $target/
+
 # prepare chroot project finalization
 cp bin/projects-chroot $target/
 
 echo "Using qemu-user-static to perform first-boot configuration now."
-chmod 755 $target/install.sh
+chmod 755 $target/dreamplug-customize
 cp /usr/bin/qemu-arm-static $target/usr/bin
-echo "Running install script from source/install.sh"
-chroot $target /install.sh
+echo "Running install script from source/dreamplug-customize"
+chroot $target /dreamplug-customize
 echo "Running install script from bin/projects-chroot"
 chroot $target /projects-chroot
 
 # clean up.
 rm "${target}/projects-chroot"
+rm "${target}/dreamplug-customize"
 rm "${target}/usr/bin/qemu-arm-static"
