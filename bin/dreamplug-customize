@@ -6,12 +6,7 @@
 # install.sh: FreedomBox system configuration for a DreamPlug image.
 #
 
-# Most of the commands in this file will fail because the commands make
-# invalid assumptions about the runtime environment.  Therefore, failing
-# on error is a terrible idea for this script.  This is why the line
-# below is commented out:
-#
-# set -e
+set -e
 
 echo "Preconfiguring dash - else dash and bash will be left in a broken state"
 /var/lib/dpkg/info/dash.preinst install
@@ -43,26 +38,24 @@ else
     policyrcd=false
 fi
 
+# Add our own APT source for now
+cat >> /etc/apt/sources.list <<EOF
+deb http://www.reinholdtsen.name/freedombox wheezy main
+deb-src http://www.reinholdtsen.name/freedombox wheezy main
+EOF
+wget -O - http://www.reinholdtsen.name/freedombox/BE1A583D.asc | apt-key add -
+apt-get update
+
 # configure all packages unpacked earlier by multistrap
 # ignore the failures, since we're still on the host machine.
-dpkg --configure -a || true
+dpkg --configure -a
 
-srctargetdir=/usr/src/packages
-echo "Adding source packages to filesystemin $targetdir"
-apt-get update || true
-dpkg --get-selections > /tmp/selections
-mkdir -p $srctargetdir
-cd $srctargetdir
-cut -f 1 < /tmp/selections | cut -d ':' -f 1 > /tmp/packages
-apt-get source --download-only `cat /tmp/packages`
+apt-get install -y freedombox-reinholdtsen-archive-keyring
+apt-get install -y freedombox-setup
+apt-get install -y freedombox-privoxy
 
-echo "Installing local binary packages, if any"
-apt-get update
-for deb in /sourcecode/*.deb ; do
-    echo "installing $deb"
-    apt-get install -y $deb
-    echo "done installing $deb"
-done
+# Run deb based setup scripts
+/usr/lib/freedombox/setup
 
 # Allow services to start after upgrading
 if $policyrcd ; then
