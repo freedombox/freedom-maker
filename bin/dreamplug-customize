@@ -52,7 +52,6 @@ dpkg --configure -a
 
 apt-get install -y freedombox-reinholdtsen-archive-keyring
 apt-get install -y freedombox-setup
-apt-get install -y freedombox-privoxy
 
 # Run deb based setup scripts
 /usr/lib/freedombox/setup
