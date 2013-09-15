@@ -118,6 +118,9 @@ aptsource=$(awk -F = '/source=/ {print $2}' multistrap-configs/fbx-base.conf)
 cat > $target/etc/apt/sources.list <<EOF
 deb $aptsource $suite main
 deb-src $aptsource $suite main
+
+deb http://security.debian.org/ $suite/updates main
+deb-src http://security.debian.org/ $suite/updates main
 EOF
 
 touch $target/etc/mtab $target/etc/fstab
