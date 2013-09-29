@@ -24,13 +24,12 @@ LOOP = /dev/loop0
 rootfs: $(STAMP)-rootfs-$(ARCHITECTURE)
 $(STAMP)-rootfs-$(ARCHITECTURE): multistrap-configs/fbx-base.conf \
 		multistrap-configs/fbx-$(ARCHITECTURE).conf \
-		bin/mk_dreamplug_rootfs bin/fix-symlinks \
-		bin/projects bin/finalize bin/projects-chroot \
+		bin/mk_dreamplug_rootfs \
+		bin/finalize \
 		$(STAMP)-predepend
 
 	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
-	bin/fix-symlinks $(MACHINE) $(DESTINATION)
-	sudo bin/mk_dreamplug_rootfs $(ARCHITECTURE) multistrap-configs/fbx-$(ARCHITECTURE).conf
+	sudo bin/mk_dreamplug_rootfs $(ARCHITECTURE) multistrap-configs/fbx-$(ARCHITECTURE).conf $(MACHINE) $(DESTINATION)
 	touch $(STAMP)-rootfs-$(ARCHITECTURE)
 
 # copy DreamPlug root filesystem to a usb stick or microSD card

@@ -50,6 +50,20 @@ then
 fi
 export config
 
+# Make sure MACHINE and DESTINATION is passed on to setup script
+# called by bin/install.sh
+if [ -n "$3" ]
+then
+    MACHINE=$3
+    export MACHINE
+fi
+
+if [ -n "$4" ]
+then
+    DESTINATION=$4
+    export DESTINATION
+fi
+
 # users
 hostname='freedombox'
 rootpassword='freedom'
@@ -104,13 +118,12 @@ aptsource=$(awk -F = '/source=/ {print $2}' multistrap-configs/fbx-base.conf)
 cat > $target/etc/apt/sources.list <<EOF
 deb $aptsource $suite main
 deb-src $aptsource $suite main
+
+deb http://security.debian.org/ $suite/updates main
+deb-src http://security.debian.org/ $suite/updates main
 EOF
 
-echo "Copying the source directory to the FreedomBox root."
-rsync -av $source/ $target
-
-echo "Configuring projects to turn this into a useful FreedomBox."
-bin/projects
+touch $target/etc/mtab $target/etc/fstab
 
 # what kernel-related files we'll build.
 kernelVersion=`grep linux-image- $config | sed 's/.*\(linux-image-[^ ]*\).*/\1/'`
