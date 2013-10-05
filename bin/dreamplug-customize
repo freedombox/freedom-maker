@@ -104,11 +104,6 @@ echo "Creating normal user: $user, password: $userpassword"
 useradd $user
 echo $user:$userpassword | /usr/sbin/chpasswd
 
-# Create a system/maintenance user
-echo "Creating maintenance user: $sysuser, password: $syspassword"
-useradd $sysuser
-echo $sysuser:$syspassword | /usr/sbin/chpasswd
-
 # By default, spawn a console on the serial port
 echo "Adding a getty on the serial port"
 echo "T0:12345:respawn:/sbin/getty -L ttyS0 115200 vt100" >> /etc/inittab

@@ -69,8 +69,6 @@ hostname='freedombox'
 rootpassword='freedom'
 user='fbx'
 userpassword='frdm'
-sysuser='plinth'
-syspassword='config'
 export hostname
 export rootpassword
 export user
