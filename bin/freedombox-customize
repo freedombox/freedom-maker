@@ -18,6 +18,8 @@ set -x
 rootdir="$1"
 cd "$rootdir"
 
+echo info: building $MACHINE for $ARCHITECTURE to $DESTINATION
+
 export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
 export LC_ALL=C LANGUAGE=C LANG=C
 
@@ -61,7 +63,9 @@ rm $rootdir/usr/sbin/policy-rc.d
 # in a kernel too.  
 if [ "$MACHINE" = raspberry ] ; then
     # Packages used by rpi-update to make Raspberry Pi bootable
-    apt-get install -y git-core binutils ca-certificates wget kmod
+    chroot $rootdir \
+	apt-get install -y git-core binutils ca-certificates wget kmod
+
     cat <<EOF > $rootdir/usr/lib/freedombox/setup.d/95_raspberry-pi
 #!/bin/sh
 wget https://raw.github.com/Hexxeh/rpi-update/master/rpi-update \
@@ -69,7 +73,7 @@ wget https://raw.github.com/Hexxeh/rpi-update/master/rpi-update \
 chmod a+x /usr/bin/rpi-update
 mkdir -p /lib/modules
 touch /boot/start.elf
-chroot  rpi-update > /root/rpi-update.log
+rpi-update > /root/rpi-update.log
 EOF
     chmod a+rx $rootdir/usr/lib/freedombox/setup.d/95_raspberry-pi
 fi
