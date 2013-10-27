@@ -72,7 +72,7 @@ for p in $base_pkgs $extra_pkgs; do
 done
 
 # Run vmdebootstrap script to create image
-sudo $vmdebootstrap_dir/vmdebootstrap \
+sudo DESTINATION="$DESTINATION" MACHINE="$MACHINE" ARCHITECTURE="$ARCHITECTURE" $vmdebootstrap_dir/vmdebootstrap \
     --log freedombox.log \
     --log-level debug \
     --size 3G \
