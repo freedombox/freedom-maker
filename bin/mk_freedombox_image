@@ -53,7 +53,7 @@ case "$MACHINE" in
 "
 	;;
     dreamplug)
-	extra_pkgs="$dreamplugpkgs"
+	extra_pkgs="$dreamplug_pkgs"
 	extra_opts="\
  --variant minbase \
  --no-kernel \
