@@ -60,7 +60,7 @@ chroot $rootdir apt-get install -y freedombox-setup
 rm $rootdir/usr/sbin/policy-rc.d
 
 # Install non-free binary blob needed to boot Raspberry Pi.  This pull
-# in a kernel too.  
+# in a kernel too.
 if [ "$MACHINE" = raspberry ] ; then
     # Packages used by rpi-update to make Raspberry Pi bootable
     chroot $rootdir \
@@ -87,9 +87,10 @@ if [ "$MACHINE" = dreamplug ] ; then
     export FK_MACHINE="Globalscale Technologies Dreamplug"
 
     # Installing flash-kernel here, as installing it using debootstrap
-    # causes all kernel related options so stop working.
+    # causes all kernel related postinst scripts to stop working when
+    # installed in a chroot.
+    chroot $rootdir apt-get install -y flash-kernel
 
-    chroot $rootdir apt-get install -y flash-kernel 
 cat <<EOF > $rootdir/usr/lib/freedombox/setup.d/95_dreamplug-kernel
 #!/bin/sh
 # process installed kernel to create uImage, uInitrd, dtb
