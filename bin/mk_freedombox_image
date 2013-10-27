@@ -1,0 +1,88 @@
+#!/bin/sh
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+set -e # Exit on first error
+
+set -x # Enable debugging
+
+IMAGE=$1
+
+# Locate vmdebootstrap program fetched in Makefile
+basedir=`pwd`
+vendor_dir="${basedir}/vendor"
+vmdebootstrap_dir="${vendor_dir}/vmdebootstrap"
+
+aptsource=http://http.debian.net/debian/
+suite=jessie
+
+# Packages to install in all FreedomBox environments
+base_pkgs="apt base-files hostname ifupdown initramfs-tools iproute \
+iptables iputils-ping logrotate module-init-tools netbase net-tools \
+rsyslog sudo uaputl udev wget debian-archive-keyring"
+
+# Packages needed on the dreamplug
+dreamplug_pkgs="linux-image-3.10-3-kirkwood u-boot-tools u-boot uboot-mkimage"
+
+if [ -z "$ARCHITECTURE" ] ; then
+    ARCHITECTURE=i386
+fi
+
+echo building $MACHINE for $ARCHITECTURE
+
+case "$MACHINE" in
+    raspberry)
+	extra_opts="\
+ --variant minbase \
+ --bootsize 128M \
+ --boottype vfat \
+ --no-kernel \
+ --no-extlinux \
+ --foreign /usr/bin/qemu-arm-static \
+"
+	;;
+    dreamplug)
+	extra_pkgs="$dreamplugpkgs"
+	extra_opts="\
+ --variant minbase \
+ --no-kernel \
+ --no-extlinux \
+ --foreign /usr/bin/qemu-arm-static \
+"
+	;;
+    virtualbox)
+	extra_opts="\
+ --enable-dhcp \
+"	;;
+esac
+
+for p in $base_pkgs $extra_pkgs; do
+    pkgopts="$pkgopts --package $p"
+done
+
+# Run vmdebootstrap script to create image
+sudo $vmdebootstrap_dir/vmdebootstrap \
+    --log freedombox.log \
+    --log-level debug \
+    --size 3G \
+    --image $IMAGE.img \
+    --hostname freedombox \
+    --verbose \
+    --mirror $aptsource \
+    --customize "$basedir/bin/freedombox-customize" \
+    --root-password freedom \
+    --arch $ARCHITECTURE \
+    --distribution $suite \
+    $extra_opts \
+    $pkgopts
