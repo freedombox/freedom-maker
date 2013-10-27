@@ -101,8 +101,6 @@ $(STAMP)-dreamplug-predepend: $(STAMP)-vmdebootstrap-predepend
 	touch $@
 
 clean:
-# just in case I tried to build before plugging in the USB drive.
-	-sudo umount `pwd`/$(BUILD_DIR)/var/cache/apt/
 	sudo rm -rf $(BUILD_DIR)
 	-rm -f $(IMAGE) $(ARCHIVE) $(STAMP)-*
 
