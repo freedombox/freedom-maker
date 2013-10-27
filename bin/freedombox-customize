@@ -91,7 +91,7 @@ if [ "$MACHINE" = dreamplug ] ; then
     # installed in a chroot.
     chroot $rootdir apt-get install -y flash-kernel
 
-cat <<EOF > $rootdir/usr/lib/freedombox/setup.d/95_dreamplug-kernel
+cat <<'EOF' > $rootdir/usr/lib/freedombox/setup.d/95_dreamplug-kernel
 #!/bin/sh
 # process installed kernel to create uImage, uInitrd, dtb
 # using flash-kernel would be a good approach, except it fails in the
@@ -104,6 +104,11 @@ cat <<EOF > $rootdir/usr/lib/freedombox/setup.d/95_dreamplug-kernel
 # when run from our emulated chroot environment, which means our root=
 # on the kernel command line is completely ignored!  repack the initrd
 # to remove this evil...
+
+kernelVersion=$(ls /usr/lib/*/kirkwood-dreamplug.dtb | cut -d/ -f4)
+version=$(echo $kernelVersion | sed 's/linux-image-\(.*\)/\1/')
+initRd=initrd.img-$version
+vmlinuz=vmlinuz-$version
 
 mkdir /tmp/initrd-repack
 
