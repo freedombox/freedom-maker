@@ -211,6 +211,7 @@ following to boot from the USB stick:
 	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
 	setenv x_bootcmd_kernel fatload usb 2 0x6400000 uImage
 	setenv x_bootcmd_initrd fatload usb 2 0x6900000 uInitrd
+    setenv x_bootargs console=ttyS0,115200
 	setenv x_bootargs_root root=/dev/sdc2 rootdelay=10
 	boot
 
@@ -237,6 +238,7 @@ time-consuming attempts to boot from gigE, which makes boot go much faster:
 	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
 	setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage
 	setenv x_bootcmd_initrd fatload usb 0 0x6900000 uInitrd
+    setenv x_bootargs console=ttyS0,115200
 	setenv x_bootargs_root root=/dev/sda2 rootdelay=10
 	saveenv
 	reset
@@ -514,6 +516,7 @@ commands:
 	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
 	setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage
 	setenv x_bootcmd_initrd fatload usb 0 0x6900000 uInitrd
+    setenv x_bootargs console=ttyS0,115200
 	setenv x_bootargs_root root=/dev/sda2 rootdelay=10
 	saveenv
 	reset
