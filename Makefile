@@ -89,7 +89,7 @@ $(STAMP)-vmdebootstrap-predepend: $(STAMP)-predepend
 	touch $@
 
 $(STAMP)-vbox-predepend: $(STAMP)-vmdebootstrap-predepend
-	sudo sh -c "apt-get install extlinux qemu-utils virtualbox"
+	sudo sh -c "apt-get install extlinux virtualbox"
 	touch $@
 
 $(STAMP)-raspberry-predepend: $(STAMP)-vmdebootstrap-predepend
