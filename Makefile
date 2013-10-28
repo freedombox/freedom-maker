@@ -107,7 +107,7 @@ clean:
 distclean: clean
 	sudo rm -rf build
 
-weekly-image: dreamplug-image virtualbox-image
+weekly-image: dreamplug-image raspberry-image virtualbox-image
 	mkdir -p $(WEEKLY_DIR)
 	mv build/*bz2 build/*sig $(WEEKLY_DIR)
 	cp weekly_template.org $(WEEKLY_DIR)/README.org
