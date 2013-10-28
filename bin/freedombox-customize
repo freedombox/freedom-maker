@@ -31,14 +31,12 @@ password=frdm
 chroot $rootdir adduser --gecos $username --disabled-password $username
 echo $username:$password | chroot $rootdir /usr/sbin/chpasswd
 
-suite=jessie
-
 cat <<EOF > etc/apt/sources.list
-deb http://http.debian.net/debian/ $suite main contrib non-free
-deb-src http://http.debian.net/debian/ $suite main contrib non-free
+deb $MIRROR $SUITE main contrib non-free
+deb-src $MIRROR $SUITE main contrib non-free
 
-#deb http://security.debian.org/ $suite/updates main
-#deb-src http://security.debian.org/ $suite/updates main
+#deb http://security.debian.org/ $SUITE/updates main
+#deb-src http://security.debian.org/ $SUITE/updates main
 EOF
 
 cat <<EOF > etc/apt/sources.list.d/reinholdtsen-freedombox.list

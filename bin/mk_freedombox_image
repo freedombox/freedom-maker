@@ -24,8 +24,8 @@ basedir=`pwd`
 vendor_dir="${basedir}/vendor"
 vmdebootstrap_dir="${vendor_dir}/vmdebootstrap"
 
-aptsource=http://http.debian.net/debian/
-suite=jessie
+MIRROR=http://http.debian.net/debian
+SUITE=jessie
 
 # Packages to install in all FreedomBox environments
 base_pkgs="apt base-files hostname ifupdown initramfs-tools iproute \
@@ -74,17 +74,23 @@ for p in $base_pkgs $extra_pkgs; do
 done
 
 # Run vmdebootstrap script to create image
-sudo DESTINATION="$DESTINATION" MACHINE="$MACHINE" ARCHITECTURE="$ARCHITECTURE" $vmdebootstrap_dir/vmdebootstrap \
+sudo \
+    SUITE="$SUITE" \
+    MIRROR="$MIRROR" \
+    DESTINATION="$DESTINATION" \
+    MACHINE="$MACHINE" \
+    ARCHITECTURE="$ARCHITECTURE" \
+    $vmdebootstrap_dir/vmdebootstrap \
     --log freedombox.log \
     --log-level debug \
     --size 2.5G \
     --image $IMAGE.img \
     --hostname freedombox \
     --verbose \
-    --mirror $aptsource \
+    --mirror $MIRROR \
     --customize "$basedir/bin/freedombox-customize" \
     --root-password freedom \
     --arch $ARCHITECTURE \
-    --distribution $suite \
+    --distribution $SUITE \
     $extra_opts \
     $pkgopts
