@@ -77,7 +77,7 @@ done
 sudo DESTINATION="$DESTINATION" MACHINE="$MACHINE" ARCHITECTURE="$ARCHITECTURE" $vmdebootstrap_dir/vmdebootstrap \
     --log freedombox.log \
     --log-level debug \
-    --size 3G \
+    --size 2.5G \
     --image $IMAGE.img \
     --hostname freedombox \
     --verbose \
