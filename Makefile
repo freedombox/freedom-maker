@@ -8,7 +8,6 @@ MACHINE = dreamplug
 DESTINATION = card
 BUILD = $(MACHINE)-$(ARCHITECTURE)-$(DESTINATION)
 STAMP = build/stamp
-BUILD_DIR = build/$(ARCHITECTURE)
 TODAY := `date +%Y-%m-%d`
 NAME = build/freedombox-unstable_$(TODAY)_$(BUILD)
 WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
@@ -103,7 +102,6 @@ $(STAMP)-dreamplug-predepend: $(STAMP)-vmdebootstrap-predepend
 	touch $@
 
 clean:
-	sudo rm -rf $(BUILD_DIR)
 	-rm -f $(IMAGE) $(ARCHIVE) $(STAMP)-*
 
 distclean: clean
