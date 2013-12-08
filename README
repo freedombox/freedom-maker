@@ -32,6 +32,23 @@ There are a couple ways to use this system:
 There are no training wheels.  Read the scripts and understand what
 they're going to do before you run them.
 
+# Build Dependencies
+
+In order for the various make targets in freedom-maker to complete successfully
+a number of packages must be installed on the system.  The following commands
+will accomplish this on a Debian system for the various targets:
+
+    general
+	apt-get install git mercurial python-docutils mktorrent
+    vmdebootstrap
+	apt-get install debootstrap qemu-utils parted mbr kpartx python-cliapp
+    vbox
+	apt-get install extlinux virtualbox
+    raspberry-pi
+	apt-get install qemu-user-static binfmt-support
+    dreamplug
+	apt-get install qemu-user-static binfmt-support u-boot-tools
+
 # Recent Firmware Necessary!
 
 If you received your DreamPlug from GlobalScale during or after fall of 2012,
