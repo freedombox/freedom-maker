@@ -39,9 +39,8 @@ a number of packages must be installed on the system.  The following commands
 will accomplish this on a Debian system for the various targets:
 
     general
-	apt-get install git mercurial python-docutils mktorrent
-    vmdebootstrap
-	apt-get install debootstrap qemu-utils parted mbr kpartx python-cliapp
+	apt-get install git vmdebootstrap
+		mercurial python-docutils mktorrent 
     vbox
 	apt-get install extlinux virtualbox
     raspberry-pi

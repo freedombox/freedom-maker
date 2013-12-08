@@ -19,15 +19,15 @@ SIGNATURE = $(ARCHIVE).sig
 image: dreamplug-image
 
 # build DreamPlug USB or SD card image
-dreamplug-image: vendor/vmdebootstrap/vmdebootstrap
+dreamplug-image: prep
 	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
 	$(eval TEMP_MACHINE = $(MACHINE))
 	$(eval TEMP_DESTINATION = $(DESTINATION))
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = dreamplug)
 	$(eval DESTINATION = card)
-	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
-	  bin/mk_freedombox_image $(NAME)
+	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) \
+		DESTINATION=$(DESTINATION) bin/mk_freedombox_image $(NAME)
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	$(eval ARCHITECTURE = $(TEMP_ARCHITECTURE))
@@ -36,7 +36,7 @@ dreamplug-image: vendor/vmdebootstrap/vmdebootstrap
 	@echo "Build complete."
 
 # build Raspberry Pi SD card image
-raspberry-image: vendor/vmdebootstrap/vmdebootstrap
+raspberry-image: prep
 	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
 	$(eval TEMP_MACHINE = $(MACHINE))
 	$(eval TEMP_DESTINATION = $(DESTINATION))
@@ -53,7 +53,7 @@ raspberry-image: vendor/vmdebootstrap/vmdebootstrap
 	@echo "Build complete."
 
 # build a virtualbox image
-virtualbox-image: vendor/vmdebootstrap/vmdebootstrap
+virtualbox-image: prep
 	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
 	$(eval TEMP_MACHINE = $(MACHINE))
 	$(eval TEMP_DESTINATION = $(DESTINATION))
@@ -71,11 +71,9 @@ virtualbox-image: vendor/vmdebootstrap/vmdebootstrap
 	$(eval DESTINATION = $(TEMP_DESTINATION))
 	@echo "Build complete."
 
-vendor/vmdebootstrap/vmdebootstrap: 
-	test -d vendor/vmdebootstrap || git clone git://git.liw.fi/vmdebootstrap vendor/vmdebootstrap
-	cd vendor/vmdebootstrap; git pull
-
-
+prep:	
+	mkdir -p build
+	
 clean:
 	sudo rm -rf $(BUILD_DIR)
 	-rm -f $(IMAGE) $(ARCHIVE) $(STAMP)-*

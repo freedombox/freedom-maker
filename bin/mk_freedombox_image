@@ -19,11 +19,6 @@ set -x # Enable debugging
 
 IMAGE=$1
 
-# Locate vmdebootstrap program fetched in Makefile
-basedir=`pwd`
-vendor_dir="${basedir}/vendor"
-vmdebootstrap_dir="${vendor_dir}/vmdebootstrap"
-
 MIRROR=http://http.debian.net/debian
 SUITE=jessie
 
@@ -79,7 +74,7 @@ sudo \
     DESTINATION="$DESTINATION" \
     MACHINE="$MACHINE" \
     ARCHITECTURE="$ARCHITECTURE" \
-    $vmdebootstrap_dir/vmdebootstrap \
+    vmdebootstrap \
     --log freedombox.log \
     --log-level debug \
     --size 2.5G \
