@@ -1,58 +1,60 @@
-#!/usr/bin/python
+#!/bin/sh
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import crypt
-import os
-import subprocess
-import sys
-import string
+set -e
+set -x
+rootdir="$1"
+cd "$rootdir"
 
-user = "fbx"
-password = "frdm"
-sysuser='plinth'
-syspassword='config'
-rootdir = sys.argv[1]
-home = "/home/{0}/".format(user)
-curr = os.getcwd()
-project_script = "/bin/projects"
-source="{0}/source/".format(curr)
+echo info: building $MACHINE for $ARCHITECTURE to $DESTINATION
 
+export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
+export LC_ALL=C LANGUAGE=C LANG=C
 
-def runchroot(argv):
-    return runcmd(["chroot", rootdir] + argv)
+# FIXME disable source fetching while debugging
+export NOSOURCE=true
 
-def runcmd(argv, stdin='', ignore_fail=False, **kwargs):
-    p = subprocess.Popen(argv, stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                         **kwargs)
-    out, err = p.communicate(stdin)
-    if p.returncode != 0:
-        msg = 'command failed: %s\n%s\n%s' % (argv, out, err)
-        if not ignore_fail:
-            print (msg)
-            raise Exception(msg)
-    return out
+username=fbx
+password=frdm
+chroot $rootdir adduser --gecos $username --disabled-password $username
+echo $username:$password | chroot $rootdir /usr/sbin/chpasswd
 
-def make_user(user, password):
-    """Create a user with specified password."""
+cat <<EOF > etc/apt/sources.list
+deb $MIRROR $SUITE main contrib non-free
+deb-src $MIRROR $SUITE main contrib non-free
 
-    runchroot(['adduser', '--gecos', user, '--disabled-password', user])
-    encrypted = crypt.crypt(password, '..')
-    runchroot(['usermod', '-p', encrypted, user])
+#deb http://security.debian.org/ $SUITE/updates main
+#deb-src http://security.debian.org/ $SUITE/updates main
+EOF
 
+cat <<EOF > etc/apt/sources.list.d/reinholdtsen-freedombox.list
+deb http://www.reinholdtsen.name/freedombox wheezy main
+deb-src http://www.reinholdtsen.name/freedombox wheezy main
+EOF
+wget -O - http://www.reinholdtsen.name/freedombox/BE1A583D.asc | \
+    chroot $rootdir apt-key add -
+chroot $rootdir apt-get update
 
-if __name__ == "__main__":
-    print 'Customizing freedombox'
+cat > $rootdir/usr/sbin/policy-rc.d <<EOF
+#!/bin/sh
+exit 101
+EOF
+chmod a+rx $rootdir/usr/sbin/policy-rc.d
 
-    # Create user accounts
-    make_user(user, password)
-    make_user(sysuser, syspassword)
+chroot $rootdir apt-get install -y freedombox-setup
 
-    # Sync up Source folder
-    # copy!
-    os.system('rsync -av '+source+' '+rootdir)
+rm $rootdir/usr/sbin/policy-rc.d
 
-    # Create all projects
-    os.chdir(rootdir)
-    subprocess.call("{0}{1} {2}".format(curr, project_script,
-                                        rootdir + home).split())
-    os.chdir(curr)
+chroot $rootdir /usr/lib/freedombox/setup

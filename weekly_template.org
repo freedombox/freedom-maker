@@ -30,9 +30,9 @@ These images are a way to test the current (incomplete) FreedomBox build.
 
 ** TODO Update TODOs [0/2]
 
-   - [ ] [[*Outstanding%20TODOs][outstanding TODOs]]
+   - [ ] [[http://wiki.debian.org/FreedomBox/BetaReleaseTodos][Beta TODOs]] 
 
-   - [ ] [[http://wiki.debian.org/FreedomBox/BetaReleaseTodos][Wiki TODOs]]
+   - [ ] [[http://wiki.debian.org/FreedomBox/1.0Todos][1.0 TODOs]]
 
 ** TODO Spell check!!!
 

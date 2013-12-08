@@ -18,6 +18,9 @@
 - [ ] mk_virtualbox_image and mk_dreamplug_rootfs should both reuse
       the same environment variables.
 - [X] abstract the kernel version from source/install.sh
+- [ ] DreamPlug should signal when it's finished booting.  Audio with
+      Festival?  Visual with blinkenlights?  Either way, we could make a
+      /etc/rc2.d/99-signal-running script.
 
 * Stuff to do for First Feature Release
 
