@@ -22,6 +22,8 @@ IMAGE=$1
 MIRROR=http://http.debian.net/debian
 SUITE=jessie
 
+basedir=`pwd`
+
 # Packages to install in all FreedomBox environments
 base_pkgs="apt base-files ifupdown initramfs-tools \
 logrotate module-init-tools netbase rsyslog udev debian-archive-keyring"
