@@ -18,15 +18,15 @@ SIGNATURE = $(ARCHIVE).sig
 image: dreamplug-image
 
 # build DreamPlug USB or SD card image
-dreamplug-image: vendor/vmdebootstrap/vmdebootstrap $(STAMP)-dreamplug-predepend
+dreamplug-image: prep
 	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
 	$(eval TEMP_MACHINE = $(MACHINE))
 	$(eval TEMP_DESTINATION = $(DESTINATION))
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = dreamplug)
 	$(eval DESTINATION = card)
-	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
-	  bin/mk_freedombox_image $(NAME)
+	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) \
+		DESTINATION=$(DESTINATION) bin/mk_freedombox_image $(NAME)
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	$(eval ARCHITECTURE = $(TEMP_ARCHITECTURE))
@@ -35,7 +35,7 @@ dreamplug-image: vendor/vmdebootstrap/vmdebootstrap $(STAMP)-dreamplug-predepend
 	@echo "Build complete."
 
 # build Raspberry Pi SD card image
-raspberry-image: vendor/vmdebootstrap/vmdebootstrap $(STAMP)-raspberry-predepend
+raspberry-image: prep
 	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
 	$(eval TEMP_MACHINE = $(MACHINE))
 	$(eval TEMP_DESTINATION = $(DESTINATION))
@@ -52,7 +52,7 @@ raspberry-image: vendor/vmdebootstrap/vmdebootstrap $(STAMP)-raspberry-predepend
 	@echo "Build complete."
 
 # build a virtualbox image
-virtualbox-image: vendor/vmdebootstrap/vmdebootstrap $(STAMP)-vbox-predepend
+virtualbox-image: prep
 	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
 	$(eval TEMP_MACHINE = $(MACHINE))
 	$(eval TEMP_DESTINATION = $(DESTINATION))
@@ -70,39 +70,12 @@ virtualbox-image: vendor/vmdebootstrap/vmdebootstrap $(STAMP)-vbox-predepend
 	$(eval DESTINATION = $(TEMP_DESTINATION))
 	@echo "Build complete."
 
-vendor/vmdebootstrap/vmdebootstrap: $(STAMP)-vmdebootstrap-predepend
-	test -d vendor/vmdebootstrap || git clone git://git.liw.fi/vmdebootstrap vendor/vmdebootstrap
-	cd vendor/vmdebootstrap; git pull
-
-
-#
-# meta
-#
-
-# install required files so users don't need to do it themselves.
-$(STAMP)-predepend:
-	mkdir -p build vendor
-	sudo sh -c "apt-get install git mercurial python-docutils mktorrent"
-	touch $@
-
-$(STAMP)-vmdebootstrap-predepend: $(STAMP)-predepend
-	sudo sh -c "apt-get install debootstrap qemu-utils parted mbr kpartx python-cliapp"
-	touch $@
-
-$(STAMP)-vbox-predepend: $(STAMP)-vmdebootstrap-predepend
-	sudo sh -c "apt-get install extlinux virtualbox"
-	touch $@
-
-$(STAMP)-raspberry-predepend: $(STAMP)-vmdebootstrap-predepend
-	sudo sh -c "apt-get install qemu-user-static binfmt-support"
-	touch $@
-
-$(STAMP)-dreamplug-predepend: $(STAMP)-vmdebootstrap-predepend
-	sudo sh -c "apt-get install qemu-user-static binfmt-support u-boot-tools"
-	touch $@
-
+prep:	
+	mkdir -p build
+	
 clean:
 	-rm -f $(IMAGE) $(ARCHIVE) $(STAMP)-*
+	-rm -f rootfs-* source/etc/fstab
 
 distclean: clean
 	sudo rm -rf build
