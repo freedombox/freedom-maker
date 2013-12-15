@@ -24,7 +24,7 @@ basedir=`pwd`
 vendor_dir="${basedir}/vendor"
 vmdebootstrap_dir="${vendor_dir}/vmdebootstrap"
 
-MIRROR=http://http.debian.net/debian
+MIRROR=http://cdn.debian.net/debian
 SUITE=jessie
 
 # Packages to install in all FreedomBox environments
