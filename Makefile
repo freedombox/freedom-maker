@@ -63,7 +63,7 @@ virtualbox-image: vendor/vmdebootstrap/vmdebootstrap $(STAMP)-vbox-predepend
 	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
 	  bin/mk_freedombox_image $(NAME)
 # Convert image to vdi hard drive
-	VBoxManage convertdd $IMAGE.img $IMAGE.vdi
+	VBoxManage convertdd $(NAME).img $(NAME).vdi
 	tar -cjvf $(ARCHIVE) $(NAME).vdi
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	$(eval ARCHITECTURE = $(TEMP_ARCHITECTURE))
@@ -87,19 +87,19 @@ $(STAMP)-predepend:
 	touch $@
 
 $(STAMP)-vmdebootstrap-predepend: $(STAMP)-predepend
-	sudo sh -c "apt-get install debootstrap qemu-utils parted mbr kpartx python-cliapp"
+	sudo sh -c "apt-get -y install debootstrap qemu-utils parted mbr kpartx python-cliapp"
 	touch $@
 
 $(STAMP)-vbox-predepend: $(STAMP)-vmdebootstrap-predepend
-	sudo sh -c "apt-get install extlinux virtualbox"
+	sudo sh -c "apt-get -y install extlinux virtualbox"
 	touch $@
 
 $(STAMP)-raspberry-predepend: $(STAMP)-vmdebootstrap-predepend
-	sudo sh -c "apt-get install qemu-user-static binfmt-support"
+	sudo sh -c "apt-get -y install qemu-user-static binfmt-support"
 	touch $@
 
 $(STAMP)-dreamplug-predepend: $(STAMP)-vmdebootstrap-predepend
-	sudo sh -c "apt-get install qemu-user-static binfmt-support u-boot-tools"
+	sudo sh -c "apt-get -y install qemu-user-static binfmt-support u-boot-tools"
 	touch $@
 
 clean:
