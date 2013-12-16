@@ -63,7 +63,7 @@ virtualbox-image: prep
 	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
 	  bin/mk_freedombox_image $(NAME)
 # Convert image to vdi hard drive
-	VBoxManage convertdd $IMAGE.img $IMAGE.vdi
+	VBoxManage convertdd $(NAME).img $(NAME).vdi
 	tar -cjvf $(ARCHIVE) $(NAME).vdi
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	$(eval ARCHITECTURE = $(TEMP_ARCHITECTURE))
