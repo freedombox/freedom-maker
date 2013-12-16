@@ -19,16 +19,7 @@ set -x # Enable debugging
 
 IMAGE=$1
 
-<<<<<<< HEAD
-MIRROR=http://http.debian.net/debian
-=======
-# Locate vmdebootstrap program fetched in Makefile
-basedir=`pwd`
-vendor_dir="${basedir}/vendor"
-vmdebootstrap_dir="${vendor_dir}/vmdebootstrap"
-
 MIRROR=http://cdn.debian.net/debian
->>>>>>> nickdaly/master
 SUITE=jessie
 
 basedir=`pwd`
