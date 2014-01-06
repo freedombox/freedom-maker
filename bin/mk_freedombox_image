@@ -32,7 +32,7 @@ base_pkgs="apt base-files ifupdown initramfs-tools \
 logrotate module-init-tools netbase rsyslog udev debian-archive-keyring"
 
 # Packages needed on the dreamplug
-dreamplug_pkgs="linux-image-kirkwood u-boot-tools u-boot uboot-mkimage"
+dreamplug_pkgs="linux-image-kirkwood u-boot-tools u-boot"
 
 if [ -z "$ARCHITECTURE" ] ; then
     ARCHITECTURE=i386
