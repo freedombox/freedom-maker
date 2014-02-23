@@ -34,6 +34,9 @@ logrotate module-init-tools netbase rsyslog udev debian-archive-keyring"
 # Packages needed on the dreamplug
 dreamplug_pkgs="linux-image-kirkwood u-boot-tools u-boot"
 
+# Packages needed for gui-based self-hosted development
+dev_pkgs="task-desktop emacs org-mode git hg"
+
 if [ -z "$ARCHITECTURE" ] ; then
     ARCHITECTURE=i386
 fi
@@ -67,6 +70,16 @@ case "$MACHINE" in
  --enable-dhcp \
 "	;;
 esac
+
+# allow for lots of extra fun customization options.
+for customization in "$CUSTOMIZATIONS"
+do
+    case "$customization" in
+        development)
+            extra_pkgs="$extra_pkgs $dev_pkgs"
+            ;;
+    esac
+done
 
 for p in $base_pkgs $extra_pkgs; do
     pkgopts="$pkgopts --package $p"
