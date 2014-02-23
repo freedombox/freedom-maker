@@ -176,10 +176,14 @@ stick method:
 ## Running from a microSD Card
 
 When DD has finished, take the microSD card out of your computer and plug it
-into your DreamPlug.  If you have a JTAG, you can watch it boot.  You'll see it
-restart once during the boot process.  If you don't have a JTAG, wait a while (5
-minutes or less) and it'll be available over SSH (port 22).  You might need to
-use nmap to find it:
+into your DreamPlug.  If you have a JTAG, you can connect directly to the box to
+watch it boot by running:
+
+    $ sudo screen /dev/ttyUSB0 115200
+
+You'll see the DreamPlug restart once during the boot process.  If you don't
+have a JTAG, wait a while (5 minutes or less) and it'll be available over SSH
+(port 22).  You might need to use nmap to find it:
 
     $ nmap -p 22 --open -sV 192.168.0.0/24
 
@@ -200,7 +204,7 @@ Move the USB stick to the DreamPlug, obtain a serial console, and hit reset.  A
 good way to access the serial console (actually USB serial emulation provided by
 the optional JTAG dongle), is to use 'screen', like so:
 
-	screen /dev/ttyUSB0 115200
+	# sudo screen /dev/ttyUSB0 115200
 
 If ``screen`` fails, see the *Errors* -> *Troubleshooting Screen* section at the
 end of this document.
@@ -526,12 +530,12 @@ commands:
 If screen fails when you're running:
 
     $ sudo screen /dev/ttyUSB0 115200
-    
+
 First, verify that the ``usbserial`` module is loaded:
 
     $ sudo modprobe usbserial
     $ sudo lsmod | grep usbserial
-    
+
 Then, make sure your JTAG is plugged into both your DreamPlug and USB ports and
 verify that you can access the ``/dev/ttyUSB0`` device:
 
