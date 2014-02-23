@@ -35,7 +35,7 @@ logrotate module-init-tools netbase rsyslog udev debian-archive-keyring"
 dreamplug_pkgs="linux-image-kirkwood u-boot-tools u-boot"
 
 # Packages needed for gui-based self-hosted development
-dev_pkgs="task-desktop emacs org-mode git hg"
+dev_pkgs="task-desktop emacs org-mode git mercurial"
 
 if [ -z "$ARCHITECTURE" ] ; then
     ARCHITECTURE=i386
