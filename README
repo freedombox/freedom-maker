@@ -93,13 +93,29 @@ USB cord into your main system and access the serial port with::
 
     # screen /dev/ttyUSB0 115200
 
-Now, interrupt the boot process so you can flash it from within the bootloader,
-before the GNU/Linux system takes over so you can actually write the new uBoot
-file.  If you get to the "sf erase" step, *make sure to complete the "sf write"
-step before turning off your plug.* If you turn off your plug before finishing
-the write step, your plug will be unbootable.
+Now, interrupt the boot process.  You'll need to save your DreamPlug's Ethernet
+interface MAC addresses because they'll be erased during the update and we'll
+need to restore them at the end of the process.  If you don't save the MAC
+addresses, the FreedomBox will automatically create random MAC addresses during
+the box's first boot.  Letting the box set a random MAC address should be a last
+resort, because those MAC addresses are unusual and can easily identify your
+system as a FreedomBox.
 
-Load and write the new bootloader::
+To find the current MAC addresses, run:
+
+    > printenv
+
+The MAC addresses will be on lines like these.  Save the whole line:
+
+    > ethaddr=F0:AD:4E:00:00:00
+    > eth1addr=F0:AD:4E:00:00:01
+
+Now that you've recorded the MAC addresses for each interface, you need to write
+the new uBoot file.  If you get to the "sf erase" step, *make sure to complete
+the "sf write" step before turning off your plug.* If you turn off your plug
+before finishing the write step, your plug will be unbootable.
+
+Load and write the new bootloader:
 
     > usb start
     > fatload usb 2 0x6400000 dreamplug/u-boot.kwb
@@ -192,10 +208,14 @@ stick method:
 ## Running from a microSD Card
 
 When DD has finished, take the microSD card out of your computer and plug it
-into your DreamPlug.  If you have a JTAG, you can watch it boot.  You'll see it
-restart once during the boot process.  If you don't have a JTAG, wait a while (5
-minutes or less) and it'll be available over SSH (port 22).  You might need to
-use nmap to find it:
+into your DreamPlug.  If you have a JTAG, you can connect directly to the box to
+watch it boot by running:
+
+    $ sudo screen /dev/ttyUSB0 115200
+
+You'll see the DreamPlug restart once during the boot process.  If you don't
+have a JTAG, wait a while (5 minutes or less) and it'll be available over SSH
+(port 22).  You might need to use nmap to find it:
 
     $ nmap -p 22 --open -sV 192.168.0.0/24
 
@@ -216,7 +236,7 @@ Move the USB stick to the DreamPlug, obtain a serial console, and hit reset.  A
 good way to access the serial console (actually USB serial emulation provided by
 the optional JTAG dongle), is to use 'screen', like so:
 
-	screen /dev/ttyUSB0 115200
+	# sudo screen /dev/ttyUSB0 115200
 
 If ``screen`` fails, see the *Errors* -> *Troubleshooting Screen* section at the
 end of this document.
@@ -249,13 +269,18 @@ from tar about timestamps being in the future.  It is safe to ignore these.
 
 On reboot, you may want to interrupt the boot and type the following to ensure
 you boot from the internal microSD by default.  This bootcmd line elides the
-time-consuming attempts to boot from gigE, which makes boot go much faster:
+time-consuming attempts to boot from gigE, which makes boot go much faster.  If
+you flashed the bootloader, you'll need to replace the *ethaddr* and *eth1addr*
+lines with the MAC addresses you previously recorded.  If you didn't record MAC
+addresses, completely exclude those two lines.
 
 	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
 	setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage
 	setenv x_bootcmd_initrd fatload usb 0 0x6900000 uInitrd
     setenv x_bootargs console=ttyS0,115200
 	setenv x_bootargs_root root=/dev/sda2 rootdelay=10
+    setenv ethaddr=F0:AD:4E:00:00:00
+    setenv eth1addr=F0:AD:4E:00:00:01
 	saveenv
 	reset
 
@@ -542,12 +567,12 @@ commands:
 If screen fails when you're running:
 
     $ sudo screen /dev/ttyUSB0 115200
-    
+
 First, verify that the ``usbserial`` module is loaded:
 
     $ sudo modprobe usbserial
     $ sudo lsmod | grep usbserial
-    
+
 Then, make sure your JTAG is plugged into both your DreamPlug and USB ports and
 verify that you can access the ``/dev/ttyUSB0`` device:
 
