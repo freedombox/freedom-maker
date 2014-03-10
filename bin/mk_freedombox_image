@@ -93,7 +93,7 @@ sudo \
     MACHINE="$MACHINE" \
     ARCHITECTURE="$ARCHITECTURE" \
     vmdebootstrap \
-    --log freedombox.log \
+    --log $(dirname $IMAGE)/freedombox.log \
     --log-level debug \
     --size 2.5G \
     --image $IMAGE.img \

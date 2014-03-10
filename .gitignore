@@ -1,9 +1,2 @@
 *~
 build
-vendor
-stamp-predepend
-rootfs-*
-stamp-dreamplug-rootfs
-freedombox-unstable*
-freedombox.log
-stamp-vbox-predepend
