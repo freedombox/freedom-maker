@@ -70,7 +70,7 @@ virtualbox-image: $(STAMP)-vbox-predepend
 	$(eval DESTINATION = $(TEMP_DESTINATION))
 	@echo "Build complete."
 
-prep:	
+prep:
 	mkdir -p build
 
 #
