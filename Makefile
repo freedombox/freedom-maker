@@ -100,7 +100,6 @@ $(STAMP)-dreamplug-predepend: $(STAMP)-vmdebootstrap-predepend
 
 clean:
 	-rm -f $(IMAGE) $(ARCHIVE) $(STAMP)-*
-	-rm -f rootfs-* source/etc/fstab
 
 distclean: clean
 	sudo rm -rf build
