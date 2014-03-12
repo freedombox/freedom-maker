@@ -247,7 +247,7 @@ following to boot from the USB stick:
 	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
 	setenv x_bootcmd_kernel fatload usb 2 0x6400000 uImage
 	setenv x_bootcmd_initrd fatload usb 2 0x6900000 uInitrd
-    setenv x_bootargs console=ttyS0,115200
+    	setenv x_bootargs console=ttyS0,115200
 	setenv x_bootargs_root root=/dev/sdc2 rootdelay=10
 	boot
 
@@ -261,7 +261,7 @@ password is "frdm".
 To set things up to boot from the internal microSD card, once you're logged into
 the system booted from root on USB stick you can use:
 
-	/sbin/copy2dream
+	/usr/sbin/copy2dream
 
 Note that if you don't have a reasonable system date and time set in the
 DreamPlug before running this command, you may see a long stream of warnings
