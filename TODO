@@ -1,5 +1,7 @@
 -*- mode: org; -*-
 
+* See also https://github.com/NickDaly/freedombox-todos.git
+
 * Next Prerelease
 
 - [ ] initial boot configuration improvements, as there are a few
@@ -14,8 +16,8 @@
 	- channel-server, the buddycloud channels service for XMPP
 	- babeld, loop-free distance-vector routing protocol
 	- tahoe-lafs, secure distributed filesystem
-- [ ] virtualbox should build with dreamplug configuration
-- [ ] mk_virtualbox_image and mk_dreamplug_rootfs should both reuse
+- [X] virtualbox should build with dreamplug configuration
+- [X] mk_virtualbox_image and mk_dreamplug_rootfs should both reuse
       the same environment variables.
 - [X] abstract the kernel version from source/install.sh
 - [ ] DreamPlug should signal when it's finished booting.  Audio with
@@ -24,9 +26,9 @@
 
 * Stuff to do for First Feature Release
 
-  - [ ] pre-configured user interface
+  - [X] pre-configured user interface
 	- [X] DHCP and HTTP servers on eth0 and/or eth1
-	- [ ] plinth-based initial config interface
+	- [X] plinth-based initial config interface
 
   - [ ] freedom buddy installed
   - [ ] openvpn server setup
