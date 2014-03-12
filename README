@@ -258,6 +258,16 @@ password is "frdm".
 
 - - - - -
 
+If booting from the USB stick fails because u-boot in the Dreamplug doesn't
+recognize the FAT partition on your stick, it may be because the partition
+type code isn't one of the FAT variants that u-boot recognizes.  If this
+happens, stick the USB tick into a Linux machine and use your favorite
+partition editor (fdisk works) to change the type of partition 1 to something
+like '6' which is simple FAT16, then write the change.  This won't change 
+the *contents* of the partition, but it will allow u-boot to recognize it.
+
+- - - - -
+
 To set things up to boot from the internal microSD card, once you're logged into
 the system booted from root on USB stick you can use:
 
