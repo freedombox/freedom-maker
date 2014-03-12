@@ -2,6 +2,12 @@
 
 * See also https://github.com/NickDaly/freedombox-todos.git
 
+* before we tag 0.2
+
+  - vmdebootstrap .img has FAT partition type code u-boot doesn't grok
+  - copy2dream needs to fix up the UUID entries in /etc/fstab
+  - update README to document booting from full-sized SD card
+
 * Next Prerelease
 
 - [ ] initial boot configuration improvements, as there are a few
