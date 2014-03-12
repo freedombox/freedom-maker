@@ -18,7 +18,7 @@ SIGNATURE = $(ARCHIVE).sig
 image: dreamplug-image
 
 # build DreamPlug USB or SD card image
-dreamplug-image: $(STAMP)-dreamplug-predepend
+dreamplug-image: prep
 	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
 	$(eval TEMP_MACHINE = $(MACHINE))
 	$(eval TEMP_DESTINATION = $(DESTINATION))
@@ -35,7 +35,7 @@ dreamplug-image: $(STAMP)-dreamplug-predepend
 	@echo "Build complete."
 
 # build Raspberry Pi SD card image
-raspberry-image: $(STAMP)-raspberry-predepend
+raspberry-image: prep
 	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
 	$(eval TEMP_MACHINE = $(MACHINE))
 	$(eval TEMP_DESTINATION = $(DESTINATION))
@@ -52,7 +52,7 @@ raspberry-image: $(STAMP)-raspberry-predepend
 	@echo "Build complete."
 
 # build a virtualbox image
-virtualbox-image: $(STAMP)-vbox-predepend
+virtualbox-image: prep
 	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
 	$(eval TEMP_MACHINE = $(MACHINE))
 	$(eval TEMP_DESTINATION = $(DESTINATION))
@@ -72,31 +72,6 @@ virtualbox-image: $(STAMP)-vbox-predepend
 
 prep:
 	mkdir -p build
-
-#
-# meta
-#
-
-# install required files so users don't need to do it themselves.
-$(STAMP)-predepend: prep
-	sudo sh -c "apt-get install git mercurial python-docutils mktorrent"
-	touch $@
-
-$(STAMP)-vmdebootstrap-predepend: $(STAMP)-predepend
-	sudo sh -c "apt-get -y install debootstrap qemu-utils parted mbr kpartx python-cliapp"
-	touch $@
-
-$(STAMP)-vbox-predepend: $(STAMP)-vmdebootstrap-predepend
-	sudo sh -c "apt-get -y install extlinux virtualbox"
-	touch $@
-
-$(STAMP)-raspberry-predepend: $(STAMP)-vmdebootstrap-predepend
-	sudo sh -c "apt-get -y install qemu-user-static binfmt-support"
-	touch $@
-
-$(STAMP)-dreamplug-predepend: $(STAMP)-vmdebootstrap-predepend
-	sudo sh -c "apt-get -y install qemu-user-static binfmt-support u-boot-tools"
-	touch $@
 
 clean:
 	-rm -f $(IMAGE) $(ARCHIVE) $(STAMP)-*
