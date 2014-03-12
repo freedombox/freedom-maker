@@ -19,10 +19,13 @@ set -x # Enable debugging
 
 IMAGE=$1
 
+# Locate vmdebootstrap program fetched in Makefile
+basedir=`pwd`
+vendor_dir="${basedir}/vendor"
+vmdebootstrap_dir="${vendor_dir}/vmdebootstrap"
+
 MIRROR=http://cdn.debian.net/debian
 SUITE=jessie
-
-basedir=`pwd`
 
 # Packages to install in all FreedomBox environments
 base_pkgs="apt base-files ifupdown initramfs-tools \
@@ -32,7 +35,7 @@ logrotate module-init-tools netbase rsyslog udev debian-archive-keyring"
 dreamplug_pkgs="linux-image-kirkwood u-boot-tools u-boot"
 
 # Packages needed for gui-based self-hosted development
-dev_pkgs="task-desktop emacs org-mode git mercurial"
+dev_pkgs="task-xfce-desktop emacs org-mode git mercurial iceweasel ca-certificates"
 
 if [ -z "$ARCHITECTURE" ] ; then
     ARCHITECTURE=i386
@@ -90,7 +93,7 @@ sudo \
     MACHINE="$MACHINE" \
     ARCHITECTURE="$ARCHITECTURE" \
     vmdebootstrap \
-    --log freedombox.log \
+    --log $(dirname $IMAGE)/freedombox.log \
     --log-level debug \
     --size 2.5G \
     --image $IMAGE.img \
