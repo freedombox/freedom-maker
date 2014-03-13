@@ -1,4 +1,6 @@
-**Freedom-Maker - Bdale's Building Tools for the FreedomBox Project**
+<!-- -*- mode: markdown; mode: auto-fill; fill-column: 80 -*- -->
+
+# Freedom-Maker - Bdale's Building Tools for the FreedomBox Project
 
 Welcome to the FreedomBox!  This project is the central hub of the FreedomBox
 project, it builds and installs the file-system image that turns any computer
@@ -31,22 +33,6 @@ There are a couple ways to use this system:
 
 There are no training wheels.  Read the scripts and understand what
 they're going to do before you run them.
-
-# Build Dependencies
-
-In order for the various make targets in freedom-maker to complete successfully
-a number of packages must be installed on the system.  The following commands
-will accomplish this on a Debian system for the various targets:
-
-    general
-	apt-get install git vmdebootstrap
-		mercurial python-docutils mktorrent 
-    vbox
-	apt-get install extlinux virtualbox
-    raspberry-pi
-	apt-get install qemu-user-static binfmt-support
-    dreamplug
-	apt-get install qemu-user-static binfmt-support u-boot-tools
 
 # Recent Firmware Necessary!
 
@@ -183,12 +169,12 @@ You'll need to copy the image to the memory card or USB stick:
 
 2. Decompress the image:
 
-    $ tar -xjvf freedombox-unstable_*.tar.bz2
+        $ tar -xjvf freedombox-unstable_*.tar.bz2
 
 3. Copy the image to your card.  Whatever you do, make sure you don't copy it to
    /dev/sda.  That'll break your system.
 
-    # dd bs=1M if=freedombox-unstable_*.img of=/dev/sd(thesameletter)
+        # dd bs=1M if=freedombox-unstable_*.img of=/dev/sd(thesameletter)
 
    When picking a device, use the drive-letter destination, like /dev/sdb, not a
    numbered destination, like /dev/sdb1.  The device-without-a-number refers to
@@ -236,7 +222,7 @@ Move the USB stick to the DreamPlug, obtain a serial console, and hit reset.  A
 good way to access the serial console (actually USB serial emulation provided by
 the optional JTAG dongle), is to use 'screen', like so:
 
-	# sudo screen /dev/ttyUSB0 115200
+    # sudo screen /dev/ttyUSB0 115200
 
 If ``screen`` fails, see the *Errors* -> *Troubleshooting Screen* section at the
 end of this document.
@@ -244,12 +230,12 @@ end of this document.
 Interrupt the boot by pressing a key during the autoboot countdown, and type the
 following to boot from the USB stick:
 
-	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
-	setenv x_bootcmd_kernel fatload usb 2 0x6400000 uImage
-	setenv x_bootcmd_initrd fatload usb 2 0x6900000 uInitrd
+    setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
+    setenv x_bootcmd_kernel fatload usb 2 0x6400000 uImage
+    setenv x_bootcmd_initrd fatload usb 2 0x6900000 uInitrd
     setenv x_bootargs console=ttyS0,115200
-	setenv x_bootargs_root root=/dev/sdc2 rootdelay=10
-	boot
+    setenv x_bootargs_root root=/dev/sdc2 rootdelay=10
+    boot
 
 The system should boot to a login prompt, using only the bits on the stick.
 
@@ -261,7 +247,7 @@ password is "frdm".
 To set things up to boot from the internal microSD card, once you're logged into
 the system booted from root on USB stick you can use:
 
-	/sbin/copy2dream
+    /sbin/copy2dream
 
 Note that if you don't have a reasonable system date and time set in the
 DreamPlug before running this command, you may see a long stream of warnings
@@ -274,194 +260,53 @@ you flashed the bootloader, you'll need to replace the *ethaddr* and *eth1addr*
 lines with the MAC addresses you previously recorded.  If you didn't record MAC
 addresses, completely exclude those two lines.
 
-	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
-	setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage
-	setenv x_bootcmd_initrd fatload usb 0 0x6900000 uInitrd
+    setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
+    setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage
+    setenv x_bootcmd_initrd fatload usb 0 0x6900000 uInitrd
     setenv x_bootargs console=ttyS0,115200
-	setenv x_bootargs_root root=/dev/sda2 rootdelay=10
+    setenv x_bootargs_root root=/dev/sda2 rootdelay=10
     setenv ethaddr=F0:AD:4E:00:00:00
     setenv eth1addr=F0:AD:4E:00:00:01
-	saveenv
-	reset
+    saveenv
+    reset
+
+Congratulations, you're done!  To connect to the internet through your
+DreamPlug, plug your computer's Ethernet cord into the *eth0* port, and plug
+*eth1* into your router.  The *eth1* port is the outside Ethernet port.
 
 # To Make It
 
-If you want to build your own image yourself, you're more than welcome to.
-Whether you're using a USB drive or a microSD card, you'll need to ensure that
-it's at least 2 GB in size and that it has two partitons:
+To build the image, download and install the dependencies for each of the images
+you want to build.
 
-1. The stick must start with a 128 MB FAT partition for the boot directory.
+Required for all images:
 
-2. The rest of the stick is an EXT2 partition, for the main installation.
+    # apt-get -y install git mercurial python-docutils mktorrent
+    # apt-get -y install debootstrap qemu-utils parted mbr kpartx python-cliapp
 
-The rest of the steps you need to follow depend on whether you're using a USB
-stick or a microSD card.
+Required for VirtualBox:
 
-## Building on a USB Stick
+    # apt-get -y install extlinux virtualbox
 
-Partition a USB stick to have a small FAT partition and large ext2 partition,
-create a /media/freedom mount point, and add entries to /etc/fstab like:
+Required for RaspberryPi:
 
-    /dev/sdb1 /media/freedom/boot vfat user,noauto 0 0
-    /dev/sdb2 /media/freedom ext2 user,noauto 0 0
+    # apt-get -y install qemu-user-static binfmt-support
 
-This will allow the Makefile to mount and unmount the stick at will.
+Required for DreamPlug:
 
-If you have a favorite Debian mirror, update the file fbx-base.conf setting the
-source= line.
+    # apt-get -y install qemu-user-static binfmt-support u-boot-tools
 
-To populate the stick with bits for a DreamPlug, just plug it in to your
-computer and type:
+Now, fetch the git source of freedom-maker and build the image you want:
 
-	make DESTINATION=usb plugserver-image
+    $ git clone http://anonscm.debian.org/git/freedombox/freedom-maker.git freedom-maker
+    $ make -C freedom-maker dreamplug-image raspberry-image virtualbox-image
 
-This will build a file tree under build/dreamplug, representing the contents of
-a root file system, then that content will be copied to the stick.
+If you only want one of the possible images of DreamPlug, RaspberryPi and
+VirtualBox, remove the rest from the make command line.  The images will show up
+in freedom-maker/build/.
 
-## Building it on a microSD card.
-
-Changing the image and building your own is a simple 18 step process!  Lots of
-thanks to Nick Hardiman for putting these instructions together.
-
-### Get Ready
-
-1. Start your workstation.
-
-2. Use a Debian OS, the version doesn't matter.  A virtual image, such
-   as a VirtualBox image, is fine.  Usually.
-
-3. Use the root account.
-
-### Prepare an SD Card
-
-4. Find a microSD card with SD card holder.  It must be at least 2GB
-   in size.
-
-5. Insert the card into your workstation.
-
-6. Install a partition editor.  Install parted if you are a masochist.
-
-    # apt-get install parted
-
-   If you don't hate yourself, use GParted, click through the relevant
-   bits and skip on to step 10.
-
-7. Create 2 partitions.  Use cfdisk, parted, gparted or similar.
-
-    # cfdisk  /dev/sdb
-
-   a. First partition: 128meg (no smaller or the kernel copy will run
-      out of room and make - see below - will end with an error).
-
-   b. Second partition: The rest of the card (anything over 800 MB
-      should work).
-
-8. Make a note of the SD card’s device name.  Mine is /dev/sdb (my
-   workstation’s layout is simple: one disk called /dev/sda and
-   nothing else defined).
-
-9. Format the two partitions.
-
-   a. First partition: FAT
-
-    # mkdosfs /dev/sdb1
-
-   b. Second partition: ext3
-
-    # mkfs.ext3 /dev/sdb2
-
-10. Create the mountpoints on your workstation.
-
-    # mkdir -p /media/freedom/boot
-
-11. Mount the second partition.
-
-    # mount /dev/sdb2 /media/freedom/
-
-12. Mount the first partition.
-
-    # mount /dev/sdb1 /media/freedom/boot/
-
-13. Check your work.
-
-    # mount
-
-    sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime)
-    ...
-    /dev/sdb2 on /media/freedom type ext3
-    (rw,relatime,errors=continue,barrier=1,data=ordered)
-    /dev/sdb1 on /media/freedom/boot type vfat
-    (rw,relatime,fmask=0022,dmask=0022,codepage=cp437,iocharset=utf8,shortname=mixed,errors=remount-ro)
-
-### Clone the Git Repository
-
-14. Install git.
-
-    # apt-get install git
-
-    Reading package lists... Done
-    ...
-    After this operation, 15.3 MB of additional disk space will be used.
-    Do you want to continue [Y/n]?
-    ...
-
-15. Clone Nick Daly’s repository.
-
-    $ git clone https://github.com/NickDaly/freedom-maker.git
-
-    Cloning into 'freedom-maker'...
-
-
-### Create the Debian OS.
-
-16. Change to the new directory.
-
-    $ cd ~/freedom-maker/
-
-17. Kick off:
-
-    $ make weekly-image
-
-18. Enter your password when asked by "sudo".  If that fails, run:
-
-    $ su -c "make weekly-image"
-
-If you do that, you'll need to enter the root password to build the image.
-
-The next part took about an hour, but required no input from me.  Packages were
-downloaded.  Lots of commands were run.  Many harmless errors were ignored:
-
-    sysvinit: restarting...init: timeout opening/writing control channel /run/initctl
-    .init: timeout opening/writing control channel /run/initctl
-    ...
-
-There was good news:
-
-    Multistrap system installed successfully...
-    Copying the source directory to the FreedomBox root.
-
-There was an enormous amount of this:
-
-    bin/bash
-          818092 100%    7.07MB/s    0:00:00 (xfer#1, to-check=1102/1123)
-    bin/cat
-           42736 100%  362.91kB/s    0:00:00 (xfer#2, to-check=1101/1123)
-    bin/chgrp
-           54996 100%  383.62kB/s    0:00:00 (xfer#3, to-check=1100/1123)
-    ...
-
-Finally an image is copied and zipped up for redistribution:
-
-    dd if=/dev/sdb of="freedombox-unstable_`date +%Y.%m%d`.img" bs=1M
-    3781+1 records in
-    3781+1 records out
-    3965190144 bytes (4.0 GB) copied, 266.174 s, 14.9 MB/s
-    Image copied.  The microSD card may now be removed.
-    tar -cjvf "freedombox-unstable_`date +%Y.%m%d`.tar.bz2"
-    "freedombox-unstable_`date +%Y.%m%d`.img"
-    freedombox-unstable_2012.0705.img
-
-The end.  Hooray!  The SD card is ready for the DreamPlug.
+*dd* the images to the SD card (for DreamPlug and RaspberryPi), or create a new
+VM for the VirtualBox hard drive file, and boot the client.
 
 # To Understand It
 
@@ -475,63 +320,23 @@ files you need to be aware of:
 - /Makefile: The makefile that describes and builds the system.
 - /bin/mk_dreamplug_rootfs: Builds the DreamPlug's root file-system.
 - /bin/mk_virtualbox_image: Builds the VirtualBox image.
-- /bin/projects: The place for external projects to hook into and customize
-  themselves before they're copied to the image.
-- /bin/finalize: Finalizes and prepares the build for booting.
 - /source: The root file system.
-- /source/install.sh: Pre-boot configuration that needs to be run on the device
-  itself (from within a chroot).
 
 ## Makefile
 
 There are three major targets to be aware of:
 
-- plugserver-image: The default target.  This loads an image to a USB drive that
-  can be used to install the FreedomBox without opening up your DreamPlug and
-  voiding the warranty.  You'll need a JTAG, though.
-- weekly-image: The target used to produce the weekly FreedomBox test release.
-  This will copy the image to a card that can be popped directly into the
-  microSD card slot in the DreamPlug.  The DreamPlug will boot happily without
-  needing a JTAG.
-- rootfs: The root file system itself.  It doesn't get installed anywhere
-  (that's done by the other two targets), but is a good way to test whether the
-  image will actually build, without waiting for all that pesky hardware I/O.
+- dreamplug-image: This builds an image for the DreamPlug's internal SD card.
+- raspberry-image: This builds an image for the RasbperryPi's SD card.
+- virtualbox-image: This builds an image for the VirtualBox virtualization tool.
 
-## /bin/mk_dreamplug_rootfs
+## /bin/mk_freedombox_image
 
-Starts building the DreamPlug system image by creating all the destination
-directories and installing the base system.
+Starts building the image by running vmdebootstrap.
 
 ## /bin/mk_virtualbox_image
 
-Starts building the VirtualBox system image by creating all the destination
-directories and installing the base system.
-
-## /bin/projects
-
-Where projects that want to integrate into the FreedomBox should hook into.
-Keep in mind, we aren't in a chroot at this point.  The only environment
-variables you'll probably need are:
-
-- user: The non-root user's name (uid = 1000).
-- homedir: The non-root user's home-directory.
-
-## /bin/finalize
-
-Getting the system ready for boot, doing the things that don't need to be done
-inside a chroot.  You probably don't need to change this.
-
-## /source
-
-The root file system on the DreamPlug.  Modify this, and you're modifying what
-ends up on the FreedomBox.
-
-## /source/install.sh
-
-This is executed from a chroot during the build process to do configuration that
-needs to be done on the device itself.  You shouldn't need to modify this.  If
-you're installing a project that needs to change how the system configures
-itself, you're probably doing something wrong.
+Adds FreedomBox specific customizations to the image.
 
 # Errors
 
@@ -554,13 +359,13 @@ Make sure you've updated your DreamPlug to boot from the internal microSD card.
 You'll need to plug in the JTAG and interrupt the boot process to paste in these
 commands:
 
-	setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
-	setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage
-	setenv x_bootcmd_initrd fatload usb 0 0x6900000 uInitrd
+    setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;'
+    setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage
+    setenv x_bootcmd_initrd fatload usb 0 0x6900000 uInitrd
     setenv x_bootargs console=ttyS0,115200
-	setenv x_bootargs_root root=/dev/sda2 rootdelay=10
-	saveenv
-	reset
+    setenv x_bootargs_root root=/dev/sda2 rootdelay=10
+    saveenv
+    reset
 
 ## Troubleshooting Screen
 
@@ -587,79 +392,79 @@ You may then be able to access the device via tail or screen.  If not, then
 
 ## Unbricking a DreamPlug
 
-You should first try to follow the (simpler instructions from
-GlobalScale)[https://code.google.com/p/dreamplug/downloads/detail?name=DreamPlug-Reflash%20uboot%20guide_%20Aug-28-2012.pdf&can=2&q=].
-Search for the "[Reflash uboot
-guide](https://code.google.com/p/dreamplug/downloads/list)" if the link doesn't
-work.
+You should first try to follow the
+[simpler instructions from GlobalScale](https://code.google.com/p/dreamplug/downloads/detail?name=DreamPlug-Reflash%20uboot%20guide_%20Aug-28-2012.pdf&can=2&q=).
+Search for the
+"[Reflash uboot guide](https://code.google.com/p/dreamplug/downloads/list)" if
+the link doesn't work.
 
 If those instructions don't work, you should then try these instructions.
 
 These instructions were copied and edited from:
 
-https://www.newit.co.uk/forum/index.php?PHPSESSID=t9b8s83gen1h10m65p0s3q4md6&topic=2835.0
+    https://www.newit.co.uk/forum/index.php?PHPSESSID=t9b8s83gen1h10m65p0s3q4md6&topic=2835.0
 
 These instructions should get you from a Bricked DreamPlug to getting uboot
 running in RAM ready to restore your system from USB/TFTP.  They should be used
 if you erased your DreamPlug's bootloader and shut it off before writing the new
 bootloader.
 
-0. Edit your /etc/apt/sources.list to make sure you're using Wheezy or later.
+1. Edit your /etc/apt/sources.list to make sure you're using Wheezy or later.
 
-1. First, install the required packages:
+2. First, install the required packages:
 
-    $ sudo apt-get install openocd telnet screen
+        $ sudo apt-get install openocd telnet screen
 
-2. Connect & Power up your device with the mini usb cable and JTAG.
+3. Connect & Power up your device with the mini usb cable and JTAG.
 
-3. Open a terminal session and connect to the plug console:
+4. Open a terminal session and connect to the plug console:
 
-   $ sudo screen /dev/ttyUSB0 115200
+        $ sudo screen /dev/ttyUSB0 115200
 
-4. Open a 2nd terminal session.
+5. Open a 2nd terminal session.
 
-    $ wget http://www.downloadsnewit.co.uk/u-boot/recovery/dreamplug/u-boot.elf
-    $ sudo openocd -f /usr/share/openocd/scripts/board/sheevaplug.cfg -s /usr/share/openocd/scripts
+        $ wget http://www.downloadsnewit.co.uk/u-boot/recovery/dreamplug/u-boot.elf
+        $ sudo openocd -f /usr/share/openocd/scripts/board/sheevaplug.cfg -s /usr/share/openocd/scripts
 
-5. You should see output similar to this:
+6. You should see output similar to this:
 
-    Open On-Chip Debugger 0.4.0 (2010-10-08-15:52)
-    Licensed under GNU GPL v2
-    For bug reports, read
-       http://openocd.berlios.de/doc/doxygen/bugs.html
-    2000 kHz
-    trst_and_srst separate srst_gates_jtag trst_push_pull srst_open_drain
-    jtag_nsrst_delay: 200
-    jtag_ntrst_delay: 200
-    dcc downloads are enabled
-    Warn : use 'feroceon.cpu' as target identifier, not '0'
-    Info : clock speed 2000 kHz
-    Info : JTAG tap: feroceon.cpu tap/device found: 0x20a023d3 (mfg: 0x1e9, part: 0x0a02, ver: 0x2)
-    Info : Embedded ICE version 0
-    Info : feroceon.cpu: hardware has 1 breakpoint/watchpoint unit
+        Open On-Chip Debugger 0.4.0 (2010-10-08-15:52)
+        Licensed under GNU GPL v2
+        For bug reports, read
+           http://openocd.berlios.de/doc/doxygen/bugs.html
+        2000 kHz
+        trst_and_srst separate srst_gates_jtag trst_push_pull srst_open_drain
+        jtag_nsrst_delay: 200
+        jtag_ntrst_delay: 200
+        dcc downloads are enabled
+        Warn : use 'feroceon.cpu' as target identifier, not '0'
+        Info : clock speed 2000 kHz
+        Info : JTAG tap: feroceon.cpu tap/device found: 0x20a023d3 (mfg: 0x1e9, part: 0x0a02, ver: 0x2)
+        Info : Embedded ICE version 0
+        Info : feroceon.cpu: hardware has 1 breakpoint/watchpoint unit
 
-6. If you are using a JTAG and getting errors at this point replug or even swap
+7. If you are using a JTAG and getting errors at this point replug or even swap
    JTAG cables and retry.
 
-7. Next open a 3rd terminal session.
+8. Next open a 3rd terminal session.
 
-    $ telnet localhost 4444
+        $ telnet localhost 4444
 
-8. Output should look like this:
+9. Output should look like this:
 
-    Trying ::1...
-    Trying 127.0.0.1...
-    Connected to localhost.
-    Escape character is '^]'.
-    Open On-Chip Debugger
-    >
+        Trying ::1...
+        Trying 127.0.0.1...
+        Connected to localhost.
+        Escape character is '^]'.
+        Open On-Chip Debugger
+        >
 
-9. Then, in that third seesion, run:
+10. Then, in that third seesion, run:
 
-    reset;sheevaplug_init;load_image u-boot.elf;resume 0x00600000
+        reset;sheevaplug_init;load_image u-boot.elf;resume 0x00600000
 
-10. Now you should see Uboot starting to run in the 1st terminal session and you
+11. Now you should see Uboot starting to run in the 1st terminal session and you
     are ready to start restoring your plug.
 
-11. DON'T turn off your DreamPlug.  Follow the "Updating the DreamPlug's U-Boot"
-    instructions.
+12. **DON'T turn off your DreamPlug.**  Follow the "Updating the DreamPlug's
+    U-Boot" instructions.
