@@ -15,8 +15,6 @@ IMAGE = $(NAME).img
 ARCHIVE = $(NAME).tar.bz2
 SIGNATURE = $(ARCHIVE).sig
 
-image: dreamplug-image
-
 # build DreamPlug USB or SD card image
 dreamplug-image: $(STAMP)-dreamplug-predepend
 	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
