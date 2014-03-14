@@ -280,9 +280,11 @@ addresses, completely exclude those two lines.
     saveenv
     reset
 
-Congratulations, you're done!  To connect to the internet through your
-DreamPlug, plug your computer's Ethernet cord into the *eth0* port, and plug
-*eth1* into your router.  The *eth1* port is the outside Ethernet port.
+Congratulations, you're done!  To connect your DreamPlug to the Internet, plug
+an Ethernet cord from the box's *eth0* port into your router.  The *eth0* port
+is the inner Ethernet port.  To connect to the Internet through your DreamPlug,
+plug your computer's Ethernet port into the box's eth1 port.  The *eth1* port is
+the outer Ethernet port.
 
 # To Make It
 
