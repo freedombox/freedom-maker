@@ -7,7 +7,6 @@ MACHINE = dreamplug
 # card usb hdd
 DESTINATION = card
 BUILD = $(MACHINE)-$(ARCHITECTURE)-$(DESTINATION)
-STAMP = build/stamp
 TODAY := `date +%Y-%m-%d`
 NAME = build/freedombox-unstable_$(TODAY)_$(BUILD)
 WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
@@ -54,7 +53,7 @@ prep:
 	mkdir -p build
 
 clean:
-	-rm -f $(IMAGE) $(ARCHIVE) $(STAMP)-*
+	-rm -f $(IMAGE) $(ARCHIVE)
 
 distclean: clean
 	sudo rm -rf build
