@@ -17,9 +17,6 @@ SIGNATURE = $(ARCHIVE).sig
 
 # build DreamPlug USB or SD card image
 dreamplug-image: prep
-	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
-	$(eval TEMP_MACHINE = $(MACHINE))
-	$(eval TEMP_DESTINATION = $(DESTINATION))
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = dreamplug)
 	$(eval DESTINATION = card)
@@ -27,16 +24,10 @@ dreamplug-image: prep
 	  bin/mk_freedombox_image $(NAME)
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
-	$(eval ARCHITECTURE = $(TEMP_ARCHITECTURE))
-	$(eval MACHINE = $(TEMP_MACHINE))
-	$(eval DESTINATION = $(TEMP_DESTINATION))
 	@echo "Build complete."
 
 # build Raspberry Pi SD card image
 raspberry-image: prep
-	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
-	$(eval TEMP_MACHINE = $(MACHINE))
-	$(eval TEMP_DESTINATION = $(DESTINATION))
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = raspberry)
 	$(eval DESTINATION = card)
@@ -44,16 +35,10 @@ raspberry-image: prep
 	  bin/mk_freedombox_image $(NAME)
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
-	$(eval ARCHITECTURE = $(TEMP_ARCHITECTURE))
-	$(eval MACHINE = $(TEMP_MACHINE))
-	$(eval DESTINATION = $(TEMP_DESTINATION))
 	@echo "Build complete."
 
 # build a virtualbox image
 virtualbox-image: prep
-	$(eval TEMP_ARCHITECTURE = $(ARCHITECTURE))
-	$(eval TEMP_MACHINE = $(MACHINE))
-	$(eval TEMP_DESTINATION = $(DESTINATION))
 	$(eval ARCHITECTURE = i386)
 	$(eval MACHINE = virtualbox)
 	$(eval DESTINATION = hdd)
@@ -63,9 +48,6 @@ virtualbox-image: prep
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
 	tar -cjvf $(ARCHIVE) $(NAME).vdi
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
-	$(eval ARCHITECTURE = $(TEMP_ARCHITECTURE))
-	$(eval MACHINE = $(TEMP_MACHINE))
-	$(eval DESTINATION = $(TEMP_DESTINATION))
 	@echo "Build complete."
 
 prep:
