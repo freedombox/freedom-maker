@@ -95,7 +95,7 @@ sudo \
     vmdebootstrap \
     --log $(dirname $IMAGE)/freedombox.log \
     --log-level debug \
-    --size 2.5G \
+    --size 3G \
     --image $IMAGE.img \
     --hostname freedombox \
     --verbose \
