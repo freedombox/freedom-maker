@@ -246,11 +246,12 @@ password is "frdm".
 
 If booting from the USB stick fails because u-boot in the Dreamplug doesn't
 recognize the FAT partition on your stick, it may be because the partition
-type code isn't one of the FAT variants that u-boot recognizes.  If this
-happens, plug the USB stick into a Linux machine and use your favorite
-partition editor (fdisk works) to change the type of partition 1 to something
-like '6' which is simple FAT16, then write the change.  This won't change
-the *contents* of the partition, but it will allow u-boot to recognize it.
+type code isn't one of the FAT variants that u-boot recognizes.  It's not 
+clear what the root cause is yet, but if this happens, plug the USB stick 
+into a Linux machine and use your favorite partition editor (fdisk works) 
+to change the type of partition 1 to something like '6' which is simple 
+FAT16, then write the change.  This won't change the *contents* of the 
+partition, but it may allow u-boot to recognize it.
 
 - - - - -
 
@@ -262,6 +263,9 @@ the system booted from root on USB stick you can use:
 Note that if you don't have a reasonable system date and time set in the
 DreamPlug before running this command, you may see a long stream of warnings
 from tar about timestamps being in the future.  It is safe to ignore these.
+
+After copy2dream completes, you may need to update /etc/fstab by hand since
+copy2dream does not yet understand UUIDs in that file.
 
 On reboot, you may want to interrupt the boot and type the following to ensure
 you boot from the internal microSD by default.  This bootcmd line elides the
