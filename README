@@ -294,7 +294,7 @@ you want to build.
 Required for all images:
 
     # apt-get -y install git mercurial python-docutils mktorrent
-    # apt-get -y install debootstrap qemu-utils parted mbr kpartx python-cliapp
+    # apt-get -y install debootstrap qemu-utils parted mbr kpartx python-cliapp dosfstools
 
 Required for VirtualBox:
 
