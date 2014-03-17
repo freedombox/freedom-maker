@@ -23,8 +23,8 @@ echo info: building $MACHINE for $ARCHITECTURE to $DESTINATION
 export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
 export LC_ALL=C LANGUAGE=C LANG=C
 
-# FIXME disable source fetching while debugging
-export NOSOURCE=true
+# set this to 'true' to disable source fetching while debugging
+export NOSOURCE=false
 
 username=fbx
 password=frdm
