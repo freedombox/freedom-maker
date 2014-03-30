@@ -246,11 +246,11 @@ password is "frdm".
 
 If booting from the USB stick fails because u-boot in the Dreamplug doesn't
 recognize the FAT partition on your stick, it may be because the partition
-type code isn't one of the FAT variants that u-boot recognizes.  It's not 
-clear what the root cause is yet, but if this happens, plug the USB stick 
-into a Linux machine and use your favorite partition editor (fdisk works) 
-to change the type of partition 1 to something like '6' which is simple 
-FAT16, then write the change.  This won't change the *contents* of the 
+type code isn't one of the FAT variants that u-boot recognizes.  It's not
+clear what the root cause is yet, but if this happens, plug the USB stick
+into a Linux machine and use your favorite partition editor (fdisk works)
+to change the type of partition 1 to something like '6' which is simple
+FAT16, then write the change.  This won't change the *contents* of the
 partition, but it may allow u-boot to recognize it.
 
 - - - - -
@@ -297,8 +297,8 @@ you want to build.
 
 Required for all images:
 
-    # apt-get -y install git mercurial python-docutils mktorrent
-    # apt-get -y install debootstrap qemu-utils parted mbr kpartx python-cliapp dosfstools
+    # apt-get -y install git python-docutils mktorrent vmdebootstrap \
+        debootstrap qemu-utils parted mbr kpartx python-cliapp dosfstools
 
 Required for VirtualBox:
 
