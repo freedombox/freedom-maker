@@ -86,7 +86,7 @@ for p in $base_pkgs $extra_pkgs; do
 done
 
 # Run vmdebootstrap script to create image
-sudo \
+sudo -H \
     SUITE="$SUITE" \
     MIRROR="$MIRROR" \
     DESTINATION="$DESTINATION" \
