@@ -34,6 +34,9 @@ logrotate module-init-tools netbase rsyslog udev debian-archive-keyring"
 # Packages needed on the dreamplug
 dreamplug_pkgs="linux-image-kirkwood u-boot-tools u-boot"
 
+# Packages needed on the beaglebone
+beaglebone_pkgs="u-boot-tools u-boot"
+
 # Packages needed for gui-based self-hosted development
 dev_pkgs="task-xfce-desktop emacs org-mode git mercurial iceweasel ca-certificates"
 
@@ -56,6 +59,17 @@ case "$MACHINE" in
 	;;
     dreamplug)
 	extra_pkgs="$dreamplug_pkgs"
+	extra_opts="\
+ --variant minbase \
+ --bootsize 128M \
+ --boottype vfat \
+ --no-kernel \
+ --no-extlinux \
+ --foreign /usr/bin/qemu-arm-static \
+"
+	;;
+    beaglebone)
+	extra_pkgs="$beaglebone_pkgs"
 	extra_opts="\
  --variant minbase \
  --bootsize 128M \
