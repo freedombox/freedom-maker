@@ -2,7 +2,7 @@
 
 # armel amd64 i386
 ARCHITECTURE = armel
-# dreamplug guruplug virtualbox
+# dreamplug guruplug virtualbox raspberry(pi)
 MACHINE = dreamplug
 # card usb hdd
 DESTINATION = card
