@@ -15,7 +15,7 @@
 
 set -e # Exit on first error
 
-set -x # Enable debugging
+#set -x # Enable debugging
 
 IMAGE=$1
 
