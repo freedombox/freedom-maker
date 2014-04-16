@@ -297,8 +297,7 @@ you want to build.
 
 Required for all images:
 
-    # apt-get -y install git python-docutils mktorrent vmdebootstrap \
-        debootstrap qemu-utils parted mbr kpartx python-cliapp dosfstools
+    # apt-get -y install git python-docutils mktorrent vmdebootstrap dosfstools
 
 Required for VirtualBox:
 
