@@ -38,7 +38,7 @@ raspberry-image: prep
 
 # build Beaglebone SD card image
 beaglebone-image: prep
-	$(eval ARCHITECTURE = armel)
+	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = beaglebone)
 	$(eval DESTINATION = card)
 	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
