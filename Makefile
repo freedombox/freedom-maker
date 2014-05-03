@@ -37,6 +37,17 @@ raspberry: prep
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	@echo "Build complete."
 
+# build Beaglebone SD card image
+beaglebone-image: prep
+	$(eval ARCHITECTURE = armhf)
+	$(eval MACHINE = beaglebone)
+	$(eval DESTINATION = card)
+	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
+	  bin/mk_freedombox_image $(NAME)
+	tar -cjvf $(ARCHIVE) $(IMAGE)
+	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
+	@echo "Build complete."
+
 # build a virtualbox image
 virtualbox: prep
 	$(eval ARCHITECTURE = i386)
