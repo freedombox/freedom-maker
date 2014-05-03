@@ -13,7 +13,7 @@ WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
 IMAGE = $(NAME).img
 ARCHIVE = $(NAME).tar.bz2
 SIGNATURE = $(ARCHIVE).sig
-SUITE = sid
+SUITE = jessie
 
 # build DreamPlug USB or SD card image
 dreamplug: prep
