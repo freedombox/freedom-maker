@@ -13,36 +13,37 @@ WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
 IMAGE = $(NAME).img
 ARCHIVE = $(NAME).tar.bz2
 SIGNATURE = $(ARCHIVE).sig
+SUITE = sid
 
 # build DreamPlug USB or SD card image
-dreamplug-image: prep
+dreamplug: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = dreamplug)
 	$(eval DESTINATION = card)
 	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
-	  bin/mk_freedombox_image $(NAME)
+	  bin/mk_freedombox_image $(NAME) $(SUITE)
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	@echo "Build complete."
 
 # build Raspberry Pi SD card image
-raspberry-image: prep
+raspberry: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = raspberry)
 	$(eval DESTINATION = card)
 	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
-	  bin/mk_freedombox_image $(NAME)
+	  bin/mk_freedombox_image $(NAME) $(SUITE)
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	@echo "Build complete."
 
 # build a virtualbox image
-virtualbox-image: prep
+virtualbox: prep
 	$(eval ARCHITECTURE = i386)
 	$(eval MACHINE = virtualbox)
 	$(eval DESTINATION = hdd)
 	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
-	  bin/mk_freedombox_image $(NAME)
+	  bin/mk_freedombox_image $(NAME) $(SUITE)
 # Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
 	tar -cjvf $(ARCHIVE) $(NAME).vdi
@@ -58,7 +59,7 @@ clean:
 distclean: clean
 	sudo rm -rf build
 
-weekly-image: dreamplug-image raspberry-image virtualbox-image
+weekly: dreamplug raspberry virtualbox
 	mkdir -p $(WEEKLY_DIR)
 	mv build/*bz2 build/*sig $(WEEKLY_DIR)
 	cp weekly_template.org $(WEEKLY_DIR)/README.org

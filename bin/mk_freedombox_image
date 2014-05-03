@@ -25,7 +25,6 @@ vendor_dir="${basedir}/vendor"
 vmdebootstrap_dir="${vendor_dir}/vmdebootstrap"
 
 MIRROR=http://cdn.debian.net/debian
-SUITE=jessie
 
 # Packages to install in all FreedomBox environments
 base_pkgs="apt base-files ifupdown initramfs-tools \
@@ -36,6 +35,10 @@ dreamplug_pkgs="linux-image-kirkwood u-boot-tools u-boot"
 
 # Packages needed for gui-based self-hosted development
 dev_pkgs="task-xfce-desktop emacs org-mode git mercurial iceweasel ca-certificates"
+
+if [ -z "$SUITE" ]; then
+    SUITE=sid
+fi
 
 if [ -z "$ARCHITECTURE" ] ; then
     ARCHITECTURE=i386
@@ -95,7 +98,7 @@ sudo -H \
     vmdebootstrap \
     --log $(dirname $IMAGE)/freedombox.log \
     --log-level debug \
-    --size 3G \
+    --size 4G \
     --image $IMAGE.img \
     --hostname freedombox \
     --verbose \
