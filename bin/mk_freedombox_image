@@ -18,6 +18,11 @@ set -e # Exit on first error
 set -x # Enable debugging
 
 IMAGE=$1
+export ARCHITECTURE
+export DESTINATION
+export MACHINE
+export SOURCE
+export SUITE
 
 # Locate vmdebootstrap program fetched in Makefile
 basedir=`pwd`

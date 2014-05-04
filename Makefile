@@ -22,12 +22,9 @@ dreamplug: prep
 	$(eval MACHINE = dreamplug)
 	$(eval DESTINATION = card)
 
-	export SUITE
-	export SOURCE
-	export ARCHITECTURE
-	export MACHINE
-	export DESTINATION
-	bin/mk_freedombox_image $(NAME)
+	ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) MACHINE=$(MACHINE) \
+	  SOURCE=$(SOURCE) SUITE=$(SUITE) \
+	  bin/mk_freedombox_image $(NAME)
 
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
@@ -39,12 +36,9 @@ raspberry: prep
 	$(eval MACHINE = raspberry)
 	$(eval DESTINATION = card)
 
-	export SUITE
-	export SOURCE
-	export ARCHITECTURE
-	export MACHINE
-	export DESTINATION
-	bin/mk_freedombox_image $(NAME)
+	ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) MACHINE=$(MACHINE) \
+	  SOURCE=$(SOURCE) SUITE=$(SUITE) \
+	  bin/mk_freedombox_image $(NAME)
 
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
@@ -56,12 +50,9 @@ beaglebone: prep
 	$(eval MACHINE = beaglebone)
 	$(eval DESTINATION = card)
 
-	export SUITE
-	export SOURCE
-	export ARCHITECTURE
-	export MACHINE
-	export DESTINATION
-	bin/mk_freedombox_image $(NAME)
+	ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) MACHINE=$(MACHINE) \
+	  SOURCE=$(SOURCE) SUITE=$(SUITE) \
+	  bin/mk_freedombox_image $(NAME)
 
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
@@ -73,12 +64,9 @@ virtualbox: prep
 	$(eval MACHINE = virtualbox)
 	$(eval DESTINATION = hdd)
 
-	export SUITE
-	export SOURCE
-	export ARCHITECTURE
-	export MACHINE
-	export DESTINATION
-	bin/mk_freedombox_image $(NAME)
+	ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) MACHINE=$(MACHINE) \
+	  SOURCE=$(SOURCE) SUITE=$(SUITE) \
+	  bin/mk_freedombox_image $(NAME)
 
 # Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
