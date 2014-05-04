@@ -13,15 +13,22 @@ WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
 IMAGE = $(NAME).img
 ARCHIVE = $(NAME).tar.bz2
 SIGNATURE = $(ARCHIVE).sig
-SUITE = jessie
+SUITE = sid
+SOURCE = false
 
 # build DreamPlug USB or SD card image
 dreamplug: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = dreamplug)
 	$(eval DESTINATION = card)
-	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
-	  bin/mk_freedombox_image $(NAME) $(SUITE)
+
+	export SUITE
+	export SOURCE
+	export ARCHITECTURE
+	export MACHINE
+	export DESTINATION
+	bin/mk_freedombox_image $(NAME)
+
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	@echo "Build complete."
@@ -31,19 +38,31 @@ raspberry: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = raspberry)
 	$(eval DESTINATION = card)
-	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
-	  bin/mk_freedombox_image $(NAME) $(SUITE)
+
+	export SUITE
+	export SOURCE
+	export ARCHITECTURE
+	export MACHINE
+	export DESTINATION
+	bin/mk_freedombox_image $(NAME)
+
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	@echo "Build complete."
 
 # build Beaglebone SD card image
-beaglebone-image: prep
+beaglebone: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = beaglebone)
 	$(eval DESTINATION = card)
-	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
-	  bin/mk_freedombox_image $(NAME)
+
+	export SUITE
+	export SOURCE
+	export ARCHITECTURE
+	export MACHINE
+	export DESTINATION
+	bin/mk_freedombox_image $(NAME)
+
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	@echo "Build complete."
@@ -53,8 +72,14 @@ virtualbox: prep
 	$(eval ARCHITECTURE = i386)
 	$(eval MACHINE = virtualbox)
 	$(eval DESTINATION = hdd)
-	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
-	  bin/mk_freedombox_image $(NAME) $(SUITE)
+
+	export SUITE
+	export SOURCE
+	export ARCHITECTURE
+	export MACHINE
+	export DESTINATION
+	bin/mk_freedombox_image $(NAME)
+
 # Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
 	tar -cjvf $(ARCHIVE) $(NAME).vdi

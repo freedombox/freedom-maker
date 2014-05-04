@@ -39,15 +39,7 @@ beaglebone_pkgs="u-boot-tools u-boot"
 # Packages needed for gui-based self-hosted development
 dev_pkgs="task-xfce-desktop emacs org-mode git mercurial iceweasel ca-certificates"
 
-if [ -z "$SUITE" ]; then
-    SUITE=sid
-fi
-
-if [ -z "$ARCHITECTURE" ] ; then
-    ARCHITECTURE=i386
-fi
-
-echo building $MACHINE for $ARCHITECTURE
+echo Building $MACHINE FreedomBox for $ARCHITECTURE.
 
 case "$MACHINE" in
     raspberry)
