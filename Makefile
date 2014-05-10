@@ -15,6 +15,7 @@ ARCHIVE = $(NAME).tar.bz2
 SIGNATURE = $(ARCHIVE).sig
 SUITE = sid
 SOURCE = false
+OWNER = 1000
 
 # build DreamPlug USB or SD card image
 dreamplug: prep
@@ -23,7 +24,7 @@ dreamplug: prep
 	$(eval DESTINATION = card)
 
 	ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) MACHINE=$(MACHINE) \
-	  SOURCE=$(SOURCE) SUITE=$(SUITE) \
+	  SOURCE=$(SOURCE) SUITE=$(SUITE) OWNER=$(OWNER) \
 	  bin/mk_freedombox_image $(NAME)
 
 	tar -cjvf $(ARCHIVE) $(IMAGE)
@@ -37,7 +38,7 @@ raspberry: prep
 	$(eval DESTINATION = card)
 
 	ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) MACHINE=$(MACHINE) \
-	  SOURCE=$(SOURCE) SUITE=$(SUITE) \
+	  SOURCE=$(SOURCE) SUITE=$(SUITE) OWNER=$(OWNER) \
 	  bin/mk_freedombox_image $(NAME)
 
 	tar -cjvf $(ARCHIVE) $(IMAGE)
@@ -51,7 +52,7 @@ beaglebone: prep
 	$(eval DESTINATION = card)
 
 	ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) MACHINE=$(MACHINE) \
-	  SOURCE=$(SOURCE) SUITE=$(SUITE) \
+	  SOURCE=$(SOURCE) SUITE=$(SUITE) OWNER=$(OWNER) \
 	  bin/mk_freedombox_image $(NAME)
 
 	tar -cjvf $(ARCHIVE) $(IMAGE)
@@ -65,7 +66,7 @@ virtualbox: prep
 	$(eval DESTINATION = hdd)
 
 	ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) MACHINE=$(MACHINE) \
-	  SOURCE=$(SOURCE) SUITE=$(SUITE) \
+	  SOURCE=$(SOURCE) SUITE=$(SUITE) OWNER=$(OWNER) \
 	  bin/mk_freedombox_image $(NAME)
 
 # Convert image to vdi hard drive
