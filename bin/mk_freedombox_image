@@ -118,6 +118,6 @@ sudo -H \
     --root-password freedom \
     --arch $ARCHITECTURE \
     --distribution $SUITE \
-    --user $OWNER \
+    --owner $OWNER \
     $extra_opts \
     $pkgopts
