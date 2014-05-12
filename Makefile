@@ -16,19 +16,21 @@ SIGNATURE = $(ARCHIVE).sig
 SUITE = sid
 SOURCE = false
 OWNER = 1000
+TAR = tar --checkpoint=1000 --checkpoint-action=dot -cjvf
+MAKE_IMAGE = ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) \
+    MACHINE=$(MACHINE) SOURCE=$(SOURCE) SUITE=$(SUITE) OWNER=$(OWNER) \
+    bin/mk_freedombox_image $(NAME)
+SIGN = -gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
+
 
 # build DreamPlug USB or SD card image
 dreamplug: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = dreamplug)
 	$(eval DESTINATION = card)
-
-	ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) MACHINE=$(MACHINE) \
-	  SOURCE=$(SOURCE) SUITE=$(SUITE) OWNER=$(OWNER) \
-	  bin/mk_freedombox_image $(NAME)
-
-	tar -cjvf $(ARCHIVE) $(IMAGE)
-	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
+	$(MAKE_IMAGE)
+	$(TAR) $(ARCHIVE) $(IMAGE)
+	$(SIGN)
 	@echo "Build complete."
 
 # build Raspberry Pi SD card image
@@ -36,13 +38,9 @@ raspberry: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = raspberry)
 	$(eval DESTINATION = card)
-
-	ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) MACHINE=$(MACHINE) \
-	  SOURCE=$(SOURCE) SUITE=$(SUITE) OWNER=$(OWNER) \
-	  bin/mk_freedombox_image $(NAME)
-
-	tar -cjvf $(ARCHIVE) $(IMAGE)
-	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
+	$(MAKE_IMAGE)
+	$(TAR) $(ARCHIVE) $(IMAGE)
+	$(SIGN)
 	@echo "Build complete."
 
 # build Beaglebone SD card image
@@ -50,13 +48,9 @@ beaglebone: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = beaglebone)
 	$(eval DESTINATION = card)
-
-	ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) MACHINE=$(MACHINE) \
-	  SOURCE=$(SOURCE) SUITE=$(SUITE) OWNER=$(OWNER) \
-	  bin/mk_freedombox_image $(NAME)
-
-	tar -cjvf $(ARCHIVE) $(IMAGE)
-	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
+	$(MAKE_IMAGE)
+	$(TAR) $(ARCHIVE) $(IMAGE)
+	$(SIGN)
 	@echo "Build complete."
 
 # build a virtualbox image
@@ -64,15 +58,11 @@ virtualbox: prep
 	$(eval ARCHITECTURE = i386)
 	$(eval MACHINE = virtualbox)
 	$(eval DESTINATION = hdd)
-
-	ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) MACHINE=$(MACHINE) \
-	  SOURCE=$(SOURCE) SUITE=$(SUITE) OWNER=$(OWNER) \
-	  bin/mk_freedombox_image $(NAME)
-
+	$(MAKE_IMAGE)
 # Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
-	tar -cjvf $(ARCHIVE) $(NAME).vdi
-	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
+	$(TAR) $(ARCHIVE) $(NAME).vdi
+	$(SIGN)
 	@echo "Build complete."
 
 prep:
