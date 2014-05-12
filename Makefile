@@ -83,15 +83,3 @@ clean:
 
 distclean: clean
 	sudo rm -rf build
-
-weekly: dreamplug raspberry virtualbox
-	mkdir -p $(WEEKLY_DIR)
-	mv build/*bz2 build/*sig $(WEEKLY_DIR)
-	cp weekly_template.org $(WEEKLY_DIR)/README.org
-	echo "http://betweennowhere.net/freedombox-images/$(WEEKLY_DIR)" > torrent/webseed
-	@echo ""
-	@echo "----------"
-	@echo "When the README has been updated, hit Enter."
-	read X
-	mktorrent -a `cat torrent/trackers` -w `cat torrent/webseed` $(WEEKLY_DIR)
-	mv $(WEEKLY_DIR).torrent torrent/
