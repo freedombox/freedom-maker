@@ -54,5 +54,5 @@ chroot $rootdir apt-get install -y freedombox-setup
 
 rm $rootdir/usr/sbin/policy-rc.d
 
-chroot $rootdir /usr/lib/freedombox/setup | tee >  \
-    $rootdir/var/log/freedombox-setup.log
+chroot $rootdir /usr/lib/freedombox/setup | \
+    tee $rootdir/var/log/freedombox-setup.log
