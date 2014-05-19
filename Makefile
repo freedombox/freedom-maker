@@ -60,6 +60,7 @@ prep:
 	mkdir -p build
 
 clean:
+	-rm -f build/freedombox.log
 	-rm -f $(IMAGE) $(ARCHIVE)
 
 distclean: clean
