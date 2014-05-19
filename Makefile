@@ -1,5 +1,9 @@
 #! /usr/bin/make
 
+# Where to fetch packages
+MIRROR=http://http.debian.net/debian
+SUITE=jessie
+
 # armel amd64 i386
 ARCHITECTURE = armel
 # dreamplug guruplug virtualbox
@@ -20,6 +24,7 @@ dreamplug-image: prep
 	$(eval MACHINE = dreamplug)
 	$(eval DESTINATION = card)
 	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
+	  MIRROR=$(MIRROR) SUITE=$(SUITE) \
 	  bin/mk_freedombox_image $(NAME)
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
@@ -31,6 +36,7 @@ raspberry-image: prep
 	$(eval MACHINE = raspberry)
 	$(eval DESTINATION = card)
 	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
+	  MIRROR=$(MIRROR) SUITE=$(SUITE) \
 	  bin/mk_freedombox_image $(NAME)
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
@@ -42,6 +48,7 @@ virtualbox-image: prep
 	$(eval MACHINE = virtualbox)
 	$(eval DESTINATION = hdd)
 	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
+	  MIRROR=$(MIRROR) SUITE=$(SUITE) \
 	  bin/mk_freedombox_image $(NAME)
 # Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi

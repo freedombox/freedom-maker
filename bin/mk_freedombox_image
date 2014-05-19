@@ -24,8 +24,10 @@ basedir=`pwd`
 vendor_dir="${basedir}/vendor"
 vmdebootstrap_dir="${vendor_dir}/vmdebootstrap"
 
-MIRROR=http://cdn.debian.net/debian
-SUITE=jessie
+if [ -z "$MIRROR" ] || [ -z "$SUITE" ] ; then
+    echo error: Missing MIRROR and SUITE settings inherited from Makefile.
+    exit 1
+fi
 
 # Packages to install in all FreedomBox environments
 base_pkgs="apt base-files ifupdown initramfs-tools \
