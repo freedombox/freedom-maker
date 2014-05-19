@@ -87,6 +87,9 @@ for p in $base_pkgs $extra_pkgs; do
     pkgopts="$pkgopts --package $p"
 done
 
+# Make sure file is owned by current user, not root
+touch $(dirname $IMAGE)/freedombox.log
+
 # Run vmdebootstrap script to create image
 sudo -H \
     SUITE="$SUITE" \
