@@ -27,9 +27,11 @@ export LC_ALL=C LANGUAGE=C LANG=C
 export NOSOURCE=false
 
 username=fbx
+echo "warning: creating initial user $username with well known password!"
 password=frdm
 chroot $rootdir adduser --gecos $username --disabled-password $username
 echo $username:$password | chroot $rootdir /usr/sbin/chpasswd
+chroot $rootdir adduser $username sudo
 
 cat <<EOF > etc/apt/sources.list
 deb $MIRROR $SUITE main contrib non-free

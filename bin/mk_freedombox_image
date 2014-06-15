@@ -106,7 +106,7 @@ sudo -H \
     --verbose \
     --mirror $MIRROR \
     --customize "$basedir/bin/freedombox-customize" \
-    --root-password freedom \
+    --lock-root-password \
     --arch $ARCHITECTURE \
     --distribution $SUITE \
     $extra_opts \
