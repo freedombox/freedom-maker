@@ -38,13 +38,6 @@ deb-src $MIRROR $SUITE main contrib non-free
 #deb http://security.debian.org/ $SUITE/updates main
 #deb-src http://security.debian.org/ $SUITE/updates main
 EOF
-
-cat <<EOF > etc/apt/sources.list.d/reinholdtsen-freedombox.list
-deb http://www.reinholdtsen.name/freedombox wheezy main
-deb-src http://www.reinholdtsen.name/freedombox wheezy main
-EOF
-wget -O - http://www.reinholdtsen.name/freedombox/BE1A583D.asc | \
-    chroot $rootdir apt-key add -
 chroot $rootdir apt-get update
 
 cat > $rootdir/usr/sbin/policy-rc.d <<EOF
