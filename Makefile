@@ -30,7 +30,7 @@ dreamplug: prep
 	$(eval DESTINATION = card)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
-	echo ""
+	@echo ""
 	$(SIGN)
 	@echo "Build complete."
 
@@ -41,7 +41,7 @@ raspberry: prep
 	$(eval DESTINATION = card)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
-	echo ""
+	@echo ""
 	$(SIGN)
 	@echo "Build complete."
 
@@ -52,7 +52,7 @@ beaglebone: prep
 	$(eval DESTINATION = card)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
-	echo ""
+	@echo ""
 	$(SIGN)
 	@echo "Build complete."
 
@@ -65,7 +65,7 @@ virtualbox: prep
 # Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
 	$(TAR) $(ARCHIVE) $(NAME).vdi
-	echo ""
+	@echo ""
 	$(SIGN)
 	@echo "Build complete."
 
