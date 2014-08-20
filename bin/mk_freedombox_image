@@ -39,7 +39,7 @@ logrotate module-init-tools netbase rsyslog udev debian-archive-keyring"
 dreamplug_pkgs="linux-image-kirkwood u-boot-tools u-boot"
 
 # Packages needed on the beaglebone
-beaglebone_pkgs="u-boot-tools u-boot"
+beaglebone_pkgs="linux-image-armmp u-boot-tools u-boot"
 
 # Packages needed for gui-based self-hosted development
 dev_pkgs="task-xfce-desktop emacs org-mode git mercurial iceweasel ca-certificates"
