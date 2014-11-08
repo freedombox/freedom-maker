@@ -58,3 +58,9 @@ rm $rootdir/usr/sbin/policy-rc.d
 
 chroot $rootdir /usr/lib/freedombox/setup 2>&1 | \
     tee $rootdir/var/log/freedombox-setup.log
+
+
+cd /
+echo "info: killing leftover processes in chroot"
+# 2014-11-04 this killed /usr/lib/erlang/erts-6.2/bin/epmd
+fuser -mvk $rootdir/.
