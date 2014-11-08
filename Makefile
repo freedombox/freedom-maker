@@ -2,7 +2,7 @@
 
 # Where to fetch packages
 MIRROR=http://http.debian.net/debian
-SUITE=jessie
+SUITE=unstable
 
 # armel amd64 i386
 ARCHITECTURE = armel
