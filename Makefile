@@ -56,7 +56,10 @@ virtualbox-image: prep
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	@echo "Build complete."
 
-prep:
+vendor/vmdebootstrap/vmdebootstrap: vendor-patches/vmdebootstrap/*.patch
+	bin/fetch-new-vmdebootstrap
+
+prep: vendor/vmdebootstrap/vmdebootstrap
 	mkdir -p build
 
 clean:

@@ -1,0 +1,163 @@
+diff --git a/vmdebootstrap b/vmdebootstrap
+index 126475f..4818f2b 100755
+--- a/vmdebootstrap
++++ b/vmdebootstrap
+@@ -39,6 +39,9 @@ class VmDebootstrap(cliapp.Application):
+         self.settings.boolean(['verbose'], 'report what is going on')
+         self.settings.string(['image'], 'put created disk image in FILE',
+                              metavar='FILE')
++        self.settings.string(['roottype'],
++                             'specify file system type for /',
++                             default='ext4')
+         self.settings.bytesize(['size'],
+                                'create a disk image of size SIZE (%default)',
+                                metavar='SIZE',
+@@ -129,7 +132,7 @@ class VmDebootstrap(cliapp.Application):
+ 
+         try:
+             rootdev = None
+-            roottype = 'ext4'
++            roottype = self.settings['roottype']
+             bootdev = None
+             boottype = None
+             rootdir = None
+@@ -141,6 +144,25 @@ class VmDebootstrap(cliapp.Application):
+                 (rootdev, bootdev) = self.setup_kpartx()
+                 self.mkfs(rootdev, type=roottype)
+                 rootdir = self.mount(rootdev)
++                rootfsdir = rootdir
++                if 'btrfs' == roottype:
++                    # Put root in a subvolume, to ease snapshots and volume management
++                    self.message("Creating root file system as btrfs subvolume @")
++                    self.runcmd(['btrfs', 'subvolume', 'create', "%s/@" % rootdir])
++
++                    # Make sure the subvolume mount point show in in
++                    # /proc/mounts for grub-update to figure out the
++                    # device for the root file system.
++                    newrootdir = "%s/build" % rootdir
++                    os.mkdir(newrootdir)
++                    self.mount(rootdev, newrootdir, ['-o','subvol=@'])
++#                    self.runcmd(['btrfs', 'subvolume', 'set-default', '@', rootdir])
++
++                    # Make the btrfs root file system available in the chroot.
++                    os.mkdir("%s/btrfs" % newrootdir)
++                    self.mount(rootdev, "%s/btrfs" % newrootdir)
++
++                    rootdir = newrootdir
+                 if bootdev:
+                     if self.settings['boottype']:
+                         boottype = self.settings['boottype']
+@@ -168,9 +191,9 @@ class VmDebootstrap(cliapp.Application):
+ 
+             if self.settings['image']:
+                 if self.settings['grub']:
+-                    self.install_grub2(rootdev, rootdir)
++                    self.install_grub2(rootdev, rootdir, rootfsdir)
+                 elif self.settings['extlinux']:
+-                    self.install_extlinux(rootdev, rootdir)
++                    self.install_extlinux(rootdev, rootdir, rootfsdir)
+                 self.append_serial_console(rootdir)
+                 self.optimize_image(rootdir)
+                 if self.settings['squash']:
+@@ -221,13 +244,19 @@ class VmDebootstrap(cliapp.Application):
+         logging.debug('mkdir %s' % dirname)
+         return dirname
+ 
+-    def mount(self, device, path=None):
++    def mount(self, device, path=None, opts=None):
+         if not path:
+             mount_point = self.mkdtemp()
+         else:
+             mount_point = path
+         self.message('Mounting %s on %s' % (device, mount_point))
+-        self.runcmd(['mount', device, mount_point])
++        cmd = ['mount']
++        if opts is not None:
++            for opt in opts:
++                cmd.append(opt)
++        cmd.append(device)
++        cmd.append(mount_point)
++        self.runcmd(cmd)
+         self.mount_points.append(mount_point)
+         logging.debug('mounted %s on %s' % (device, mount_point))
+         return mount_point
+@@ -300,7 +328,11 @@ class VmDebootstrap(cliapp.Application):
+         if self.settings['grub']:
+             necessary_packages.append('grub2')
+ 
++        if 'btrfs' == self.settings['roottype']:
++            necessary_packages.append('btrfs-tools')
++
+         include = self.settings['package']
++        self.message('packages %s' % self.settings['package'])
+ 
+         if not self.settings['no-kernel']:
+             if self.settings['arch'] == 'i386':
+@@ -380,7 +412,12 @@ class VmDebootstrap(cliapp.Application):
+         fstab = os.path.join(rootdir, 'etc', 'fstab')
+         with open(fstab, 'w') as f:
+             f.write('proc /proc proc defaults 0 0\n')
+-            f.write('%s / %s errors=remount-ro 0 1\n' % (rootdevstr, roottype))
++            if 'btrfs' == roottype:
++#                f.write('%s / %s defaults 0 1\n' % (rootdevstr, roottype))
++                f.write('%s / %s subvol=@ 0 1\n' % (rootdevstr, roottype))
++                f.write('%s /btrfs %s defaults 1\n' % (rootdevstr, roottype))
++            else:
++                f.write('%s / %s errors=remount-ro 0 1\n' % (rootdevstr, roottype))
+             if bootdevstr:
+                 f.write('%s /boot %s errors=remount-ro 0 2\n' % (bootdevstr, boottype))
+ 
+@@ -473,7 +510,8 @@ class VmDebootstrap(cliapp.Application):
+             with open(inittab, 'a') as f:
+                 f.write('\nS0:23:respawn:%s\n' % serial_command)
+ 
+-    def install_grub2(self, rootdev, rootdir):
++    def install_grub2(self, rootdev, rootdir, rootfsdir):
++        # FIXME use rootfsdir
+         self.message("Configuring grub2")
+         # rely on kpartx using consistent naming to map loop0p1 to loop0
+         install_dev = os.path.join('/dev', os.path.basename(rootdev)[:-2])
+@@ -492,9 +529,9 @@ class VmDebootstrap(cliapp.Application):
+         self.runcmd(['umount', os.path.join(rootdir, 'sys')])
+         self.runcmd(['umount', os.path.join(rootdir, 'proc')])
+         self.runcmd(['umount', os.path.join(rootdir, 'dev')])
+-        self.install_extlinux(rootdev, rootdir)
++        self.install_extlinux(rootdev, rootdir, rootfsdir)
+ 
+-    def install_extlinux(self, rootdev, rootdir):
++    def install_extlinux(self, rootdev, rootdir, rootfsdir):
+         if not os.path.exists("/usr/bin/extlinux"):
+             self.message("extlinux not installed, skipping.")
+             return
+@@ -521,7 +558,7 @@ class VmDebootstrap(cliapp.Application):
+                            '-s', 'UUID', rootdev])
+         uuid = out.splitlines()[0].strip()
+ 
+-        conf = os.path.join(rootdir, 'extlinux.conf')
++        conf = os.path.join(rootfsdir, 'extlinux.conf')
+         logging.debug('configure extlinux %s' % conf)
+         f = open(conf, 'w')
+         f.write('''
+@@ -530,7 +567,7 @@ timeout 1
+ 
+ label linux
+ kernel %(kernel)s
+-append initrd=%(initrd)s root=UUID=%(uuid)s ro %(kserial)s
++append initrd=%(initrd)s root=UUID=%(uuid)s ro %(kserial)s %(rootflags)s
+ %(extserial)s
+ ''' % {
+             'kernel': kernel_image,
+@@ -538,11 +575,12 @@ append initrd=%(initrd)s root=UUID=%(uuid)s ro %(kserial)s
+             'uuid': uuid,
+             'kserial':
+             'console=ttyS0,115200' if self.settings['serial-console'] else '',
++            'rootflags': 'rootfsflags=subvol=@' if 'btrfs' == self.settings['roottype'] else '',
+             'extserial': 'serial 0 115200' if self.settings['serial-console'] else '',
+         })
+         f.close()
+ 
+-        self.runcmd(['extlinux', '--install', rootdir])
++        self.runcmd(['extlinux', '--install', rootfsdir])
+         self.runcmd(['sync'])
+         time.sleep(2)
+ 

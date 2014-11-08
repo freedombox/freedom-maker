@@ -1,0 +1,13 @@
+diff --git a/vmdebootstrap b/vmdebootstrap
+index 126475f..cc5d380 100755
+--- a/vmdebootstrap
++++ b/vmdebootstrap
+@@ -289,7 +289,7 @@ class VmDebootstrap(cliapp.Application):
+         self.runcmd(['mkfs', '-t', type, device])
+ 
+     def debootstrap(self, rootdir):
+-        self.message('Debootstrapping')
++        self.message('Debootstrapping %s' % self.settings['distribution'])
+ 
+         if self.settings['foreign']:
+             necessary_packages = []
