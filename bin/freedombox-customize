@@ -15,6 +15,40 @@
 
 set -e
 set -x
+
+enable_eatmydata_override() {
+    chroot $rootdir apt-get install -y eatmydata
+    if [ -x $rootdir/usr/bin/eatmydata ] && \
+        [ ! -f $rootdir/etc/apt/apt.conf.d/95debian-edu-install-dpkg-eatmydata ]; then
+        echo "info: Adding apt config to call dpkg via eatmydata"
+        printf "#!/bin/sh\nexec eatmydata dpkg \"\$@\"\n" \
+            > $rootdir/var/tmp/dpkg-eatmydata
+        chmod 755 $rootdir/var/tmp/dpkg-eatmydata
+        cat > $rootdir/etc/apt/apt.conf.d/95debian-edu-install-dpkg-eatmydata <<EOF
+Dir::Bin::dpkg "/var/tmp/dpkg-eatmydata";
+EOF
+    else
+        echo "error: unable to find /usr/bin/eatmydata after installing the eatmydata package"
+    fi
+}
+
+disable_eatmydata_override() {
+    for override in \
+        /etc/apt/apt.conf.d/95debian-edu-install-dpkg-eatmydata \
+        /var/tmp/dpkg-eatmydata ; do
+        echo "info: Removing apt config to call dpkg via eatmydata"
+        if [ -f $rootdir$override ] ; then
+            rm -f $rootdir$override
+        else
+            echo "warning: missing $rootdir$override"
+        fi
+    done
+    sync # Flush file buffers before continuing
+}
+
+# Set to true/false to control if eatmydata is used during build
+use_eatmydata=true
+
 rootdir="$1"
 cd "$rootdir"
 
@@ -28,7 +62,7 @@ export LC_ALL=C LANGUAGE=C LANG=C
 export TMP=/tmp/ TMPDIR=/tmp/
 
 # set this to 'true' to disable source fetching while debugging
-export NOSOURCE=false
+export SOURCE=false
 
 username=fbx
 echo "warning: creating initial user $username with well known password!"
@@ -52,6 +86,10 @@ exit 101
 EOF
 chmod a+rx $rootdir/usr/sbin/policy-rc.d
 
+if $use_eatmydata ; then
+    enable_eatmydata_override
+fi
+
 chroot $rootdir apt-get install -y freedombox-setup
 
 rm $rootdir/usr/sbin/policy-rc.d
@@ -59,6 +97,9 @@ rm $rootdir/usr/sbin/policy-rc.d
 chroot $rootdir /usr/lib/freedombox/setup 2>&1 | \
     tee $rootdir/var/log/freedombox-setup.log
 
+if $use_eatmydata ; then
+    disable_eatmydata_override
+fi
 
 cd /
 echo "info: killing leftover processes in chroot"
