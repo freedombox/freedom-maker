@@ -17,7 +17,7 @@ set -e
 set -x
 
 enable_eatmydata_override() {
-    chroot $rootdir apt-get install -y eatmydata
+    chroot $rootdir apt-get install --no-install-recommends -y eatmydata
     if [ -x $rootdir/usr/bin/eatmydata ] && \
         [ ! -f $rootdir/etc/apt/apt.conf.d/95debian-edu-install-dpkg-eatmydata ]; then
         echo "info: Adding apt config to call dpkg via eatmydata"
