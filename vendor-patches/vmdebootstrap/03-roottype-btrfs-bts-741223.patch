@@ -81,7 +81,7 @@ index 126475f..4818f2b 100755
          self.mount_points.append(mount_point)
          logging.debug('mounted %s on %s' % (device, mount_point))
          return mount_point
-@@ -300,7 +328,11 @@ class VmDebootstrap(cliapp.Application):
+@@ -300,7 +328,10 @@ class VmDebootstrap(cliapp.Application):
          if self.settings['grub']:
              necessary_packages.append('grub2')
  
@@ -89,7 +89,6 @@ index 126475f..4818f2b 100755
 +            necessary_packages.append('btrfs-tools')
 +
          include = self.settings['package']
-+        self.message('packages %s' % self.settings['package'])
  
          if not self.settings['no-kernel']:
              if self.settings['arch'] == 'i386':
