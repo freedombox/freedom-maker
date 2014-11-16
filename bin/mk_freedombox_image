@@ -69,6 +69,7 @@ case "$MACHINE" in
 	;;
     virtualbox)
 	extra_opts="\
+ --grub \
  --enable-dhcp \
 "	;;
 esac
@@ -115,7 +116,6 @@ sudo -H \
     --customize "$basedir/bin/freedombox-customize" \
     --lock-root-password \
     --arch $ARCHITECTURE \
-    --grub \
     --roottype btrfs \
     --distribution $SUITE \
     $extra_opts \
