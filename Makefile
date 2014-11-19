@@ -25,7 +25,7 @@ dreamplug-image: prep
 	$(eval DESTINATION = card)
 	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
 	  MIRROR=$(MIRROR) SUITE=$(SUITE) \
-	  bin/mk_freedombox_image $(NAME)
+	  taskset 0x01 bin/mk_freedombox_image $(NAME)
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	@echo "Build complete."
@@ -37,7 +37,7 @@ raspberry-image: prep
 	$(eval DESTINATION = card)
 	ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) DESTINATION=$(DESTINATION) \
 	  MIRROR=$(MIRROR) SUITE=$(SUITE) \
-	  bin/mk_freedombox_image $(NAME)
+	  taskset 0x01 bin/mk_freedombox_image $(NAME)
 	tar -cjvf $(ARCHIVE) $(IMAGE)
 	-gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 	@echo "Build complete."
