@@ -18,6 +18,10 @@ IMAGE = $(NAME).img
 ARCHIVE = $(NAME).tar.bz2
 SIGNATURE = $(ARCHIVE).sig
 
+# Using taskset to pin build process to single core. This is a
+# workaround for a qemu-user-static issue that causes builds to
+# hang. (See Debian bug #769983 for details.)
+
 # build DreamPlug USB or SD card image
 dreamplug-image: prep
 	$(eval ARCHITECTURE = armel)
