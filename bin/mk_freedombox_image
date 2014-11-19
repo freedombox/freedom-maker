@@ -94,7 +94,7 @@ touch $(dirname $IMAGE)/freedombox.log
 if [ -x vendor/vmdebootstrap/vmdebootstrap ] ; then
     VMDEBOOTSTRAP=vendor/vmdebootstrap/vmdebootstrap
 else
-    VMDEBOOTSTRAp=vmdebootstrap
+    VMDEBOOTSTRAP=vmdebootstrap
 fi
 
 echo "starting vmdebootstrap"
