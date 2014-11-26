@@ -278,7 +278,7 @@ addresses, completely exclude those two lines.
     setenv x_bootcmd_kernel fatload usb 0 0x6400000 uImage
     setenv x_bootcmd_initrd fatload usb 0 0x6900000 uInitrd
     setenv x_bootargs console=ttyS0,115200
-    setenv x_bootargs_root root=/dev/sda2 rootdelay=10
+    setenv x_bootargs_root root=/dev/sda2 rootdelay=10 rootflags=subvol=@
     setenv ethaddr=F0:AD:4E:00:00:00
     setenv eth1addr=F0:AD:4E:00:00:01
     saveenv
