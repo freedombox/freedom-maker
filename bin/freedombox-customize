@@ -50,6 +50,7 @@ disable_eatmydata_override() {
 use_eatmydata=true
 
 rootdir="$1"
+image=$(pwd)/"$2"
 cd "$rootdir"
 
 echo info: building $MACHINE for $ARCHITECTURE to $DESTINATION
@@ -104,6 +105,16 @@ rm $rootdir/usr/sbin/policy-rc.d
 
 chroot $rootdir /usr/lib/freedombox/setup 2>&1 | \
     tee $rootdir/var/log/freedombox-setup.log
+
+# copy u-boot to beginning of image
+case "$MACHINE" in
+    beaglebone)
+	dd if=$rootdir/usr/lib/u-boot/am335x_boneblack/MLO of="$image" \
+	   count=1 seek=1 conv=notrunc bs=128k
+	dd if=$rootdir/usr/lib/u-boot/am335x_boneblack/u-boot.img of="$image" \
+	   count=2 seek=1 conv=notrunc bs=384k
+	;;
+esac
 
 if $use_eatmydata ; then
     disable_eatmydata_override
