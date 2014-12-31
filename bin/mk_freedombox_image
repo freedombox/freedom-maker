@@ -85,7 +85,6 @@ case "$MACHINE" in
     virtualbox)
 	extra_opts="\
  --grub \
- --enable-dhcp \
 "	;;
 esac
 
@@ -133,5 +132,6 @@ sudo -H \
     --arch $ARCHITECTURE \
     --roottype btrfs \
     --distribution $SUITE \
+    --enable-dhcp \
     $extra_opts \
     $pkgopts
