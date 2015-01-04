@@ -2,25 +2,6 @@ diff --git a/vmdebootstrap b/vmdebootstrap
 index 500fa77..f08a0cc 100755
 --- a/vmdebootstrap
 +++ b/vmdebootstrap
-@@ -48,6 +48,9 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
-         self.settings.string(
-             ['image'], 'put created disk image in FILE',
-             metavar='FILE')
-+        self.settings.string(['roottype'],
-+                             'specify file system type for /',
-+                             default='ext4')
-         self.settings.bytesize(
-             ['size'],
-             'create a disk image of size SIZE (%default)',
-@@ -181,7 +184,7 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
-         rootdir = None
-         try:
-             rootdev = None
--            roottype = 'ext4'
-+            roottype = self.settings['roottype']
-             bootdev = None
-             boottype = None
-             if self.settings['image']:
 @@ -192,6 +195,25 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
                  (rootdev, bootdev) = self.setup_kpartx()
                  self.mkfs(rootdev, fstype=roottype)
