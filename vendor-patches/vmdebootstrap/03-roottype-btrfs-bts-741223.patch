@@ -1,29 +1,10 @@
 diff --git a/vmdebootstrap b/vmdebootstrap
-index 126475f..4818f2b 100755
+index 500fa77..f08a0cc 100755
 --- a/vmdebootstrap
 +++ b/vmdebootstrap
-@@ -39,6 +39,9 @@ class VmDebootstrap(cliapp.Application):
-         self.settings.boolean(['verbose'], 'report what is going on')
-         self.settings.string(['image'], 'put created disk image in FILE',
-                              metavar='FILE')
-+        self.settings.string(['roottype'],
-+                             'specify file system type for /',
-+                             default='ext4')
-         self.settings.bytesize(['size'],
-                                'create a disk image of size SIZE (%default)',
-                                metavar='SIZE',
-@@ -129,7 +132,7 @@ class VmDebootstrap(cliapp.Application):
- 
-         try:
-             rootdev = None
--            roottype = 'ext4'
-+            roottype = self.settings['roottype']
-             bootdev = None
-             boottype = None
-             rootdir = None
-@@ -141,6 +144,25 @@ class VmDebootstrap(cliapp.Application):
+@@ -192,6 +195,25 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
                  (rootdev, bootdev) = self.setup_kpartx()
-                 self.mkfs(rootdev, type=roottype)
+                 self.mkfs(rootdev, fstype=roottype)
                  rootdir = self.mount(rootdev)
 +                rootfsdir = rootdir
 +                if 'btrfs' == roottype:
@@ -47,7 +28,7 @@ index 126475f..4818f2b 100755
                  if bootdev:
                      if self.settings['boottype']:
                          boottype = self.settings['boottype']
-@@ -168,9 +191,9 @@ class VmDebootstrap(cliapp.Application):
+@@ -219,9 +241,9 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
  
              if self.settings['image']:
                  if self.settings['grub']:
@@ -59,8 +40,8 @@ index 126475f..4818f2b 100755
                  self.append_serial_console(rootdir)
                  self.optimize_image(rootdir)
                  if self.settings['squash']:
-@@ -221,13 +244,19 @@ class VmDebootstrap(cliapp.Application):
-         logging.debug('mkdir %s' % dirname)
+@@ -274,13 +296,19 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
+         logging.debug('mkdir %s', dirname)
          return dirname
  
 -    def mount(self, device, path=None):
@@ -79,20 +60,19 @@ index 126475f..4818f2b 100755
 +        cmd.append(mount_point)
 +        self.runcmd(cmd)
          self.mount_points.append(mount_point)
-         logging.debug('mounted %s on %s' % (device, mount_point))
+         logging.debug('mounted %s on %s', device, mount_point)
          return mount_point
-@@ -300,7 +328,10 @@ class VmDebootstrap(cliapp.Application):
+@@ -382,6 +410,9 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
          if self.settings['grub']:
-             necessary_packages.append('grub2')
+             include.append('grub2')
  
 +        if 'btrfs' == self.settings['roottype']:
-+            necessary_packages.append('btrfs-tools')
++            include.append('btrfs-tools')
 +
-         include = self.settings['package']
- 
          if not self.settings['no-kernel']:
              if self.settings['arch'] == 'i386':
-@@ -380,7 +412,12 @@ class VmDebootstrap(cliapp.Application):
+                 kernel_arch = '486'
+@@ -461,7 +492,12 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
          fstab = os.path.join(rootdir, 'etc', 'fstab')
          with open(fstab, 'w') as f:
              f.write('proc /proc proc defaults 0 0\n')
@@ -106,7 +86,7 @@ index 126475f..4818f2b 100755
              if bootdevstr:
                  f.write('%s /boot %s errors=remount-ro 0 2\n' % (bootdevstr, boottype))
  
-@@ -473,7 +510,8 @@ class VmDebootstrap(cliapp.Application):
+@@ -555,7 +591,8 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
              with open(inittab, 'a') as f:
                  f.write('\nS0:23:respawn:%s\n' % serial_command)
  
@@ -116,7 +96,7 @@ index 126475f..4818f2b 100755
          self.message("Configuring grub2")
          # rely on kpartx using consistent naming to map loop0p1 to loop0
          install_dev = os.path.join('/dev', os.path.basename(rootdev)[:-2])
-@@ -492,9 +529,9 @@ class VmDebootstrap(cliapp.Application):
+@@ -573,9 +610,9 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
          self.runcmd(['umount', os.path.join(rootdir, 'sys')])
          self.runcmd(['umount', os.path.join(rootdir, 'proc')])
          self.runcmd(['umount', os.path.join(rootdir, 'dev')])
@@ -128,16 +108,16 @@ index 126475f..4818f2b 100755
          if not os.path.exists("/usr/bin/extlinux"):
              self.message("extlinux not installed, skipping.")
              return
-@@ -521,7 +558,7 @@ class VmDebootstrap(cliapp.Application):
+@@ -602,7 +639,7 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
                             '-s', 'UUID', rootdev])
          uuid = out.splitlines()[0].strip()
  
 -        conf = os.path.join(rootdir, 'extlinux.conf')
 +        conf = os.path.join(rootfsdir, 'extlinux.conf')
-         logging.debug('configure extlinux %s' % conf)
-         f = open(conf, 'w')
-         f.write('''
-@@ -530,7 +567,7 @@ timeout 1
+         logging.debug('configure extlinux %s', conf)
+         kserial = 'console=ttyS0,115200' if self.settings['serial-console'] else ''
+         extserial = 'serial 0 115200' if self.settings['serial-console'] else ''
+@@ -612,13 +649,14 @@ timeout 1
  
  label linux
  kernel %(kernel)s
@@ -145,15 +125,17 @@ index 126475f..4818f2b 100755
 +append initrd=%(initrd)s root=UUID=%(uuid)s ro %(kserial)s %(rootflags)s
  %(extserial)s
  ''' % {
-             'kernel': kernel_image,
-@@ -538,11 +575,12 @@ append initrd=%(initrd)s root=UUID=%(uuid)s ro %(kserial)s
-             'uuid': uuid,
-             'kserial':
-             'console=ttyS0,115200' if self.settings['serial-console'] else '',
-+            'rootflags': 'rootfsflags=subvol=@' if 'btrfs' == self.settings['roottype'] else '',
-             'extserial': 'serial 0 115200' if self.settings['serial-console'] else '',
-         })
-         f.close()
+             'kernel': kernel_image,  # pylint: disable=bad-continuation
+             'initrd': initrd_image,  # pylint: disable=bad-continuation
+             'uuid': uuid,  # pylint: disable=bad-continuation
+             'kserial': kserial,  # pylint: disable=bad-continuation
++            'rootflags': 'rootfsflags=subvol=@' if 'btrfs' == self.settings['roottype'] else '',  # pylint: disable=bad-continuation
+             'extserial': extserial,  # pylint: disable=bad-continuation
+         }  # pylint: disable=bad-continuation
+         logging.debug("extlinux config:\n%s", msg)
+@@ -629,7 +667,7 @@ append initrd=%(initrd)s root=UUID=%(uuid)s ro %(kserial)s
+         f = open(conf, 'w')
+         f.write(msg)
  
 -        self.runcmd(['extlinux', '--install', rootdir])
 +        self.runcmd(['extlinux', '--install', rootfsdir])

@@ -75,8 +75,9 @@ case "$MACHINE" in
 	extra_pkgs="$beaglebone_pkgs"
 	extra_opts="\
  --variant minbase \
+ --bootoffset=2mib \
  --bootsize 128M \
- --boottype vfat \
+ --boottype ext2 \
  --no-kernel \
  --no-extlinux \
  --foreign /usr/bin/qemu-arm-static \
@@ -85,7 +86,6 @@ case "$MACHINE" in
     virtualbox)
 	extra_opts="\
  --grub \
- --enable-dhcp \
 "	;;
 esac
 
@@ -133,5 +133,6 @@ sudo -H \
     --arch $ARCHITECTURE \
     --roottype btrfs \
     --distribution $SUITE \
+    --enable-dhcp \
     $extra_opts \
     $pkgopts
