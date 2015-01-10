@@ -2,7 +2,7 @@
 
 # Where to fetch packages
 MIRROR = http://http.debian.net/debian
-
+BUILD_MIRROR = http://http.debian.net/debian
 # armel amd64 i386
 ARCHITECTURE = armel
 # dreamplug guruplug virtualbox raspberry(pi)
@@ -27,6 +27,7 @@ SIGN = -gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 # hang. (See Debian bug #769983 for details.)
 MAKE_IMAGE = ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) \
     MACHINE=$(MACHINE) SOURCE=$(SOURCE) MIRROR=$(MIRROR) SUITE=$(SUITE) OWNER=$(OWNER) \
+    BUILD_MIRROR=$(BUILD_MIRROR) \
     taskset 0x01 bin/mk_freedombox_image $(NAME)
 
 # build DreamPlug USB or SD card image

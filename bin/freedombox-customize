@@ -46,6 +46,17 @@ disable_eatmydata_override() {
     sync # Flush file buffers before continuing
 }
 
+set_apt_sources() {
+    NEW_MIRROR="$1"
+    cat <<EOF > etc/apt/sources.list
+deb $NEW_MIRROR $SUITE main contrib non-free
+deb-src $NEW_MIRROR $SUITE main contrib non-free
+
+#deb http://security.debian.org/ $SUITE/updates main
+#deb-src http://security.debian.org/ $SUITE/updates main
+EOF
+}
+
 # Set to true/false to control if eatmydata is used during build
 use_eatmydata=true
 
@@ -79,13 +90,7 @@ case "$MACHINE" in
         ;;
 esac
 
-cat <<EOF > etc/apt/sources.list
-deb $MIRROR $SUITE main contrib non-free
-deb-src $MIRROR $SUITE main contrib non-free
-
-#deb http://security.debian.org/ $SUITE/updates main
-#deb-src http://security.debian.org/ $SUITE/updates main
-EOF
+set_apt_sources $BUILD_MIRROR
 chroot $rootdir apt-get update
 
 cat > $rootdir/usr/sbin/policy-rc.d <<EOF
@@ -108,6 +113,9 @@ chroot $rootdir /usr/lib/freedombox/setup 2>&1 | \
 if $use_eatmydata ; then
     disable_eatmydata_override
 fi
+
+set_apt_sources $MIRROR
+chroot $rootdir apt-get update
 
 cd /
 echo "info: killing leftover processes in chroot"
