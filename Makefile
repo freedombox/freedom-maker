@@ -63,12 +63,26 @@ beaglebone: prep
 	@echo "Build complete."
 
 # build a virtualbox image
-virtualbox: prep
+virtualbox: virtualbox-i386
+
+virtualbox-i386: prep
 	$(eval ARCHITECTURE = i386)
 	$(eval MACHINE = virtualbox)
 	$(eval DESTINATION = hdd)
 	$(MAKE_IMAGE)
-# Convert image to vdi hard drive
+	# Convert image to vdi hard drive
+	VBoxManage convertdd $(NAME).img $(NAME).vdi
+	$(TAR) $(ARCHIVE) $(NAME).vdi
+	@echo ""
+	$(SIGN)
+	@echo "Build complete."
+
+virtualbox-amd64: prep
+	$(eval ARCHITECTURE = amd64)
+	$(eval MACHINE = virtualbox)
+	$(eval DESTINATION = hdd)
+	$(MAKE_IMAGE)
+	# Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
 	$(TAR) $(ARCHIVE) $(NAME).vdi
 	@echo ""
