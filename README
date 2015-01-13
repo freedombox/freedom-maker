@@ -308,7 +308,7 @@ Required for DreamPlug:
 
 Now, fetch the git source of freedom-maker and build the image you want:
 
-    $ git clone https://github.com/freedombox/freedom-maker.git freedom-maker
+    $ git clone http://anonscm.debian.org/git/freedombox/freedom-maker.git freedom-maker
     $ make -C freedom-maker dreamplug raspberry virtualbox
 
 If you only want one of the possible images of DreamPlug, RaspberryPi and
