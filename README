@@ -1,5 +1,3 @@
-<!-- -*- mode: markdown; mode: auto-fill; fill-column: 80 -*- -->
-
 # Freedom-Maker - Bdale's Building Tools for the FreedomBox Project
 
 Welcome to the FreedomBox!  This project is the central hub of the FreedomBox
@@ -8,19 +6,15 @@ into a FreedomBox.
 
 There are a couple ways to use this system:
 
-1. If you just want to use a FreedomBox and don't care about changing
-   how it works or mucking about in its insides (if you're like most
-   people), you should use one of the pre-built systems we've already
-   put together.
+1. Get a pre-built image via https://wiki.debian.org/FreedomBox
+   There are images available for virtualbox, raspberry and dreamplug.
+   You also find the setup instructions in the Wiki.
 
-   If you don't have a DreamPlug or don't know what one is, make sure
-   to ask for a copy of the VirtualBox image.  If you do have a
-   DreamPlug, then you should get a pre-built image from someone and
-   copy it to an SD card or USB drive.  If you don't have a JTAG or
-   don't know what one is, make sure to ask for the SD card (not the
-   USB) version.
+2. Create a VirtualBox image on your own: The "To Make It" section of this
+   document is all you need.
 
-2. If you want to change and build on it, you can use:
+3. Create an image for the dreamplug (or similar devices):
+   Read this document. You can use
 
    A. A USB stick.  This requires a JTAG, but doesn't require opening up the
       DreamPlug, or,
@@ -297,7 +291,8 @@ you want to build.
 
 Required for all images:
 
-    # apt-get -y install git python-docutils mktorrent vmdebootstrap dosfstools
+    # apt-get -y install git python-docutils mktorrent vmdebootstrap \
+                 dosfstools btrfs-tools
 
 Required for VirtualBox:
 
@@ -313,8 +308,8 @@ Required for DreamPlug:
 
 Now, fetch the git source of freedom-maker and build the image you want:
 
-    $ git clone http://anonscm.debian.org/git/freedombox/freedom-maker.git freedom-maker
-    $ make -C freedom-maker dreamplug-image raspberry-image virtualbox-image
+    $ git clone https://github.com/freedombox/freedom-maker.git freedom-maker
+    $ make -C freedom-maker dreamplug raspberry virtualbox
 
 If you only want one of the possible images of DreamPlug, RaspberryPi and
 VirtualBox, remove the rest from the make command line.  The images will show up
