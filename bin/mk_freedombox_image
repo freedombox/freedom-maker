@@ -23,6 +23,7 @@ export DESTINATION
 export MACHINE
 export SOURCE
 export SUITE
+export ENABLE_NONFREE
 
 # Locate vmdebootstrap program fetched in Makefile
 basedir=`pwd`
@@ -121,6 +122,7 @@ sudo -H \
     DESTINATION="$DESTINATION" \
     MACHINE="$MACHINE" \
     ARCHITECTURE="$ARCHITECTURE" \
+    ENABLE_NONFREE="$ENABLE_NONFREE" \
     $VMDEBOOTSTRAP \
     --log $(dirname $IMAGE)/freedombox.log \
     --log-level debug \
