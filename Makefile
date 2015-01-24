@@ -68,6 +68,17 @@ beaglebone: prep
 	$(SIGN)
 	@echo "Build complete."
 
+# build CubieTruck SD card image
+cubietruck: prep
+	$(eval ARCHITECTURE = armhf)
+	$(eval MACHINE = cubietruck)
+	$(eval DESTINATION = card)
+	$(MAKE_IMAGE)
+	$(TAR) $(ARCHIVE) $(IMAGE)
+	@echo ""
+	$(SIGN)
+	@echo "Build complete."
+
 # build a virtualbox image
 virtualbox: virtualbox-i386
 

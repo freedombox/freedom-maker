@@ -125,6 +125,10 @@ case "$MACHINE" in
 	dd if=$rootdir/usr/lib/u-boot/am335x_boneblack/u-boot.img of="$image" \
 	   count=2 seek=1 conv=notrunc bs=384k
 	;;
+    cubietruck)
+        dd if=$rootdir/usr/lib/u-boot/Cubietruck/u-boot-sunxi-with-spl.bin of="$image" \
+           seek=8 conv=notrunc bs=1k
+        ;;
 esac
 
 if $use_eatmydata ; then

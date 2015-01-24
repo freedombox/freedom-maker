@@ -45,6 +45,9 @@ dreamplug_pkgs="linux-image-kirkwood u-boot-tools u-boot"
 # Packages needed on the beaglebone
 beaglebone_pkgs="linux-image-armmp u-boot-tools u-boot"
 
+# Packages needed on the cubietruck
+cubietruck_pkgs="linux-image-armmp-lpae u-boot-tools u-boot"
+
 # Packages needed for gui-based self-hosted development
 dev_pkgs="task-xfce-desktop emacs org-mode git mercurial iceweasel ca-certificates"
 
@@ -84,6 +87,18 @@ case "$MACHINE" in
  --foreign /usr/bin/qemu-arm-static \
 "
 	;;
+    cubietruck)
+       extra_pkgs="$cubietruck_pkgs"
+       extra_opts="\
+ --variant minbase \
+ --bootoffset=1mib \
+ --bootsize 128M \
+ --boottype vfat \
+ --no-kernel \
+ --no-extlinux \
+ --foreign /usr/bin/qemu-arm-static \
+"
+       ;;
     virtualbox)
 	extra_opts="\
  --grub \
@@ -113,7 +128,7 @@ else
     VMDEBOOTSTRAP=vmdebootstrap
 fi
 
-echo "starting vmdebootstrap"
+echo "starting $VMDEBOOTSTRAP"
 # Run vmdebootstrap script to create image
 sudo -H \
     SUITE="$SUITE" \
