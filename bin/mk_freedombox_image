@@ -117,6 +117,7 @@ echo "starting vmdebootstrap"
 sudo -H \
     SUITE="$SUITE" \
     MIRROR="$MIRROR" \
+    BUILD_MIRROR="$BUILD_MIRROR"\
     DESTINATION="$DESTINATION" \
     MACHINE="$MACHINE" \
     ARCHITECTURE="$ARCHITECTURE" \
@@ -127,7 +128,7 @@ sudo -H \
     --image $IMAGE.img \
     --hostname freedombox \
     --verbose \
-    --mirror $MIRROR \
+    --mirror $BUILD_MIRROR \
     --customize "$basedir/bin/freedombox-customize" \
     --lock-root-password \
     --arch $ARCHITECTURE \
