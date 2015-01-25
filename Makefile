@@ -9,6 +9,8 @@ ARCHITECTURE = armel
 MACHINE = dreamplug
 # card usb hdd
 DESTINATION = card
+# yes no
+ENABLE_NONFREE = no
 BUILD = $(MACHINE)-$(ARCHITECTURE)-$(DESTINATION)
 TODAY := `date +%Y-%m-%d`
 NAME = build/freedombox-unstable_$(TODAY)_$(BUILD)
@@ -27,7 +29,7 @@ SIGN = -gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 # hang. (See Debian bug #769983 for details.)
 MAKE_IMAGE = ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) \
     MACHINE=$(MACHINE) SOURCE=$(SOURCE) MIRROR=$(MIRROR) SUITE=$(SUITE) OWNER=$(OWNER) \
-    BUILD_MIRROR=$(BUILD_MIRROR) \
+    BUILD_MIRROR=$(BUILD_MIRROR) ENABLE_NONFREE=$(ENABLE_NONFREE) \
     taskset 0x01 bin/mk_freedombox_image $(NAME)
 
 # build DreamPlug USB or SD card image
@@ -35,6 +37,7 @@ dreamplug: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = dreamplug)
 	$(eval DESTINATION = card)
+	$(eval ENABLE_NONFREE = yes)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
@@ -46,6 +49,7 @@ raspberry: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = raspberry)
 	$(eval DESTINATION = card)
+	$(eval ENABLE_NONFREE = yes)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
@@ -57,6 +61,7 @@ beaglebone: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = beaglebone)
 	$(eval DESTINATION = card)
+	$(eval ENABLE_NONFREE = yes)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""

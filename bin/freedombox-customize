@@ -48,9 +48,15 @@ disable_eatmydata_override() {
 
 set_apt_sources() {
     NEW_MIRROR="$1"
+    COMPONENTS="main"
+    if [ "$ENABLE_NONFREE" = "yes" ]
+    then
+	    COMPONENTS="main contrib non-free"
+    fi
+
     cat <<EOF > etc/apt/sources.list
-deb $NEW_MIRROR $SUITE main contrib non-free
-deb-src $NEW_MIRROR $SUITE main contrib non-free
+deb $NEW_MIRROR $SUITE $COMPONENTS
+deb-src $NEW_MIRROR $SUITE $COMPONENTS
 
 #deb http://security.debian.org/ $SUITE/updates main
 #deb-src http://security.debian.org/ $SUITE/updates main
