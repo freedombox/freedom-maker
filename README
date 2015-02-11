@@ -7,8 +7,9 @@ into a FreedomBox.
 There are a couple ways to use this system:
 
 1. Get a pre-built image via https://wiki.debian.org/FreedomBox
-   There are images available for virtualbox, raspberry and dreamplug.
-   You also find the setup instructions in the Wiki.
+   There are images available for VirtualBox, BeagleBone, Raspberry
+   Pi, Dreamplug, Cubietruck and any i386/amd64 machines.  You also
+   find the setup instructions in the Wiki.
 
 2. Create a VirtualBox image on your own: The "To Make It" section of this
    document is all you need.
@@ -309,18 +310,20 @@ Required for DreamPlug:
 Now, fetch the git source of freedom-maker and build the image you want:
 
     $ git clone http://anonscm.debian.org/git/freedombox/freedom-maker.git freedom-maker
-    $ make -C freedom-maker dreamplug raspberry virtualbox
+    $ make -C freedom-maker dreamplug raspberry beaglebone cubietruck \
+      i386 amd64 virtualbox-i386 virtualbox-amd64
 
-If you only want one of the possible images of DreamPlug, RaspberryPi and
-VirtualBox, remove the rest from the make command line.  The images will show up
-in freedom-maker/build/.
+If you only want one of the possible images of DreamPlug, RaspberryPi,
+BeagleBone, Cubietruck, VirtualBox, i386 or amd64, remove the rest
+from the make command line.  The images will show up in
+freedom-maker/build/.
 
 *dd* the images to the SD card (for DreamPlug and RaspberryPi), or create a new
 VM for the VirtualBox hard drive file, and boot the client.
 
 # To Understand It
 
-Be aware that this is a *very* imcomplete solution for now, suitable only
+Be aware that this is a *very* incomplete solution for now, suitable only
 for developers .. you will want to at least do things like create unique
 ssh host keys for your device!
 
@@ -336,9 +339,16 @@ files you need to be aware of:
 
 There are three major targets to be aware of:
 
-- dreamplug-image: This builds an image for the DreamPlug's internal SD card.
-- raspberry-image: This builds an image for the RasbperryPi's SD card.
-- virtualbox-image: This builds an image for the VirtualBox virtualization tool.
+- beaglebone: This builds an image for the BeagleBone's SD card.
+- cubietruck: This builds an image for the Cubietruck's SD card.
+- dreamplug: This builds an image for the DreamPlug's internal SD card.
+- raspberry: This builds an image for the RasbperryPi's SD card.
+- i386: This builds an image for any machine with i386 architecture.
+- amd64: This builds an image for any machine with amd64 architecture.
+- virtualbox-i386: This builds a 32-bit image for the VirtualBox
+  virtualization tool.
+- virtualbox-amd64: This builds a 64-bit image for the VirtualBox
+  virtualization tool.
 
 ## /bin/mk_freedombox_image
 
