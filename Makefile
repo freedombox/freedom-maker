@@ -12,7 +12,7 @@ DESTINATION = card
 # yes no
 ENABLE_NONFREE = no
 BUILD = $(MACHINE)-$(ARCHITECTURE)-$(DESTINATION)
-TODAY := `date +%Y-%m-%d`
+TODAY := $(shell date +%Y-%m-%d)
 NAME = build/freedombox-unstable_$(TODAY)_$(BUILD)
 WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
 IMAGE = $(NAME).img
