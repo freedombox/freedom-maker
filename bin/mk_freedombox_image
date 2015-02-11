@@ -62,6 +62,7 @@ case "$MACHINE" in
  --no-kernel \
  --no-extlinux \
  --foreign /usr/bin/qemu-arm-static \
+ --roottype ext4 \
 "
 	;;
     dreamplug)
@@ -73,6 +74,7 @@ case "$MACHINE" in
  --no-kernel \
  --no-extlinux \
  --foreign /usr/bin/qemu-arm-static \
+ --roottype btrfs \
 "
 	;;
     beaglebone)
@@ -85,6 +87,7 @@ case "$MACHINE" in
  --no-kernel \
  --no-extlinux \
  --foreign /usr/bin/qemu-arm-static \
+ --roottype btrfs \
 "
 	;;
     cubietruck)
@@ -97,11 +100,13 @@ case "$MACHINE" in
  --no-kernel \
  --no-extlinux \
  --foreign /usr/bin/qemu-arm-static \
+ --roottype btrfs \
 "
        ;;
     virtualbox)
 	extra_opts="\
  --grub \
+ --roottype btrfs \
 "	;;
 esac
 
@@ -149,7 +154,6 @@ sudo -H \
     --customize "$basedir/bin/freedombox-customize" \
     --lock-root-password \
     --arch $ARCHITECTURE \
-    --roottype btrfs \
     --distribution $SUITE \
     --enable-dhcp \
     $extra_opts \
