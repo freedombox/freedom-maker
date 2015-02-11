@@ -108,6 +108,11 @@ case "$MACHINE" in
  --grub \
  --roottype btrfs \
 "	;;
+    all)
+	extra_opts="\
+ --grub \
+ --roottype btrfs \
+"	;;
 esac
 
 # allow for lots of extra fun customization options.

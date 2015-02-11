@@ -80,6 +80,28 @@ cubietruck: prep
 	$(SIGN)
 	@echo "Build complete."
 
+# build an i386 image
+i386: prep
+	$(eval ARCHITECTURE = i386)
+	$(eval MACHINE = all)
+	$(eval DESTINATION = hdd)
+	$(MAKE_IMAGE)
+	$(TAR) $(ARCHIVE) $(IMAGE)
+	@echo ""
+	$(SIGN)
+	@echo "Build complete."
+
+# build an amd64 image
+amd64: prep
+	$(eval ARCHITECTURE = amd64)
+	$(eval MACHINE = all)
+	$(eval DESTINATION = hdd)
+	$(MAKE_IMAGE)
+	$(TAR) $(ARCHIVE) $(IMAGE)
+	@echo ""
+	$(SIGN)
+	@echo "Build complete."
+
 # build a virtualbox image
 virtualbox: virtualbox-i386
 
