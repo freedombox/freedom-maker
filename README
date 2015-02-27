@@ -309,7 +309,7 @@ Required for DreamPlug:
 
 Now, fetch the git source of freedom-maker and build the image you want:
 
-    $ git clone http://anonscm.debian.org/git/freedombox/freedom-maker.git freedom-maker
+    $ git clone https://alioth.debian.org/anonscm/git/freedombox/freedom-maker.git freedom-maker
     $ make -C freedom-maker dreamplug raspberry beaglebone cubietruck \
       i386 amd64 virtualbox-i386 virtualbox-amd64
 
