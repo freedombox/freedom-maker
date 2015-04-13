@@ -151,7 +151,7 @@ sudo -H \
     $VMDEBOOTSTRAP \
     --log $(dirname $IMAGE)/freedombox.log \
     --log-level debug \
-    --size 4G \
+    --size $IMAGE_SIZE \
     --image $IMAGE.img \
     --hostname freedombox \
     --verbose \

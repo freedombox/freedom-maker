@@ -16,6 +16,7 @@ TODAY := $(shell date +%Y-%m-%d)
 NAME = build/freedombox-unstable_$(TODAY)_$(BUILD)
 WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
 IMAGE = $(NAME).img
+IMAGE_SIZE = 4G
 ARCHIVE = $(NAME).tar.bz2
 SIGNATURE = $(ARCHIVE).sig
 SUITE = sid
@@ -30,7 +31,7 @@ SIGN = -gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 MAKE_IMAGE = ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) \
     MACHINE=$(MACHINE) SOURCE=$(SOURCE) MIRROR=$(MIRROR) SUITE=$(SUITE) OWNER=$(OWNER) \
     BUILD_MIRROR=$(BUILD_MIRROR) ENABLE_NONFREE=$(ENABLE_NONFREE) \
-    taskset 0x01 bin/mk_freedombox_image $(NAME)
+    IMAGE_SIZE=$(IMAGE_SIZE) taskset 0x01 bin/mk_freedombox_image $(NAME)
 
 # build DreamPlug USB or SD card image
 dreamplug: prep
