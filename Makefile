@@ -61,7 +61,6 @@ beaglebone: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = beaglebone)
 	$(eval DESTINATION = card)
-	$(eval ENABLE_NONFREE = yes)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
