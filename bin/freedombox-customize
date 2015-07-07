@@ -142,4 +142,4 @@ cd /
 echo "info: killing leftover processes in chroot"
 # 2014-11-04 this killed /usr/lib/erlang/erts-6.2/bin/epmd, see
 # <URL: https://www.ejabberd.im/epmd?q=epmd > to learn more.
-fuser -mvk $rootdir/.
+fuser -mvk $rootdir/. || true
