@@ -73,7 +73,6 @@ cubietruck: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = cubietruck)
 	$(eval DESTINATION = card)
-	$(eval ENABLE_NONFREE = yes)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
