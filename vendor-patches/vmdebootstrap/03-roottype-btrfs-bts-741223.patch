@@ -1,9 +1,9 @@
 diff --git a/vmdebootstrap b/vmdebootstrap
-index 500fa77..f08a0cc 100755
+index 4895147..c46be43 100755
 --- a/vmdebootstrap
 +++ b/vmdebootstrap
-@@ -192,6 +195,25 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
-                 (rootdev, bootdev) = self.setup_kpartx()
+@@ -218,6 +218,25 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
+                     self.runcmd(['mkswap', swapdev])
                  self.mkfs(rootdev, fstype=roottype)
                  rootdir = self.mount(rootdev)
 +                rootfsdir = rootdir
@@ -28,7 +28,7 @@ index 500fa77..f08a0cc 100755
                  if bootdev:
                      if self.settings['boottype']:
                          boottype = self.settings['boottype']
-@@ -219,9 +241,9 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
+@@ -245,9 +264,9 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
  
              if self.settings['image']:
                  if self.settings['grub']:
@@ -40,7 +40,7 @@ index 500fa77..f08a0cc 100755
                  self.append_serial_console(rootdir)
                  self.optimize_image(rootdir)
                  if self.settings['squash']:
-@@ -274,13 +296,19 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
+@@ -300,13 +319,19 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
          logging.debug('mkdir %s', dirname)
          return dirname
  
@@ -62,17 +62,17 @@ index 500fa77..f08a0cc 100755
          self.mount_points.append(mount_point)
          logging.debug('mounted %s on %s', device, mount_point)
          return mount_point
-@@ -382,6 +410,9 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
+@@ -458,6 +483,9 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
          if self.settings['grub']:
-             include.append('grub2')
+             include.append('grub-pc')
  
 +        if 'btrfs' == self.settings['roottype']:
 +            include.append('btrfs-tools')
 +
          if not self.settings['no-kernel']:
-             if self.settings['arch'] == 'i386':
-                 kernel_arch = '486'
-@@ -461,7 +492,12 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
+             if self.settings['kernel-package']:
+                 kernel_image = self.settings['kernel-package']
+@@ -546,7 +574,12 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
          fstab = os.path.join(rootdir, 'etc', 'fstab')
          with open(fstab, 'w') as f:
              f.write('proc /proc proc defaults 0 0\n')
@@ -85,10 +85,10 @@ index 500fa77..f08a0cc 100755
 +                f.write('%s / %s errors=remount-ro 0 1\n' % (rootdevstr, roottype))
              if bootdevstr:
                  f.write('%s /boot %s errors=remount-ro 0 2\n' % (bootdevstr, boottype))
- 
-@@ -555,7 +591,8 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
-             with open(inittab, 'a') as f:
-                 f.write('\nS0:23:respawn:%s\n' % serial_command)
+                 if self.settings['swap'] > 0:
+@@ -661,7 +694,8 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
+             cfg.write("%s\n" % terminal)
+             cfg.write("%s\n" % command)
  
 -    def install_grub2(self, rootdev, rootdir):
 +    def install_grub2(self, rootdev, rootdir, rootfsdir):
@@ -96,19 +96,22 @@ index 500fa77..f08a0cc 100755
          self.message("Configuring grub2")
          # rely on kpartx using consistent naming to map loop0p1 to loop0
          install_dev = os.path.join('/dev', os.path.basename(rootdev)[:-2])
-@@ -573,9 +610,9 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
+@@ -679,12 +713,12 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
+             self.runcmd(['chroot', rootdir, 'grub-install', install_dev])
+         except cliapp.AppException:
+             self.message("Failed. Is grub2-common installed? Using extlinux.")
+-            self.install_extlinux(rootdev, rootdir)
++            self.install_extlinux(rootdev, rootdir, rootfsdir)
          self.runcmd(['umount', os.path.join(rootdir, 'sys')])
          self.runcmd(['umount', os.path.join(rootdir, 'proc')])
          self.runcmd(['umount', os.path.join(rootdir, 'dev')])
--        self.install_extlinux(rootdev, rootdir)
-+        self.install_extlinux(rootdev, rootdir, rootfsdir)
  
 -    def install_extlinux(self, rootdev, rootdir):
 +    def install_extlinux(self, rootdev, rootdir, rootfsdir):
          if not os.path.exists("/usr/bin/extlinux"):
              self.message("extlinux not installed, skipping.")
              return
-@@ -602,7 +639,7 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
+@@ -711,7 +745,7 @@ class VmDebootstrap(cliapp.Application):  # pylint: disable=too-many-public-meth
                             '-s', 'UUID', rootdev])
          uuid = out.splitlines()[0].strip()
  
@@ -117,7 +120,7 @@ index 500fa77..f08a0cc 100755
          logging.debug('configure extlinux %s', conf)
          kserial = 'console=ttyS0,115200' if self.settings['serial-console'] else ''
          extserial = 'serial 0 115200' if self.settings['serial-console'] else ''
-@@ -612,13 +649,14 @@ timeout 1
+@@ -721,13 +755,14 @@ timeout 1
  
  label linux
  kernel %(kernel)s
@@ -133,7 +136,7 @@ index 500fa77..f08a0cc 100755
              'extserial': extserial,  # pylint: disable=bad-continuation
          }  # pylint: disable=bad-continuation
          logging.debug("extlinux config:\n%s", msg)
-@@ -629,7 +667,7 @@ append initrd=%(initrd)s root=UUID=%(uuid)s ro %(kserial)s
+@@ -738,7 +773,7 @@ append initrd=%(initrd)s root=UUID=%(uuid)s ro %(kserial)s
          f = open(conf, 'w')
          f.write(msg)
  

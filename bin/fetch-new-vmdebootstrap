@@ -7,7 +7,7 @@ else
     git clone git://git.liw.fi/vmdebootstrap vendor/vmdebootstrap
 fi
 cd vendor/vmdebootstrap
-git checkout tags/vmdebootstrap-0.6
+git checkout tags/vmdebootstrap-0.8
 for f in ../../vendor-patches/vmdebootstrap/* ; do
     patch -p1 < $f
 done
