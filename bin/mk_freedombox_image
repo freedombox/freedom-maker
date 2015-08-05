@@ -160,6 +160,5 @@ sudo -H \
     --lock-root-password \
     --arch $ARCHITECTURE \
     --distribution $SUITE \
-    --enable-dhcp \
     $extra_opts \
     $pkgopts
