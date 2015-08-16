@@ -63,7 +63,7 @@ which is the current version in Debian's Wheezy release (as of December 12,
 
 First, prepare your system::
 
-    # wget http://http.debian.net/debian/pool/main/u/u-boot/u-boot_2012.04.01-2_armel.deb
+    # wget http://httpredir.debian.org/debian/pool/main/u/u-boot/u-boot_2012.04.01-2_armel.deb
     # dpkg-deb -x u-boot_2012.04.01-2_armel.deb u-boot_2012.04.01-2_armel
     # cp -r u-boot_2012.04.01-2_armel/usr/lib/u-boot/dreamplug /mnt
 

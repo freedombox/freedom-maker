@@ -1,8 +1,8 @@
 #! /usr/bin/make
 
 # Where to fetch packages
-MIRROR = http://http.debian.net/debian
-BUILD_MIRROR = http://http.debian.net/debian
+MIRROR = http://httpredir.debian.org/debian
+BUILD_MIRROR = http://httpredir.debian.org/debian
 # armel amd64 i386
 ARCHITECTURE = armel
 # dreamplug guruplug virtualbox raspberry(pi)
