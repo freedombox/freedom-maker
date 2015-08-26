@@ -65,6 +65,17 @@ case "$MACHINE" in
  --roottype ext4 \
 "
 	;;
+    raspberry2)
+	extra_opts="\
+ --variant minbase \
+ --bootsize 128M \
+ --boottype vfat \
+ --no-kernel \
+ --no-extlinux \
+ --foreign /usr/bin/qemu-arm-static \
+ --roottype ext4 \
+"
+	;;
     dreamplug)
 	extra_pkgs="$dreamplug_pkgs"
 	extra_opts="\

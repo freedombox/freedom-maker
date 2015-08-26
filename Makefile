@@ -57,6 +57,18 @@ raspberry: prep
 	$(SIGN)
 	@echo "Build complete."
 
+# build Raspberry Pi 2 SD card image
+raspberry2: prep
+	$(eval ARCHITECTURE = armhf)
+	$(eval MACHINE = raspberry2)
+	$(eval DESTINATION = card)
+	$(eval ENABLE_NONFREE = yes)
+	$(MAKE_IMAGE)
+	$(TAR) $(ARCHIVE) $(IMAGE)
+	@echo ""
+	$(SIGN)
+	@echo "Build complete."
+
 # build Beaglebone SD card image
 beaglebone: prep
 	$(eval ARCHITECTURE = armhf)
