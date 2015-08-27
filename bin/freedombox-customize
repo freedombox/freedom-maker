@@ -117,6 +117,10 @@ rm $rootdir/usr/sbin/policy-rc.d
 chroot $rootdir /usr/lib/freedombox/setup 2>&1 | \
     tee $rootdir/var/log/freedombox-setup.log
 
+# Remove SSH keys from the image, freedomxbox-setup does not do that
+# anymore.
+rm $rootdir/etc/ssh/ssh_host_*
+
 # copy u-boot to beginning of image
 case "$MACHINE" in
     beaglebone)
