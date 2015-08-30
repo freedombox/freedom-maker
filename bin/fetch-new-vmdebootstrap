@@ -9,5 +9,6 @@ fi
 cd vendor/vmdebootstrap
 git checkout tags/vmdebootstrap-0.8
 for f in ../../vendor-patches/vmdebootstrap/* ; do
+    echo applying $(basename $f)
     patch -p1 < $f
 done
