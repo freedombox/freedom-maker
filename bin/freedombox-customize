@@ -70,7 +70,7 @@ rootdir="$1"
 image=$(pwd)/"$2"
 cd "$rootdir"
 
-echo info: building $MACHINE for $ARCHITECTURE to $DESTINATION
+echo info: building $MACHINE for $ARCHITECTURE
 
 export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
 export LC_ALL=C LANGUAGE=C LANG=C

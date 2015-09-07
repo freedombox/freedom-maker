@@ -7,11 +7,9 @@ BUILD_MIRROR ?= http://httpredir.debian.org/debian
 ARCHITECTURE = armel
 # dreamplug guruplug virtualbox raspberry(pi)
 MACHINE = dreamplug
-# card usb hdd
-DESTINATION = card
 # yes no
 ENABLE_NONFREE = no
-BUILD = $(MACHINE)-$(ARCHITECTURE)-$(DESTINATION)
+BUILD = $(MACHINE)-$(ARCHITECTURE)
 TODAY := $(shell date +%Y-%m-%d)
 NAME = build/freedombox-unstable_$(TODAY)_$(BUILD)
 WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
@@ -28,8 +26,8 @@ SIGN = -gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 # Using taskset to pin build process to single core. This is a
 # workaround for a qemu-user-static issue that causes builds to
 # hang. (See Debian bug #769983 for details.)
-MAKE_IMAGE = ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) \
-    MACHINE=$(MACHINE) SOURCE=$(SOURCE) MIRROR=$(MIRROR) SUITE=$(SUITE) OWNER=$(OWNER) \
+MAKE_IMAGE = ARCHITECTURE=$(ARCHITECTURE) MACHINE=$(MACHINE) SOURCE=$(SOURCE) \
+    MIRROR=$(MIRROR) SUITE=$(SUITE) OWNER=$(OWNER) \
     BUILD_MIRROR=$(BUILD_MIRROR) ENABLE_NONFREE=$(ENABLE_NONFREE) \
     IMAGE_SIZE=$(IMAGE_SIZE) taskset 0x01 bin/mk_freedombox_image $(NAME)
 
@@ -37,7 +35,6 @@ MAKE_IMAGE = ARCHITECTURE=$(ARCHITECTURE) DESTINATION=$(DESTINATION) \
 dreamplug: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = dreamplug)
-	$(eval DESTINATION = card)
 	$(eval ENABLE_NONFREE = yes)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
@@ -49,7 +46,6 @@ dreamplug: prep
 raspberry: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = raspberry)
-	$(eval DESTINATION = card)
 	$(eval ENABLE_NONFREE = yes)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
@@ -61,7 +57,6 @@ raspberry: prep
 raspberry2: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = raspberry2)
-	$(eval DESTINATION = card)
 	$(eval ENABLE_NONFREE = yes)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
@@ -73,7 +68,6 @@ raspberry2: prep
 beaglebone: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = beaglebone)
-	$(eval DESTINATION = card)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
@@ -84,7 +78,6 @@ beaglebone: prep
 cubietruck: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = cubietruck)
-	$(eval DESTINATION = card)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
@@ -95,7 +88,6 @@ cubietruck: prep
 i386: prep
 	$(eval ARCHITECTURE = i386)
 	$(eval MACHINE = all)
-	$(eval DESTINATION = hdd)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
@@ -106,7 +98,6 @@ i386: prep
 amd64: prep
 	$(eval ARCHITECTURE = amd64)
 	$(eval MACHINE = all)
-	$(eval DESTINATION = hdd)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
@@ -119,7 +110,6 @@ virtualbox: virtualbox-i386
 virtualbox-i386: prep
 	$(eval ARCHITECTURE = i386)
 	$(eval MACHINE = virtualbox)
-	$(eval DESTINATION = hdd)
 	$(MAKE_IMAGE)
 	# Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
@@ -131,7 +121,6 @@ virtualbox-i386: prep
 virtualbox-amd64: prep
 	$(eval ARCHITECTURE = amd64)
 	$(eval MACHINE = virtualbox)
-	$(eval DESTINATION = hdd)
 	$(MAKE_IMAGE)
 	# Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi

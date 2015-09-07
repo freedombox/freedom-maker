@@ -19,7 +19,6 @@ set -e # Exit on first error
 
 IMAGE=$1
 export ARCHITECTURE
-export DESTINATION
 export MACHINE
 export SOURCE
 export SUITE
@@ -155,7 +154,6 @@ sudo -H \
     SUITE="$SUITE" \
     MIRROR="$MIRROR" \
     BUILD_MIRROR="$BUILD_MIRROR"\
-    DESTINATION="$DESTINATION" \
     MACHINE="$MACHINE" \
     ARCHITECTURE="$ARCHITECTURE" \
     ENABLE_NONFREE="$ENABLE_NONFREE" \
