@@ -11,7 +11,7 @@ MACHINE = dreamplug
 ENABLE_NONFREE = no
 BUILD = $(MACHINE)-$(ARCHITECTURE)
 TODAY := $(shell date +%Y-%m-%d)
-NAME = build/freedombox-unstable_$(TODAY)_$(BUILD)
+NAME = build/freedombox-unstable-$(NON)free_$(TODAY)_$(BUILD)
 WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
 IMAGE = $(NAME).img
 IMAGE_SIZE ?= 4G
@@ -36,6 +36,7 @@ dreamplug: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = dreamplug)
 	$(eval ENABLE_NONFREE = yes)
+	$(eval NON = non)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
@@ -47,6 +48,7 @@ raspberry: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = raspberry)
 	$(eval ENABLE_NONFREE = yes)
+	$(eval NON = non)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
@@ -58,6 +60,7 @@ raspberry2: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = raspberry2)
 	$(eval ENABLE_NONFREE = yes)
+	$(eval NON = non)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
