@@ -156,6 +156,7 @@ sudo -H \
     BUILD_MIRROR="$BUILD_MIRROR"\
     MACHINE="$MACHINE" \
     ARCHITECTURE="$ARCHITECTURE" \
+    SOURCE="$SOURCE" \
     ENABLE_NONFREE="$ENABLE_NONFREE" \
     $VMDEBOOTSTRAP \
     --log $(dirname $IMAGE)/freedombox.log \
