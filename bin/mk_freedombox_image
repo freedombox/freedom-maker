@@ -47,8 +47,11 @@ beaglebone_pkgs="linux-image-armmp u-boot-tools u-boot"
 # Packages needed on the cubietruck
 cubietruck_pkgs="linux-image-armmp-lpae u-boot-tools u-boot"
 
-# Packages needed for gui-based self-hosted development
-dev_pkgs="task-xfce-desktop emacs org-mode git mercurial iceweasel ca-certificates"
+# Packages needed for self-hosted development
+dev_pkgs="build-essential devscripts make man-db emacs org-mode git mercurial"
+
+# Packages needed for XFCE desktop environment
+xfce_pkgs="task-xfce-desktop iceweasel ca-certificates"
 
 echo Building $MACHINE FreedomBox for $ARCHITECTURE.
 
@@ -126,12 +129,15 @@ case "$MACHINE" in
 esac
 
 # allow for lots of extra fun customization options.
-for customization in "$CUSTOMIZATIONS"
+for customization in $CUSTOMIZATIONS
 do
     case "$customization" in
         development)
             extra_pkgs="$extra_pkgs $dev_pkgs"
             ;;
+	xfce)
+	    extra_pkgs="$extra_pkgs $xfce_pkgs"
+	    ;;
     esac
 done
 
