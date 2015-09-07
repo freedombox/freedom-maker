@@ -3,9 +3,14 @@
 # Where to fetch packages
 MIRROR ?= http://httpredir.debian.org/debian
 BUILD_MIRROR ?= http://httpredir.debian.org/debian
-# armel amd64 i386
+IMAGE_SIZE ?= 4G
+SUITE ?= sid
+# include source packages in image?
+SOURCE ?= false
+
+# armel armhf i386 amd64
 ARCHITECTURE = armel
-# dreamplug guruplug virtualbox raspberry(pi)
+# dreamplug raspberry raspberry2 beaglebone cubietruck all virtualbox
 MACHINE = dreamplug
 # yes no
 ENABLE_NONFREE = no
@@ -14,11 +19,8 @@ TODAY := $(shell date +%Y-%m-%d)
 NAME = build/freedombox-unstable-$(NON)free_$(TODAY)_$(BUILD)
 WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
 IMAGE = $(NAME).img
-IMAGE_SIZE ?= 4G
 ARCHIVE = $(NAME).tar.bz2
 SIGNATURE = $(ARCHIVE).sig
-SUITE ?= sid
-SOURCE ?= false
 OWNER = 1000
 TAR = tar --checkpoint=1000 --checkpoint-action=dot -cjvf
 SIGN = -gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
