@@ -79,9 +79,6 @@ export LC_ALL=C LANGUAGE=C LANG=C
 # are not created yet.
 export TMP=/tmp/ TMPDIR=/tmp/
 
-# set this to 'true' to disable source fetching while debugging
-export SOURCE=false
-
 username=fbx
 echo "warning: creating initial user $username with well known password!"
 password=frdm
