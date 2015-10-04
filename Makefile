@@ -25,7 +25,8 @@ SOURCE ?= false
 ENABLE_NONFREE = no
 BUILD = $(MACHINE)-$(ARCHITECTURE)
 TODAY := $(shell date +%Y-%m-%d)
-NAME = build/freedombox-unstable-$(NON)free_$(TODAY)_$(BUILD)
+FREE_TAG = $(if $(findstring yes, $(ENABLE_NONFREE)),nonfree,free)
+NAME = build/freedombox-unstable-$(FREE_TAG)_$(TODAY)_$(BUILD)
 IMAGE = $(NAME).img
 ARCHIVE = $(NAME).tar.bz2
 SIGNATURE = $(ARCHIVE).sig
@@ -46,7 +47,6 @@ dreamplug: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = dreamplug)
 	$(eval ENABLE_NONFREE = yes)
-	$(eval NON = non)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
@@ -58,7 +58,6 @@ raspberry: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = raspberry)
 	$(eval ENABLE_NONFREE = yes)
-	$(eval NON = non)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
@@ -70,7 +69,6 @@ raspberry2: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = raspberry2)
 	$(eval ENABLE_NONFREE = yes)
-	$(eval NON = non)
 	$(MAKE_IMAGE)
 	$(TAR) $(ARCHIVE) $(IMAGE)
 	@echo ""
