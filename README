@@ -39,7 +39,7 @@ image as follows:
 
 For all images:
 ```
-$ sudo apt-get -y install git vmdebootstrap dosfstools btrfs-tools
+$ sudo apt-get -y install git sudo vmdebootstrap dosfstools btrfs-tools
 ```
 
 For VirtualBox:
