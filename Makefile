@@ -21,10 +21,6 @@ SUITE ?= sid
 # include source packages in image?
 SOURCE ?= false
 
-# armel armhf i386 amd64
-ARCHITECTURE = armel
-# dreamplug raspberry raspberry2 beaglebone cubietruck all virtualbox
-MACHINE = dreamplug
 # yes no
 ENABLE_NONFREE = no
 BUILD = $(MACHINE)-$(ARCHITECTURE)
@@ -154,7 +150,6 @@ prep: vendor/vmdebootstrap/vmdebootstrap
 
 clean:
 	-rm -f build/freedombox.log
-	-rm -f $(IMAGE) $(ARCHIVE)
 
 distclean: clean
 	sudo rm -rf build
