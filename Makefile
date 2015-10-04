@@ -17,7 +17,6 @@ ENABLE_NONFREE = no
 BUILD = $(MACHINE)-$(ARCHITECTURE)
 TODAY := $(shell date +%Y-%m-%d)
 NAME = build/freedombox-unstable-$(NON)free_$(TODAY)_$(BUILD)
-WEEKLY_DIR = torrent/freedombox-unstable_$(TODAY)
 IMAGE = $(NAME).img
 ARCHIVE = $(NAME).tar.bz2
 SIGNATURE = $(ARCHIVE).sig
