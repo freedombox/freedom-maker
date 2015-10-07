@@ -121,7 +121,7 @@ You'll need to copy the image to the memory card or USB stick:
     $ tar -xjvf freedombox-unstable_2015-08-06_beaglebone-armhf-card.tar.bz2
     ```
 
-   The above command is an example for the beagblebone image built on
+   The above command is an example for the beaglebone image built on
    2015-08-06.  Your tar file name will be different.
 
 3. Copy the image to your card.  Double check and make sure you don't
@@ -137,7 +137,7 @@ You'll need to copy the image to the memory card or USB stick:
     $ dd bs=1M if=freedombox-unstable_2015-08-06_beaglebone-armhf-card.img of=/dev/sdf conv=fdatasync
     ```
 
-   The above command is an example for the beagblebone image built on
+   The above command is an example for the beaglebone image built on
    2015-08-06.  Your image file name will be different.
 
    When picking a device, use the drive-letter destination, like
