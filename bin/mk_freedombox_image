@@ -164,6 +164,8 @@ sudo -H \
     ARCHITECTURE="$ARCHITECTURE" \
     SOURCE="$SOURCE" \
     ENABLE_NONFREE="$ENABLE_NONFREE" \
+    CUSTOM_PLINTH="$CUSTOM_PLINTH" \
+    CUSTOM_SETUP="$CUSTOM_SETUP" \
     $VMDEBOOTSTRAP \
     --log $(dirname $IMAGE)/freedombox.log \
     --log-level debug \

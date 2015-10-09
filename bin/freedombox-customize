@@ -107,7 +107,19 @@ if $use_eatmydata ; then
     enable_eatmydata_override
 fi
 
-chroot $rootdir apt-get install -y freedombox-setup
+if [ -n "$CUSTOM_PLINTH" ]; then
+    cp "$CUSTOM_PLINTH" "$rootdir"/tmp
+    chroot "$rootdir" apt-get install -y gdebi-core
+    chroot "$rootdir" gdebi -n /tmp/"$(basename $CUSTOM_PLINTH)"
+fi
+
+if [ -n "$CUSTOM_SETUP" ]; then
+    cp "$CUSTOM_SETUP" "$rootdir"/tmp
+    chroot "$rootdir" apt-get install -y gdebi-core
+    chroot "$rootdir" gdebi -n /tmp/"$(basename $CUSTOM_SETUP)"
+else
+    chroot "$rootdir" apt-get install -y freedombox-setup
+fi
 
 rm $rootdir/usr/sbin/policy-rc.d
 
