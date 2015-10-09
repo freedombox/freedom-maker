@@ -34,6 +34,10 @@ OWNER = 1000
 TAR = tar --checkpoint=1000 --checkpoint-action=dot -cjvf
 SIGN = -gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 
+# settings for `make test`
+TEST_SSH_PORT = 2222
+TEST_FIRSTRUN_WAIT_TIME = 120 # seconds
+
 # Using taskset to pin build process to single core. This is a
 # workaround for a qemu-user-static issue that causes builds to
 # hang. (See Debian bug #769983 for details.)
@@ -139,6 +143,28 @@ virtualbox-amd64: prep
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
+
+test: test-virtualbox
+
+test-virtualbox: virtualbox
+	$(eval VM_NAME = freedom-maker-test)
+	VBoxManage createvm --name $(VM_NAME) --ostype "Debian" --register
+	VBoxManage storagectl $(VM_NAME) --name "SATA Controller" --add sata \
+		 --controller IntelAHCI
+	VBoxManage storageattach $(VM_NAME) --storagectl "SATA Controller" \
+		--port 0 --device 0 --type hdd --medium $(NAME).vdi
+	VBoxManage modifyvm $(VM_NAME) --pae on --memory 1024 --vram 128 \
+		--nic1 nat --natpf1 ,tcp,,$(TEST_SSH_PORT),,22
+	VBoxManage startvm $(VM_NAME) --type headless
+	sleep $(TEST_FIRSTRUN_WAIT_TIME) # wait for first-run to complete
+	echo frdm |sshpass -p frdm ssh -o UserKnownHostsFile=/dev/null \
+		-o StrictHostKeyChecking=no -t -t \
+		-p $(TEST_SSH_PORT) fbx@127.0.0.1 \
+		"sudo plinth --diagnose" \
+		|tee build/$(VM_NAME)-results_$(TODAY).log
+	VBoxManage controlvm $(VM_NAME) poweroff
+	VBoxManage modifyvm $(VM_NAME) --hda none
+	VBoxManage unregistervm $(VM_NAME) --delete
 
 vendor/vmdebootstrap/vmdebootstrap: vendor-patches/vmdebootstrap/*.patch
 	bin/fetch-new-vmdebootstrap
