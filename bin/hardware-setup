@@ -1,0 +1,269 @@
+#!/bin/sh
+
+enable_serial_console() {
+    # By default, spawn a console on the serial port
+    device="$1"
+    echo "Adding a getty on the serial port"
+    echo "T0:12345:respawn:/sbin/getty -L $device 115200 vt100" >> /etc/inittab
+}
+
+dreamplug_install_extra_packages() {
+    # Install additional hardware related packages for Dreamplug
+    if [ -n "`grep non-free /etc/apt/sources.list`" ]
+    then
+        echo "Installing non-free WIFI package: firmware-libertas"
+        apt-get install -y firmware-libertas
+    else
+        echo "Non-free packages disabled.  Skipping DreamPlug non-free WIFI."
+    fi
+}
+
+dreamplug_flash() {
+    # allow flash-kernel to work without valid /proc contents
+    # ** this doesn't *really* work, since there are too many checks
+    #    that fail in an emulated environment!  We'll have to do it by
+    #    hand below anyway...
+    export FK_MACHINE="Globalscale Technologies Dreamplug"
+    apt-get install -y flash-kernel
+}
+
+dreamplug_repack_kernel() {
+# process installed kernel to create uImage, uInitrd, dtb
+# using flash-kernel would be a good approach, except it fails in the
+# cross build environment due to too many environment checks...
+#FK_MACHINE="Globalscale Technologies Dreamplug" flash-kernel
+#  so, let's do it manually...
+
+# flash-kernel's hook-functions provided to mkinitramfs have the
+# unfortunate side-effect of creating /conf/param.conf in the initrd
+# when run from our emulated chroot environment, which means our root=
+# on the kernel command line is completely ignored!  repack the initrd
+# to remove this evil...
+
+    echo "info: repacking dreamplug kernel and initrd"
+
+    kernelVersion=$(ls /usr/lib/*/kirkwood-dreamplug.dtb | head -1 | cut -d/ -f4)
+    version=$(echo $kernelVersion | sed 's/linux-image-\(.*\)/\1/')
+    initRd=initrd.img-$version
+    vmlinuz=vmlinuz-$version
+
+    mkdir /tmp/initrd-repack
+
+    (cd /tmp/initrd-repack ; \
+	zcat /boot/$initRd | cpio -i ; \
+	rm -f conf/param.conf ; \
+	find . | cpio --quiet -o -H newc | \
+	gzip -9 > /boot/$initRd )
+
+    rm -rf /tmp/initrd-repack
+
+    (cd /boot ; \
+	cp /usr/lib/$kernelVersion/kirkwood-dreamplug.dtb dtb ; \
+	cat $vmlinuz dtb >> temp-kernel ; \
+	mkimage -A arm -O linux -T kernel -n "Debian kernel ${version}" \
+	-C none -a 0x8000 -e 0x8000 -d temp-kernel uImage ; \
+	rm -f temp-kernel ; \
+	mkimage -A arm -O linux -T ramdisk -C gzip -a 0x0 -e 0x0 \
+	-n "Debian ramdisk ${version}" \
+	-d $initRd uInitrd )
+}
+
+# Install binary blob and kernel needed to boot on the Raspberry Pi.
+raspberry_setup_boot() {
+    # Packages used by rpi-update to make Raspberry Pi bootable
+    apt-get install -y git-core binutils ca-certificates wget kmod
+
+    wget https://raw.github.com/Hexxeh/rpi-update/master/rpi-update \
+	-O /usr/bin/rpi-update
+    chmod a+x /usr/bin/rpi-update
+    mkdir -p /lib/modules
+    touch /boot/start.elf
+    SKIP_BACKUP=1 SKIP_WARNING=1 rpi-update | tee /root/rpi-update.log
+}
+
+# Install binary blob and kernel needed to boot on the Raspberry Pi 2.
+raspberry2_setup_boot() {
+    # Packages used by rpi-update to make Raspberry Pi 2 bootable
+    apt-get install -y git-core binutils ca-certificates wget kmod
+
+    wget https://raw.github.com/Hexxeh/rpi-update/master/rpi-update \
+	-O /usr/bin/rpi-update
+    chmod a+x /usr/bin/rpi-update
+    mkdir -p /lib/modules
+    touch /boot/start.elf
+    SKIP_BACKUP=1 SKIP_WARNING=1 rpi-update | tee /root/rpi-update.log
+}
+
+beaglebone_setup_boot() {
+    # Setup uEnv.txt
+    if grep -q btrfs /etc/fstab ; then
+	fstype=btrfs
+    else
+	fstype=ext4
+    fi
+    kernelVersion=$(ls /usr/lib/*/am335x-boneblack.dtb | head -1 | cut -d/ -f4)
+    version=$(echo $kernelVersion | sed 's/linux-image-\(.*\)/\1/')
+    initRd=initrd.img-$version
+    vmlinuz=vmlinuz-$version
+
+    # uEnv.txt for Beaglebone
+    # based on https://github.com/beagleboard/image-builder/blob/master/target/boot/beagleboard.org.txt
+    cat >> /boot/uEnv.txt <<EOF
+mmcroot=/dev/mmcblk0p2 ro
+mmcrootfstype=$fstype rootwait fixrtc
+mmcrootflags=subvol=@
+
+console=ttyO0,115200n8
+
+kernel_file=$vmlinuz
+initrd_file=$initRd
+
+loadaddr=0x80200000
+initrd_addr=0x81000000
+fdtaddr=0x80F80000
+
+initrd_high=0xffffffff
+fdt_high=0xffffffff
+
+loadkernel=load mmc \${mmcdev}:\${mmcpart} \${loadaddr} \${kernel_file}
+loadinitrd=load mmc \${mmcdev}:\${mmcpart} \${initrd_addr} \${initrd_file}; setenv initrd_size \${filesize}
+loadfdt=load mmc \${mmcdev}:\${mmcpart} \${fdtaddr} /dtbs/\${fdtfile}
+
+loadfiles=run loadkernel; run loadinitrd; run loadfdt
+mmcargs=setenv bootargs console=tty0 console=\${console} root=\${mmcroot} rootfstype=\${mmcrootfstype} rootflags=\${mmcrootflags}
+
+uenvcmd=run loadfiles; run mmcargs; bootz \${loadaddr} \${initrd_addr}:\${initrd_size} \${fdtaddr}
+EOF
+
+    mkdir -p /boot/dtbs
+    cp /usr/lib/linux-image-*-armmp/* /boot/dtbs
+}
+
+beaglebone_flash() {
+    # allow flash-kernel to work without valid /proc contents
+    # ** this doesn't *really* work, since there are too many checks
+    #    that fail in an emulated environment!  We'll have to do it by
+    #    hand below anyway...
+    export FK_MACHINE="TI AM335x BeagleBone"
+    apt-get install -y flash-kernel
+}
+
+beaglebone_repack_kernel() {
+# process installed kernel to create uImage, uInitrd, dtb
+# using flash-kernel would be a good approach, except it fails in the
+# cross build environment due to too many environment checks...
+#FK_MACHINE="TI AM335x BeagleBone" flash-kernel
+#  so, let's do it manually...
+
+# flash-kernel's hook-functions provided to mkinitramfs have the
+# unfortunate side-effect of creating /conf/param.conf in the initrd
+# when run from our emulated chroot environment, which means our root=
+# on the kernel command line is completely ignored!  repack the initrd
+# to remove this evil...
+
+    echo "info: repacking beaglebone kernel and initrd"
+
+    kernelVersion=$(ls /usr/lib/*/am335x-boneblack.dtb | head -1 | cut -d/ -f4)
+    version=$(echo $kernelVersion | sed 's/linux-image-\(.*\)/\1/')
+    initRd=initrd.img-$version
+    vmlinuz=vmlinuz-$version
+
+    mkdir /tmp/initrd-repack
+
+    (cd /tmp/initrd-repack ; \
+	zcat /boot/$initRd | cpio -i ; \
+	rm -f conf/param.conf ; \
+	find . | cpio --quiet -o -H newc | \
+	gzip -9 > /boot/$initRd )
+
+    rm -rf /tmp/initrd-repack
+
+    (cd /boot ; \
+	cp /usr/lib/$kernelVersion/am335x-boneblack.dtb dtb ; \
+	cat $vmlinuz dtb >> temp-kernel ; \
+	mkimage -A arm -O linux -T kernel -n "Debian kernel ${version}" \
+	-C none -a 0x80200000 -e 0x80200000 -d temp-kernel uImage ; \
+	rm -f temp-kernel ; \
+	mkimage -A arm -O linux -T ramdisk -C gzip -a 0x81000000 -e 0x81000000 \
+	-n "Debian ramdisk ${version}" \
+	-d $initRd uInitrd )
+}
+
+cubietruck_setup_boot() {
+    # Setup boot.cmd
+    if grep -q btrfs /etc/fstab ; then
+	fstype=btrfs
+    else
+	fstype=ext4
+    fi
+    kernelVersion=$(ls /usr/lib/*/sun7i-a20-cubietruck.dtb | head -1 | cut -d/ -f4)
+    version=$(echo $kernelVersion | sed 's/linux-image-\(.*\)/\1/')
+    initRd=initrd.img-$version
+    vmlinuz=vmlinuz-$version
+
+    # boot.cmd for CubieTruck
+    cat >> /boot/boot.cmd <<EOF
+setenv mmcdev 0
+setenv mmcpart 1
+
+setenv mmcroot /dev/mmcblk0p2 ro
+setenv mmcrootfstype $fstype rootwait fixrtc
+setenv mmcrootflags subvol=@
+
+setenv console ttyS0,115200n8
+
+setenv kernel_file $vmlinuz
+setenv initrd_file $initRd
+
+setenv loadaddr 0x46000000
+setenv initrd_addr 0x48000000
+setenv fdtaddr 0x47000000
+
+setenv initrd_high 0xffffffff
+setenv fdt_high 0xffffffff
+
+setenv loadkernel load mmc \${mmcdev}:\${mmcpart} \${loadaddr} \${kernel_file}
+setenv loadinitrd load mmc \${mmcdev}:\${mmcpart} \${initrd_addr} \${initrd_file}\\; setenv initrd_size \\\${filesize}
+setenv loadfdt load mmc \${mmcdev}:\${mmcpart} \${fdtaddr} /dtbs/\${fdtfile}
+
+setenv loadfiles run loadkernel\\; run loadinitrd\\; run loadfdt
+setenv mmcargs setenv bootargs console=\${console} root=\${mmcroot} rootfstype=\${mmcrootfstype} rootflags=\${mmcrootflags}
+
+run loadfiles; run mmcargs; bootz \${loadaddr} \${initrd_addr}:\${initrd_size} \${fdtaddr}
+EOF
+
+    # boot.scr for CubieTruck
+    mkimage -C none -A arm -T script -d /boot/boot.cmd /boot/boot.scr
+
+    # DTBs for CubieTruck
+    mkdir -p /boot/dtbs
+    cp /usr/lib/$kernelVersion/* /boot/dtbs
+
+    # extra boot modules
+    echo "rtc_sunxi" >> /etc/initramfs-tools/modules
+}
+
+case "$MACHINE" in
+    dreamplug|guruplug)
+	dreamplug_install_extra_packages
+	dreamplug_flash
+	dreamplug_repack_kernel
+	enable_serial_console ttyS0
+	;;
+    raspberry)
+	raspberry_setup_boot
+	;;
+    raspberry2)
+	raspberry2_setup_boot
+	;;
+    beaglebone)
+	beaglebone_setup_boot
+	beaglebone_flash
+	beaglebone_repack_kernel
+	enable_serial_console ttyO0
+	;;
+    cubietruck)
+	cubietruck_setup_boot
+	enable_serial_console ttyS0
+	;;
+esac
