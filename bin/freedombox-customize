@@ -67,7 +67,8 @@ EOF
 use_eatmydata=true
 
 rootdir="$1"
-image=$(pwd)/"$2"
+fmdir="$(pwd)"
+image="$fmdir"/"$2"
 cd "$rootdir"
 
 echo info: building $MACHINE for $ARCHITECTURE
@@ -120,6 +121,10 @@ if [ -n "$CUSTOM_SETUP" ]; then
 else
     chroot "$rootdir" apt-get install -y freedombox-setup
 fi
+
+cp "$fmdir"/bin/hardware-setup $rootdir/tmp
+chroot $rootdir /tmp/hardware-setup 2>&1 | \
+    tee $rootdir/var/log/hardware-setup.log
 
 rm $rootdir/usr/sbin/policy-rc.d
 
