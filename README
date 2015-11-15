@@ -31,6 +31,7 @@ Freedom-maker supports building for the following targets:
 - *amd64*: Disk image for any machine with amd64 architecture.
 - *virtualbox-i386*: 32-bit image for the VirtualBox virtualization tool
 - *virtualbox-amd64*: 64-bit image for the VirtualBox virtualization tool
+- *test*: build virtualbox i386 image and run diagnostics tests on it
 
 ## Install dependencies
 
@@ -55,6 +56,11 @@ $ sudo apt-get -y install qemu-user-static binfmt-support
 For DreamPlug:
 ```
 $ sudo apt-get -y install qemu-user-static binfmt-support u-boot-tools
+```
+
+For Testing:
+```
+$ sudo apt-get install extlinux virtualbox sshpass
 ```
 
 ## Running Build
