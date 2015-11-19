@@ -189,19 +189,21 @@ beaglebone_repack_kernel() {
 	-d $initRd uInitrd )
 }
 
-cubietruck_setup_boot() {
+a20_setup_boot() {
+    dtb="$1"
+
     # Setup boot.cmd
     if grep -q btrfs /etc/fstab ; then
 	fstype=btrfs
     else
 	fstype=ext4
     fi
-    kernelVersion=$(ls /usr/lib/*/sun7i-a20-cubietruck.dtb | head -1 | cut -d/ -f4)
+    kernelVersion=$(ls /usr/lib/*/$dtb | head -1 | cut -d/ -f4)
     version=$(echo $kernelVersion | sed 's/linux-image-\(.*\)/\1/')
     initRd=initrd.img-$version
     vmlinuz=vmlinuz-$version
 
-    # boot.cmd for CubieTruck
+    # Create boot.cmd
     cat >> /boot/boot.cmd <<EOF
 setenv mmcdev 0
 setenv mmcpart 1
@@ -214,6 +216,7 @@ setenv console ttyS0,115200n8
 
 setenv kernel_file $vmlinuz
 setenv initrd_file $initRd
+setenv fdtfile $dtb
 
 setenv loadaddr 0x46000000
 setenv initrd_addr 0x48000000
@@ -232,10 +235,10 @@ setenv mmcargs setenv bootargs console=\${console} root=\${mmcroot} rootfstype=\
 run loadfiles; run mmcargs; bootz \${loadaddr} \${initrd_addr}:\${initrd_size} \${fdtaddr}
 EOF
 
-    # boot.scr for CubieTruck
+    # boot.scr for Allwinner A20 based device
     mkimage -C none -A arm -T script -d /boot/boot.cmd /boot/boot.scr
 
-    # DTBs for CubieTruck
+    # Copy all DTBs
     mkdir -p /boot/dtbs
     cp /usr/lib/$kernelVersion/* /boot/dtbs
 
@@ -263,7 +266,15 @@ case "$MACHINE" in
 	enable_serial_console ttyO0
 	;;
     cubietruck)
-	cubietruck_setup_boot
+	a20_setup_boot sun7i-a20-cubietruck.dtb
 	enable_serial_console ttyS0
 	;;
+    a20-olinuxino-lime2)
+	a20_setup_boot sun7i-a20-olinuxino-lime2.dtb
+	enable_serial_console ttyS0
+        ;;
+    a20-olinuxino-micro)
+	a20_setup_boot sun7i-a20-olinuxino-micro.dtb
+	enable_serial_console ttyS0
+        ;;
 esac

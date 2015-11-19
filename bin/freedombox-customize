@@ -147,6 +147,14 @@ case "$MACHINE" in
         dd if=$rootdir/usr/lib/u-boot/Cubietruck/u-boot-sunxi-with-spl.bin of="$image" \
            seek=8 conv=notrunc bs=1k
         ;;
+    a20-olinuxino-lime2)
+        dd if=$rootdir/usr/lib/u-boot/A20-OLinuXino-Lime2/u-boot-sunxi-with-spl.bin \
+           of="$image" seek=8 conv=notrunc bs=1k
+        ;;
+    a20-olinuxino-micro)
+        dd if=$rootdir/usr/lib/u-boot/A20-OLinuXino_MICRO/u-boot-sunxi-with-spl.bin \
+           of="$image" seek=8 conv=notrunc bs=1k
+        ;;
 esac
 
 if $use_eatmydata ; then

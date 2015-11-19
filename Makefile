@@ -100,6 +100,26 @@ cubietruck: prep
 	$(SIGN)
 	@echo "Build complete."
 
+# build A20 OLinuXino Lime2 SD card image
+a20-olinuxino-lime2: prep
+	$(eval ARCHITECTURE = armhf)
+	$(eval MACHINE = a20-olinuxino-lime2)
+	$(MAKE_IMAGE)
+	$(TAR) $(ARCHIVE) $(IMAGE)
+	@echo ""
+	$(SIGN)
+	@echo "Build complete."
+
+# build A20 OLinuXino MIRCO SD card image
+a20-olinuxino-micro: prep
+	$(eval ARCHITECTURE = armhf)
+	$(eval MACHINE = a20-olinuxino-micro)
+	$(MAKE_IMAGE)
+	$(TAR) $(ARCHIVE) $(IMAGE)
+	@echo ""
+	$(SIGN)
+	@echo "Build complete."
+
 # build an i386 image
 i386: prep
 	$(eval ARCHITECTURE = i386)
