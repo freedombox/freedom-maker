@@ -201,8 +201,8 @@ qemu-i386: prep
 	$(SIGN)
 	@echo "Build complete."
 
-qemu-x86_64: prep
-	$(eval ARCHITECTURE = x86_64)
+qemu-amd64: prep
+	$(eval ARCHITECTURE = amd64)
 	$(eval MACHINE = qemu)
 	$(MAKE_IMAGE)
 	# Convert image to qemu format

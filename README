@@ -32,7 +32,7 @@ Freedom-maker supports building for the following targets:
 - *virtualbox-i386*: 32-bit image for the VirtualBox virtualization tool
 - *virtualbox-amd64*: 64-bit image for the VirtualBox virtualization tool
 - *qemu-i386*: 32-bit image for the Qemu virtualization tool
-- *qemu-x86_64*: 64-bit image for the Qemu virtualization tool
+- *qemu-amd64*: 64-bit image for the Qemu virtualization tool
 - *test*: build virtualbox i386 image and run diagnostics tests on it
 
 ## Install dependencies
@@ -52,7 +52,7 @@ $ sudo apt-get -y install extlinux virtualbox
 
 For Qemu:
 ```
-$ sudo apt-get -y install qemu
+$ sudo apt-get -y install qemu-utils
 ```
 
 For RaspberryPi:
@@ -81,7 +81,7 @@ $ sudo apt-get install extlinux virtualbox sshpass
     ```
     $ sudo make -C freedom-maker dreamplug raspberry beaglebone \
       cubietruck i386 amd64 virtualbox-i386 virtualbox-amd64 \
-      qemu-i386 qemu-x86_64
+      qemu-i386 qemu-amd64
     ```
 
     or to build just a single image:
