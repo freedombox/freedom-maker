@@ -187,6 +187,31 @@ test-virtualbox: virtualbox
 	VBoxManage modifyvm $(VM_NAME) --hda none
 	VBoxManage unregistervm $(VM_NAME) --delete
 
+# build a qemu image
+qemu: qemu-i386
+
+qemu-i386: prep
+	$(eval ARCHITECTURE = i386)
+	$(eval MACHINE = qemu)
+	$(MAKE_IMAGE)
+	# Convert image to qemu format
+	qemu-img convert -O qcow2 $(NAME).img $(NAME).qcow2
+	$(TAR) $(ARCHIVE) $(NAME).qcow2
+	@echo ""
+	$(SIGN)
+	@echo "Build complete."
+
+qemu-x86_64: prep
+	$(eval ARCHITECTURE = x86_64)
+	$(eval MACHINE = qemu)
+	$(MAKE_IMAGE)
+	# Convert image to qemu format
+	qemu-img convert -O qcow2 $(NAME).img $(NAME).qcow2
+	$(TAR) $(ARCHIVE) $(NAME).qcow2
+	@echo ""
+	$(SIGN)
+	@echo "Build complete."
+
 vendor/vmdebootstrap/vmdebootstrap: vendor-patches/vmdebootstrap/*.patch
 	bin/fetch-new-vmdebootstrap
 
