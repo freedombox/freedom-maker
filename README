@@ -24,6 +24,7 @@ Freedom-maker supports building for the following targets:
 
 - *beaglebone*: BeagleBone Black's SD card
 - *cubietruck*: Cubietruck's SD card
+- *cubieboard2*: Cubieboard2's SD card
 - *dreamplug*: DreamPlug's internal SD card
 - *raspberry*: RasbperryPi's SD card.
 - *raspberry2*: RasbperryPi 2's SD card.

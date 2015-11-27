@@ -277,4 +277,8 @@ case "$MACHINE" in
 	a20_setup_boot sun7i-a20-olinuxino-micro.dtb
 	enable_serial_console ttyS0
         ;;
+    cubieboard2)
+	a20_setup_boot sun7i-a20-cubieboard2.dtb
+	enable_serial_console ttyS0
+        ;;
 esac

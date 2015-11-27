@@ -106,7 +106,7 @@ case "$MACHINE" in
  --roottype btrfs \
 "
 	;;
-    cubietruck | a20-olinuxino-lime2 | a20-olinuxino-micro)
+    cubietruck | a20-olinuxino-lime2 | a20-olinuxino-micro | cubieboard2)
        extra_pkgs="$a20_pkgs"
        extra_opts="\
  --variant minbase \

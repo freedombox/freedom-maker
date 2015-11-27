@@ -90,6 +90,16 @@ beaglebone: prep
 	$(SIGN)
 	@echo "Build complete."
 
+# build Cubieboard2 SD card image
+cubieboard2: prep
+	$(eval ARCHITECTURE = armhf)
+	$(eval MACHINE = cubieboard2)
+	$(MAKE_IMAGE)
+	$(TAR) $(ARCHIVE) $(IMAGE)
+	@echo ""
+	$(SIGN)
+	@echo "Build complete."
+
 # build CubieTruck SD card image
 cubietruck: prep
 	$(eval ARCHITECTURE = armhf)
