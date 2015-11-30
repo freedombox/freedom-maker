@@ -23,8 +23,10 @@ tweaks, see the *Build Images* section below.
 Freedom-maker supports building for the following targets:
 
 - *beaglebone*: BeagleBone Black's SD card
-- *cubietruck*: Cubietruck's SD card
 - *cubieboard2*: Cubieboard2's SD card
+- *cubietruck*: Cubietruck's SD card
+- *a20-olinuxino-lime2*: A20 OLinuXino Lime2's SD card
+- *a20-olinuxino-micro*: A20 OLinuXino MICRO's SD card
 - *dreamplug*: DreamPlug's internal SD card
 - *raspberry*: RasbperryPi's SD card.
 - *raspberry2*: RasbperryPi 2's SD card.
@@ -81,8 +83,9 @@ $ sudo apt-get install extlinux virtualbox sshpass
 2. Build all images:
     ```
     $ sudo make -C freedom-maker dreamplug raspberry beaglebone \
-      cubietruck i386 amd64 virtualbox-i386 virtualbox-amd64 \
-      qemu-i386 qemu-amd64
+      cubieboard2 cubietruck a20-olinuxino-lime2 a20-olinuxino-micro \
+      i386 amd64 virtualbox-i386 virtualbox-amd64 qemu-i386 \
+      qemu-amd64
     ```
 
     or to build just a single image:
@@ -141,9 +144,15 @@ You'll need to copy the image to the memory card or USB stick:
 
 3. Copy the image to your card.  Double check and make sure you don't
    write to your computer's main storage (such as /dev/sda).  Also
-   make sure that you don't run this step as root to avoid potential
-   damage.  USB disks and SD cards inserted into the system should
-   typically be write accessible to normal users.
+   make sure that you don't run this step as root to avoid potentially
+   overriding data on your hard drive due to a mistake in identifying
+   the device or errors while typing the command.  USB disks and SD
+   cards inserted into the system should typically be write accessible
+   to normal users. If you don't have permission to write to your SD
+   card as a user, you may need to run this command as root.  In this
+   case triple check everything before you run the command.  Another
+   safety precaution is to unplug all external disks except the SD
+   card before running the command.
 
    For example, if your SD card is /dev/sdf as noted in the first step
    above, then to copy the image, run:
@@ -159,7 +168,10 @@ You'll need to copy the image to the memory card or USB stick:
    /dev/sdf, not a numbered destination, like /dev/sdf1.  The device
    without a number refers to the entire device, while the device with
    anumber refers to a specific partition.  We want to use the whole
-   device.
+   device.  Downloaded images contain complete information about how
+   many partitions there should be, their sizes and types. You don't
+   have to format your SD card or create partitions. All the data on
+   the SD card will be wiped off during the write process.
 
 4. Use the image by inserting the SD card or USB disk into the target
    device and booting from it.  Also see hardware specific
