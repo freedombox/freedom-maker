@@ -112,7 +112,7 @@ case "$MACHINE" in
  --variant minbase \
  --bootoffset=1mib \
  --bootsize 128M \
- --boottype vfat \
+ --boottype ext2 \
  --no-kernel \
  --no-extlinux \
  --foreign /usr/bin/qemu-arm-static \
