@@ -81,10 +81,8 @@ export LC_ALL=C LANGUAGE=C LANG=C
 export TMP=/tmp/ TMPDIR=/tmp/
 
 username=fbx
-echo "warning: creating initial user $username with well known password!"
-password=frdm
+echo "info: creating initial user $username with disabled password!"
 chroot $rootdir adduser --gecos $username --disabled-password $username
-echo $username:$password | chroot $rootdir /usr/sbin/chpasswd
 chroot $rootdir adduser $username sudo
 
 case "$MACHINE" in
