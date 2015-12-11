@@ -28,10 +28,10 @@ TODAY := $(shell date +%Y-%m-%d)
 FREE_TAG = $(if $(findstring yes, $(ENABLE_NONFREE)),nonfree,free)
 NAME = build/freedombox-unstable-$(FREE_TAG)_$(TODAY)_$(BUILD)
 IMAGE = $(NAME).img
-ARCHIVE = $(NAME).tar.bz2
+ARCHIVE = $(IMAGE).xz
 SIGNATURE = $(ARCHIVE).sig
 OWNER = 1000
-TAR = tar --checkpoint=1000 --checkpoint-action=dot -cjvf
+XZ = xz --best --verbose
 SIGN = -gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 
 # settings for `make test`
@@ -53,7 +53,8 @@ dreamplug: prep
 	$(eval MACHINE = dreamplug)
 	$(eval ENABLE_NONFREE = yes)
 	$(MAKE_IMAGE)
-	$(TAR) $(ARCHIVE) $(IMAGE)
+	@rm -f $(ARCHIVE)
+	$(XZ) $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -64,7 +65,8 @@ raspberry: prep
 	$(eval MACHINE = raspberry)
 	$(eval ENABLE_NONFREE = yes)
 	$(MAKE_IMAGE)
-	$(TAR) $(ARCHIVE) $(IMAGE)
+	@rm -f $(ARCHIVE)
+	$(XZ) $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -75,7 +77,8 @@ raspberry2: prep
 	$(eval MACHINE = raspberry2)
 	$(eval ENABLE_NONFREE = yes)
 	$(MAKE_IMAGE)
-	$(TAR) $(ARCHIVE) $(IMAGE)
+	@rm -f $(ARCHIVE)
+	$(XZ) $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -85,7 +88,8 @@ beaglebone: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = beaglebone)
 	$(MAKE_IMAGE)
-	$(TAR) $(ARCHIVE) $(IMAGE)
+	@rm -f $(ARCHIVE)
+	$(XZ) $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -95,7 +99,8 @@ cubieboard2: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = cubieboard2)
 	$(MAKE_IMAGE)
-	$(TAR) $(ARCHIVE) $(IMAGE)
+	@rm -f $(ARCHIVE)
+	$(XZ) $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -105,7 +110,8 @@ cubietruck: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = cubietruck)
 	$(MAKE_IMAGE)
-	$(TAR) $(ARCHIVE) $(IMAGE)
+	@rm -f $(ARCHIVE)
+	$(XZ) $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -115,7 +121,8 @@ a20-olinuxino-lime2: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = a20-olinuxino-lime2)
 	$(MAKE_IMAGE)
-	$(TAR) $(ARCHIVE) $(IMAGE)
+	rm -f $(ARCHIVE)
+	$(XZ) $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -125,7 +132,8 @@ a20-olinuxino-micro: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = a20-olinuxino-micro)
 	$(MAKE_IMAGE)
-	$(TAR) $(ARCHIVE) $(IMAGE)
+	@rm -f $(ARCHIVE)
+	$(XZ) $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -135,7 +143,8 @@ i386: prep
 	$(eval ARCHITECTURE = i386)
 	$(eval MACHINE = all)
 	$(MAKE_IMAGE)
-	$(TAR) $(ARCHIVE) $(IMAGE)
+	@rm -f $(ARCHIVE)
+	$(XZ) $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -145,7 +154,8 @@ amd64: prep
 	$(eval ARCHITECTURE = amd64)
 	$(eval MACHINE = all)
 	$(MAKE_IMAGE)
-	$(TAR) $(ARCHIVE) $(IMAGE)
+	@rm -f $(ARCHIVE)
+	$(XZ) $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -159,7 +169,8 @@ virtualbox-i386: prep
 	$(MAKE_IMAGE)
 	# Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
-	$(TAR) $(ARCHIVE) $(NAME).vdi
+	@rm -f $(NAME).vdi.xz
+	$(XZ) $(NAME).vdi
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -170,7 +181,8 @@ virtualbox-amd64: prep
 	$(MAKE_IMAGE)
 	# Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
-	$(TAR) $(ARCHIVE) $(NAME).vdi
+	@rm -f $(NAME).vdi.xz
+	$(XZ) $(NAME).vdi
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -206,7 +218,8 @@ qemu-i386: prep
 	$(MAKE_IMAGE)
 	# Convert image to qemu format
 	qemu-img convert -O qcow2 $(NAME).img $(NAME).qcow2
-	$(TAR) $(ARCHIVE) $(NAME).qcow2
+	@rm -f $(NAME).qcow2.xz
+	$(XZ) $(NAME).qcow2
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -217,7 +230,8 @@ qemu-amd64: prep
 	$(MAKE_IMAGE)
 	# Convert image to qemu format
 	qemu-img convert -O qcow2 $(NAME).img $(NAME).qcow2
-	$(TAR) $(ARCHIVE) $(NAME).qcow2
+	@rm -f $(NAME).qcow2.xz
+	$(XZ) $(NAME).qcow2
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
