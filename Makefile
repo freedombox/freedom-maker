@@ -144,7 +144,7 @@ i386: prep
 	$(eval MACHINE = all)
 	$(MAKE_IMAGE)
 	@rm -f $(ARCHIVE)
-	$(XZ) $(IMAGE)
+	$(XZ) --keep $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -155,7 +155,7 @@ amd64: prep
 	$(eval MACHINE = all)
 	$(MAKE_IMAGE)
 	@rm -f $(ARCHIVE)
-	$(XZ) $(IMAGE)
+	$(XZ) --keep $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -163,10 +163,9 @@ amd64: prep
 # build a virtualbox image
 virtualbox: virtualbox-i386
 
-virtualbox-i386: prep
+virtualbox-i386: i386
 	$(eval ARCHITECTURE = i386)
-	$(eval MACHINE = virtualbox)
-	$(MAKE_IMAGE)
+	$(eval MACHINE = all)
 	# Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
 	@rm -f $(NAME).vdi.xz
@@ -175,10 +174,9 @@ virtualbox-i386: prep
 	$(SIGN)
 	@echo "Build complete."
 
-virtualbox-amd64: prep
+virtualbox-amd64: amd64
 	$(eval ARCHITECTURE = amd64)
-	$(eval MACHINE = virtualbox)
-	$(MAKE_IMAGE)
+	$(eval MACHINE = all)
 	# Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
 	@rm -f $(NAME).vdi.xz
@@ -212,10 +210,9 @@ test-virtualbox: virtualbox
 # build a qemu image
 qemu: qemu-i386
 
-qemu-i386: prep
+qemu-i386: i386
 	$(eval ARCHITECTURE = i386)
-	$(eval MACHINE = qemu)
-	$(MAKE_IMAGE)
+	$(eval MACHINE = all)
 	# Convert image to qemu format
 	qemu-img convert -O qcow2 $(NAME).img $(NAME).qcow2
 	@rm -f $(NAME).qcow2.xz
@@ -224,10 +221,9 @@ qemu-i386: prep
 	$(SIGN)
 	@echo "Build complete."
 
-qemu-amd64: prep
+qemu-amd64: amd64
 	$(eval ARCHITECTURE = amd64)
-	$(eval MACHINE = qemu)
-	$(MAKE_IMAGE)
+	$(eval MACHINE = all)
 	# Convert image to qemu format
 	qemu-img convert -O qcow2 $(NAME).img $(NAME).qcow2
 	@rm -f $(NAME).qcow2.xz
