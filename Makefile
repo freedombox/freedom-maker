@@ -27,7 +27,6 @@ BUILD = $(MACHINE)-$(ARCHITECTURE)
 TODAY := $(shell date +%Y-%m-%d)
 FREE_TAG = $(if $(findstring yes, $(ENABLE_NONFREE)),nonfree,free)
 NAME = build/freedombox-unstable-$(FREE_TAG)_$(TODAY)_$(BUILD)
-IMAGE = $(NAME).img
 ARCHIVE = $(IMAGE).xz
 SIGNATURE = $(ARCHIVE).sig
 OWNER = 1000
@@ -52,6 +51,7 @@ dreamplug: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = dreamplug)
 	$(eval ENABLE_NONFREE = yes)
+	$(eval IMAGE = $(NAME).img)
 	$(MAKE_IMAGE)
 	@rm -f $(ARCHIVE)
 	$(XZ) $(IMAGE)
@@ -64,6 +64,7 @@ raspberry: prep
 	$(eval ARCHITECTURE = armel)
 	$(eval MACHINE = raspberry)
 	$(eval ENABLE_NONFREE = yes)
+	$(eval IMAGE = $(NAME).img)
 	$(MAKE_IMAGE)
 	@rm -f $(ARCHIVE)
 	$(XZ) $(IMAGE)
@@ -76,6 +77,7 @@ raspberry2: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = raspberry2)
 	$(eval ENABLE_NONFREE = yes)
+	$(eval IMAGE = $(NAME).img)
 	$(MAKE_IMAGE)
 	@rm -f $(ARCHIVE)
 	$(XZ) $(IMAGE)
@@ -87,6 +89,7 @@ raspberry2: prep
 beaglebone: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = beaglebone)
+	$(eval IMAGE = $(NAME).img)
 	$(MAKE_IMAGE)
 	@rm -f $(ARCHIVE)
 	$(XZ) $(IMAGE)
@@ -98,6 +101,7 @@ beaglebone: prep
 cubieboard2: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = cubieboard2)
+	$(eval IMAGE = $(NAME).img)
 	$(MAKE_IMAGE)
 	@rm -f $(ARCHIVE)
 	$(XZ) $(IMAGE)
@@ -109,6 +113,7 @@ cubieboard2: prep
 cubietruck: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = cubietruck)
+	$(eval IMAGE = $(NAME).img)
 	$(MAKE_IMAGE)
 	@rm -f $(ARCHIVE)
 	$(XZ) $(IMAGE)
@@ -120,6 +125,7 @@ cubietruck: prep
 a20-olinuxino-lime2: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = a20-olinuxino-lime2)
+	$(eval IMAGE = $(NAME).img)
 	$(MAKE_IMAGE)
 	rm -f $(ARCHIVE)
 	$(XZ) $(IMAGE)
@@ -142,6 +148,7 @@ a20-olinuxino-micro: prep
 i386: prep
 	$(eval ARCHITECTURE = i386)
 	$(eval MACHINE = all)
+	$(eval IMAGE = $(NAME).img)
 	$(MAKE_IMAGE)
 	@rm -f $(ARCHIVE)
 	$(XZ) --keep $(IMAGE)
@@ -153,6 +160,7 @@ i386: prep
 amd64: prep
 	$(eval ARCHITECTURE = amd64)
 	$(eval MACHINE = all)
+	$(eval IMAGE = $(NAME).img)
 	$(MAKE_IMAGE)
 	@rm -f $(ARCHIVE)
 	$(XZ) --keep $(IMAGE)
@@ -166,6 +174,7 @@ virtualbox: virtualbox-i386
 virtualbox-i386: i386
 	$(eval ARCHITECTURE = i386)
 	$(eval MACHINE = all)
+	$(eval IMAGE = $(NAME).vdi)
 	# Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
 	@rm -f $(NAME).vdi.xz
@@ -177,6 +186,7 @@ virtualbox-i386: i386
 virtualbox-amd64: amd64
 	$(eval ARCHITECTURE = amd64)
 	$(eval MACHINE = all)
+	$(eval IMAGE = $(NAME).vdi)
 	# Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
 	@rm -f $(NAME).vdi.xz
@@ -213,10 +223,11 @@ qemu: qemu-i386
 qemu-i386: i386
 	$(eval ARCHITECTURE = i386)
 	$(eval MACHINE = all)
+	$(eval IMAGE = $(NAME).qcow2)
 	# Convert image to qemu format
-	qemu-img convert -O qcow2 $(NAME).img $(NAME).qcow2
-	@rm -f $(NAME).qcow2.xz
-	$(XZ) $(NAME).qcow2
+	qemu-img convert -O qcow2 $(NAME).img $(IMAGE)
+	@rm -f $(ARCHIVE)
+	$(XZ) $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -224,10 +235,11 @@ qemu-i386: i386
 qemu-amd64: amd64
 	$(eval ARCHITECTURE = amd64)
 	$(eval MACHINE = all)
+	$(eval IMAGE = $(NAME).qcow2)
 	# Convert image to qemu format
-	qemu-img convert -O qcow2 $(NAME).img $(NAME).qcow2
-	@rm -f $(NAME).qcow2.xz
-	$(XZ) $(NAME).qcow2
+	qemu-img convert -O qcow2 $(NAME).img $(IMAGE)
+	@rm -f $(ARCHIVE)
+	$(XZ) $(IMAGE)
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
