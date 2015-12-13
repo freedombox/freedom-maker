@@ -137,6 +137,7 @@ a20-olinuxino-lime2: prep
 a20-olinuxino-micro: prep
 	$(eval ARCHITECTURE = armhf)
 	$(eval MACHINE = a20-olinuxino-micro)
+	$(eval IMAGE = $(NAME).img)
 	$(MAKE_IMAGE)
 	@rm -f $(ARCHIVE)
 	$(XZ) $(IMAGE)
