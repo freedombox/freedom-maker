@@ -63,6 +63,23 @@ deb-src $NEW_MIRROR $SUITE $COMPONENTS
 EOF
 }
 
+atheros_wifi() {
+    # Fetch and install free software firmware for a couple USB Atheros
+    # Wi-Fi devices from Trisqel repository.
+    firmware_filename="open-ath9k-htc-firmware_1.3-1_all.deb"
+    firmware_hash='5fea58ffefdf0ef15b504db7fbe3bc078c03e0d927bba64085e4b6f2546102f5'
+
+    firmware_url="http://us.archive.trisquel.info/trisquel/pool/main/o/open-ath9k-htc-firmware/$firmware_filename"
+    firmware_tempfile="/tmp/$firmware_filename"
+    wget "$firmware_url" -O "$rootdir$firmware_tempfile"
+    downloaded_firmware_hash=$(sha256sum "$rootdir$firmware_tempfile" | awk -F ' ' '{print $1}')
+    if [[ "$downloaded_firmware_hash" == "$firmware_hash" ]]; then
+        chroot "$rootdir" dpkg -i "$firmware_tempfile"
+    else
+        echo 'WARNING: Atheros wifi firmware hash does not match. The driver has not been installed.'
+    fi
+}
+
 # Set to true/false to control if eatmydata is used during build
 use_eatmydata=true
 
@@ -120,12 +137,7 @@ else
     chroot "$rootdir" apt-get install -y freedombox-setup
 fi
 
-# Fetch and install free software firmware for a couple USB Atheros
-# Wi-Fi devices from Trisqel repository.
-firmware_url="http://us.archive.trisquel.info/trisquel/pool/main/o/open-ath9k-htc-firmware/open-ath9k-htc-firmware_1.3-1_all.deb"
-firmware_file="/tmp/open-ath9k-htc-firmware_1.3-1_all.deb"
-wget "$firmware_url" -O "$rootdir$firmware_file"
-chroot "$rootdir" dpkg -i "$firmware_file"
+atheros_wifi
 
 cp "$fmdir"/bin/hardware-setup $rootdir/tmp
 chroot $rootdir /tmp/hardware-setup 2>&1 | \
