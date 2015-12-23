@@ -179,7 +179,7 @@ virtualbox-i386: i386
 	# Convert image to vdi hard drive
 	VBoxManage convertdd $(NAME).img $(NAME).vdi
 	@rm -f $(NAME).vdi.xz
-	$(XZ) $(NAME).vdi
+	$(XZ) --keep $(NAME).vdi
 	@echo ""
 	$(SIGN)
 	@echo "Build complete."
@@ -200,6 +200,7 @@ test: test-virtualbox
 
 test-virtualbox: virtualbox
 	$(eval VM_NAME = freedom-maker-test)
+	./bin/passwd-in-image $(NAME).vdi fbx --password frdm
 	VBoxManage createvm --name $(VM_NAME) --ostype "Debian" --register
 	VBoxManage storagectl $(VM_NAME) --name "SATA Controller" --add sata \
 		 --controller IntelAHCI
