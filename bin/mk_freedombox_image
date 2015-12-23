@@ -36,7 +36,7 @@ fi
 
 # Packages to install in all FreedomBox environments
 base_pkgs="apt base-files ifupdown initramfs-tools \
-logrotate module-init-tools netbase rsyslog udev debian-archive-keyring"
+logrotate kmod netbase rsyslog udev debian-archive-keyring"
 
 # Packages needed on the dreamplug
 dreamplug_pkgs="linux-image-kirkwood u-boot-tools u-boot"
