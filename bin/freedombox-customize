@@ -75,9 +75,11 @@ atheros_wifi() {
     downloaded_firmware_hash=$(sha256sum "$rootdir$firmware_tempfile" | awk -F ' ' '{print $1}')
     if [[ "$downloaded_firmware_hash" == "$firmware_hash" ]]; then
         chroot "$rootdir" dpkg -i "$firmware_tempfile"
-    else
-        echo 'WARNING: Atheros wifi firmware hash does not match. The driver has not been installed.'
+        return
     fi
+    echo 'Atheros wifi firmware download verification failed'
+    fuser -mvk $rootdir/. || true
+    exit 1
 }
 
 # Set to true/false to control if eatmydata is used during build
