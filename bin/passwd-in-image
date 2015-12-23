@@ -46,6 +46,7 @@ def main():
         'is sought')
     parser.add_argument('user',
                         help='User account to change password for')
+    parser.add_argument('--password', help='New password for user')
 
     arguments = parser.parse_args()
 
@@ -54,7 +55,7 @@ def main():
     check_requirements(image_type)
 
     try:
-        password = take_password()
+        password = arguments.password or take_password()
         perform_operations(arguments, password, image_type)
     except subprocess.CalledProcessError as exception:
         logger.error('Error running command: %s', exception.cmd)
