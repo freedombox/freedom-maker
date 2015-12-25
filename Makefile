@@ -30,7 +30,7 @@ NAME = build/freedombox-unstable-$(FREE_TAG)_$(TODAY)_$(BUILD)
 ARCHIVE = $(IMAGE).xz
 SIGNATURE = $(ARCHIVE).sig
 OWNER = 1000
-XZ = xz --best --verbose
+XZ = xz --no-warn --best --verbose
 SIGN = -gpg --output $(SIGNATURE) --detach-sig $(ARCHIVE)
 
 # settings for `make test`
