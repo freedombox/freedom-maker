@@ -199,6 +199,9 @@ virtualbox-amd64: amd64
 test: test-virtualbox
 
 test-virtualbox: virtualbox
+	$(eval ARCHITECTURE = i386)
+	$(eval MACHINE = all)
+	$(eval IMAGE = $(NAME).vdi)
 	$(eval VM_NAME = freedom-maker-test)
 	./bin/passwd-in-image $(NAME).vdi fbx --password frdm
 	VBoxManage createvm --name $(VM_NAME) --ostype "Debian" --register
