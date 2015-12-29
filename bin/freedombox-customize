@@ -73,7 +73,7 @@ atheros_wifi() {
     firmware_tempfile="/tmp/$firmware_filename"
     wget "$firmware_url" -O "$rootdir$firmware_tempfile"
     downloaded_firmware_hash=$(sha256sum "$rootdir$firmware_tempfile" | awk -F ' ' '{print $1}')
-    if [[ "$downloaded_firmware_hash" == "$firmware_hash" ]]; then
+    if [ "$downloaded_firmware_hash" = "$firmware_hash" ]; then
         chroot "$rootdir" dpkg -i "$firmware_tempfile"
         return
     fi
