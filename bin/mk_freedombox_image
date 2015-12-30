@@ -61,7 +61,7 @@ echo Building $MACHINE FreedomBox for $ARCHITECTURE.
 case "$MACHINE" in
     raspberry)
 	extra_opts="\
- --variant minbase \
+ --debootstrap=variant=minbase \
  --bootsize 128M \
  --boottype vfat \
  --no-kernel \
@@ -72,7 +72,7 @@ case "$MACHINE" in
 	;;
     raspberry2)
 	extra_opts="\
- --variant minbase \
+ --debootstrap=variant=minbase \
  --bootsize 128M \
  --boottype vfat \
  --no-kernel \
@@ -84,7 +84,7 @@ case "$MACHINE" in
     dreamplug)
 	extra_pkgs="$dreamplug_pkgs"
 	extra_opts="\
- --variant minbase \
+ --debootstrap=variant=minbase \
  --bootsize 128M \
  --boottype vfat \
  --no-kernel \
@@ -96,7 +96,7 @@ case "$MACHINE" in
     beaglebone)
 	extra_pkgs="$beaglebone_pkgs"
 	extra_opts="\
- --variant minbase \
+ --debootstrap=variant=minbase \
  --bootoffset=2mib \
  --bootsize 128M \
  --boottype ext2 \
@@ -109,7 +109,7 @@ case "$MACHINE" in
     cubietruck | a20-olinuxino-lime2 | a20-olinuxino-micro | cubieboard2)
        extra_pkgs="$a20_pkgs"
        extra_opts="\
- --variant minbase \
+ --debootstrap=variant=minbase \
  --bootoffset=1mib \
  --bootsize 128M \
  --boottype ext2 \
@@ -152,7 +152,7 @@ done
 touch $(dirname $IMAGE)/freedombox.log
 
 if [ -x vendor/vmdebootstrap/vmdebootstrap ] ; then
-    VMDEBOOTSTRAP=vendor/vmdebootstrap/vmdebootstrap
+    VMDEBOOTSTRAP="PYTHONPATH=vendor/vmdebootstrap vendor/vmdebootstrap/bin/vmdebootstrap"
 else
     VMDEBOOTSTRAP=vmdebootstrap
 fi
