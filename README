@@ -82,7 +82,7 @@ $ sudo apt-get install extlinux virtualbox sshpass
 
 2. Build all images:
     ```
-    $ sudo make -C freedom-maker dreamplug raspberry beaglebone \
+    $ sudo make -C freedom-maker dreamplug raspberry raspberry2 beaglebone \
       cubieboard2 cubietruck a20-olinuxino-lime2 a20-olinuxino-micro \
       i386 amd64 virtualbox-i386 virtualbox-amd64 qemu-i386 \
       qemu-amd64
