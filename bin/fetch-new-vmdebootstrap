@@ -15,7 +15,7 @@
 
 mkdir -p vendor
 if [ -d vendor/vmdebootstrap ] ; then
-    (cd vendor/vmdebootstrap; git checkout .; git pull)
+    (cd vendor/vmdebootstrap; git checkout .; git pull origin master)
 else
     git clone git://git.liw.fi/vmdebootstrap vendor/vmdebootstrap
 fi
