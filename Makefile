@@ -121,6 +121,18 @@ cubietruck: prep
 	$(SIGN)
 	@echo "Build complete."
 
+# build A20 OLinuXino Lime SD card image
+a20-olinuxino-lime: prep
+	$(eval ARCHITECTURE = armhf)
+	$(eval MACHINE = a20-olinuxino-lime)
+	$(eval IMAGE = $(NAME).img)
+	$(MAKE_IMAGE)
+	rm -f $(ARCHIVE)
+	$(XZ) $(IMAGE)
+	@echo ""
+	$(SIGN)
+	@echo "Build complete."
+
 # build A20 OLinuXino Lime2 SD card image
 a20-olinuxino-lime2: prep
 	$(eval ARCHITECTURE = armhf)
