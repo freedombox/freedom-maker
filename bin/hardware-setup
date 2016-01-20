@@ -89,7 +89,7 @@ raspberry_setup_boot() {
     git checkout $rpi_blob_commit -b $rpi_blob_commit
 
     downloaded_rpi_blob_hash=$(sha256sum $rpi_tempdir/rpi-update | awk -F ' ' '{print $1}')
-    if [[ "$downloaded_rpi_blob_hash" != "$rpi_blob_hash" ]]; then
+    if [ "$downloaded_rpi_blob_hash" != "$rpi_blob_hash" ]; then
         echo 'WARNING: Unable to verify Raspberry Pi boot blob'
         return
     fi
