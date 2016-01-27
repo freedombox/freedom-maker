@@ -25,6 +25,7 @@ Freedom-maker supports building for the following targets:
 - *beaglebone*: BeagleBone Black's SD card
 - *cubieboard2*: Cubieboard2's SD card
 - *cubietruck*: Cubietruck's SD card
+- *a20-olinuxino-lime*: A20 OLinuXino Lime's SD card
 - *a20-olinuxino-lime2*: A20 OLinuXino Lime2's SD card
 - *a20-olinuxino-micro*: A20 OLinuXino MICRO's SD card
 - *dreamplug*: DreamPlug's internal SD card
@@ -83,9 +84,9 @@ $ sudo apt-get install extlinux virtualbox sshpass
 2. Build all images:
     ```
     $ sudo make -C freedom-maker dreamplug raspberry raspberry2 beaglebone \
-      cubieboard2 cubietruck a20-olinuxino-lime2 a20-olinuxino-micro \
-      i386 amd64 virtualbox-i386 virtualbox-amd64 qemu-i386 \
-      qemu-amd64
+      cubieboard2 cubietruck a20-olinuxino-lime a20-olinuxino-lime2 \
+      a20-olinuxino-micro i386 amd64 virtualbox-i386 virtualbox-amd64 \
+      qemu-i386 qemu-amd64
     ```
 
     or to build just a single image:
@@ -136,7 +137,7 @@ You'll need to copy the image to the memory card or USB stick:
 2. Decompress the built image using tar:
     ```
     $ cd freedom-maker/build
-    $ tar -xjvf freedombox-unstable_2015-08-06_beaglebone-armhf-card.tar.bz2
+    $ tar -xvf freedombox-unstable_2015-08-06_beaglebone-armhf-card.tar.xz
     ```
 
    The above command is an example for the beaglebone image built on
