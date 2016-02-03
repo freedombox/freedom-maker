@@ -24,15 +24,7 @@ export SOURCE
 export SUITE
 export ENABLE_NONFREE
 
-# Locate vmdebootstrap program fetched in Makefile
 basedir=`pwd`
-vendor_dir="${basedir}/vendor"
-vmdebootstrap_dir="${vendor_dir}/vmdebootstrap"
-
-if [ -z "$MIRROR" ] || [ -z "$SUITE" ] ; then
-    echo error: Missing MIRROR and SUITE settings inherited from Makefile.
-    exit 1
-fi
 
 # Packages to install in all FreedomBox environments
 base_pkgs="apt base-files ifupdown initramfs-tools \
@@ -152,13 +144,7 @@ done
 # Make sure file is owned by current user, not root
 touch $(dirname $IMAGE)/freedombox.log
 
-if [ -x vendor/vmdebootstrap/vmdebootstrap ] ; then
-    VMDEBOOTSTRAP="PYTHONPATH=vendor/vmdebootstrap vendor/vmdebootstrap/bin/vmdebootstrap"
-else
-    VMDEBOOTSTRAP=vmdebootstrap
-fi
-
-echo "starting $VMDEBOOTSTRAP"
+echo "starting vmdebootstrap"
 # Run vmdebootstrap script to create image
 sudo -H \
     SUITE="$SUITE" \
@@ -170,7 +156,7 @@ sudo -H \
     ENABLE_NONFREE="$ENABLE_NONFREE" \
     CUSTOM_PLINTH="$CUSTOM_PLINTH" \
     CUSTOM_SETUP="$CUSTOM_SETUP" \
-    $VMDEBOOTSTRAP \
+    vmdebootstrap \
     --log $(dirname $IMAGE)/freedombox.log \
     --log-level debug \
     --size $IMAGE_SIZE \

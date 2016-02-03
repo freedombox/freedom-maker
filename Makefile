@@ -261,10 +261,7 @@ qemu-amd64: amd64
 	$(SIGN)
 	@echo "Build complete."
 
-vendor/vmdebootstrap/vmdebootstrap: vendor-patches/vmdebootstrap/*.patch
-	bin/fetch-new-vmdebootstrap
-
-prep: vendor/vmdebootstrap/vmdebootstrap
+prep:
 	mkdir -p build
 
 clean:
