@@ -141,7 +141,8 @@ fi
 
 atheros_wifi
 
-cp "$fmdir"/bin/hardware-setup $rootdir/tmp
+script_dir=$(cd $(dirname "$0") && pwd)
+cp "$script_dir"/hardware-setup $rootdir/tmp
 chroot $rootdir /tmp/hardware-setup 2>&1 | \
     tee $rootdir/var/log/hardware-setup.log
 
