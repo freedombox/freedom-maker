@@ -1,3 +1,6 @@
 *~
 build
 vendor
+freedom_maker.egg-info
+freedommaker/tests/output
+*.pyc
