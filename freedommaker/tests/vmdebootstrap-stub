@@ -1,0 +1,49 @@
+#!/usr/bin/python3
+#
+# This file is part of Freedom Maker.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+"""
+Stub for vmdeboostrap to test freedom-maker
+"""
+
+import argparse
+import json
+import os
+import sys
+
+
+def main():
+    """Save the environement and arguments."""
+    print('Running vmdebootstrap stub')
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--image')
+    parser.add_argument('--arch')
+
+    output = {
+        'arguments': sys.argv,
+        'environment': dict(os.environ),
+        'padding': '@' * 1024 * 1024,
+    }
+
+    arguments, unknown = parser.parse_known_args()
+    with open(arguments.image, 'w') as file_handle:
+        print(json.dumps(output), file=file_handle)
+
+
+if __name__ == '__main__':
+    main()
