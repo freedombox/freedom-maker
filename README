@@ -7,7 +7,7 @@ boot into FreedomBox.
 These scripts are meant for developers of FreedomBox to build images
 during releases and for advanced users who intend to build their own
 images.  Regular users who wish to turn their devices into
-FreedomBoxes should instead download the prebuilt images.
+FreedomBoxes should instead download the pre-built images.
 
 Get a pre-built image via https://wiki.debian.org/FreedomBox .  There
 are images available for all supported target devices.  You also find
@@ -83,7 +83,7 @@ $ sudo apt-get install extlinux virtualbox sshpass
 
 2. Build all images:
     ```
-    $ sudo make -C freedom-maker dreamplug raspberry raspberry2 beaglebone \
+    $ python3 -m freedommaker dreamplug raspberry raspberry2 beaglebone \
       cubieboard2 cubietruck a20-olinuxino-lime a20-olinuxino-lime2 \
       a20-olinuxino-micro i386 amd64 virtualbox-i386 virtualbox-amd64 \
       qemu-i386 qemu-amd64
@@ -91,7 +91,12 @@ $ sudo apt-get install extlinux virtualbox sshpass
 
     or to build just a single image:
     ```
-    $ sudo make -C freedom-maker beaglebone
+    $ python3 -m freedommaker beaglebone
+    ```
+
+    or to see the full list of options you can pass to the build proces:
+    ```
+    $ python3 -m freedommaker --help
     ```
 
 The images will show up in *freedom-maker/build/*. Copy the image to
