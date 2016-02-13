@@ -100,7 +100,7 @@ class TestInvocation(unittest.TestCase):
         command = ['python3', '-m', self.binary] + parameters + targets
         subprocess.check_call(command)
 
-    def get_built_file(self, target=None):
+    def get_built_file(self, target=None, distribution=None):
         """Return the path of the expected built file.
 
         Also tests:
@@ -125,19 +125,22 @@ class TestInvocation(unittest.TestCase):
             'raspberry2': 'raspberry2-armhf.img',
         }
 
+        distribution = distribution or 'unstable'
+
         free_tag = 'free'
         if target in ('dreamplug', 'raspberry', 'raspberry2'):
             free_tag = 'nonfree'
 
-        file_name = 'freedombox-unstable-{free_tag}_{build_stamp}_{extra}.xz' \
-            .format(build_stamp=self.build_stamp, extra=extra_map[target],
-                    free_tag=free_tag)
+        file_name = 'freedombox-{distribution}-{free_tag}_{build_stamp}_' \
+            '{extra}.xz' \
+            .format(distribution=distribution, build_stamp=self.build_stamp,
+                    extra=extra_map[target], free_tag=free_tag)
 
         return os.path.join(self.output_dir, file_name)
 
-    def get_parameters_passed(self):
+    def get_parameters_passed(self, distribution=None):
         """Return parameters passed to vmdeboostrap during invocation."""
-        compressed_built_file = self.get_built_file()
+        compressed_built_file = self.get_built_file(distribution=distribution)
 
         built_file = compressed_built_file.rsplit('.', maxsplit=1)[0]
 
@@ -172,9 +175,10 @@ class TestInvocation(unittest.TestCase):
         self.assertTrue(os.path.isfile(
             os.path.join(self.output_dir, file_name)))
 
-    def assert_arguments_passed(self, expected_arguments):
+    def assert_arguments_passed(self, expected_arguments, distribution=None):
         """Check that a sequence of arguments are passed to vmdeboostrap."""
-        arguments = self.get_parameters_passed()['arguments']
+        arguments = self.get_parameters_passed(
+            distribution=distribution)['arguments']
         arguments = '@'.join(arguments)
         expected_arguments = '@'.join(expected_arguments)
         self.assertIn(expected_arguments, arguments)
@@ -186,9 +190,11 @@ class TestInvocation(unittest.TestCase):
         expected_arguments = '@'.join(expected_arguments)
         self.assertNotIn(expected_arguments, arguments)
 
-    def assert_environment_passed(self, expected_environment):
+    def assert_environment_passed(self, expected_environment,
+                                  distribution=None):
         """Check that expected environment is passed to vmdeboostrap."""
-        environment = self.get_parameters_passed()['environment']
+        environment = self.get_parameters_passed(
+            distribution=distribution)['environment']
         for key, value in expected_environment.items():
             self.assertEqual(environment[key], value)
 
@@ -226,8 +232,10 @@ class TestInvocation(unittest.TestCase):
         """Test that distribution parameter works."""
         distribution = self.random_string()
         self.invoke(distribution=distribution)
-        self.assert_arguments_passed(['--distribution', distribution])
-        self.assert_environment_passed({'SUITE': distribution})
+        self.assert_arguments_passed(['--distribution', distribution],
+                                     distribution=distribution)
+        self.assert_environment_passed({'SUITE': distribution},
+                                       distribution=distribution)
 
     def test_include_source(self):
         """Test that include-source parameter works."""

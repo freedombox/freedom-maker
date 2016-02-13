@@ -117,10 +117,11 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         """Return the base file name of the final image."""
         free_tag = 'free' if self.free else 'nonfree'
 
-        return 'freedombox-unstable-{free_tag}_{build_stamp}_{machine}' \
+        return 'freedombox-{distribution}-{free_tag}_{build_stamp}_{machine}' \
             '-{architecture}'.format(
-                free_tag=free_tag, build_stamp=self.arguments.build_stamp,
-                machine=self.machine, architecture=self.architecture)
+                distribution=self.arguments.distribution, free_tag=free_tag,
+                build_stamp=self.arguments.build_stamp, machine=self.machine,
+                architecture=self.architecture)
 
     def make_image(self):
         """Create a disk image."""
