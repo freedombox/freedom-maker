@@ -32,7 +32,7 @@ import freedommaker
 IMAGE_SIZE = '4G'
 BUILD_MIRROR = 'http://httpredir.debian.org/debian'
 MIRROR = 'http://httpredir.debian.org/debian'
-DISTRIBUTION = 'sid'
+DISTRIBUTION = 'unstable'
 INCLUDE_SOURCE = False
 BUILD_DIR = 'build'
 LOG_LEVEL = 'debug'
