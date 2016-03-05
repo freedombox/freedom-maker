@@ -86,8 +86,8 @@ atheros_wifi() {
 use_eatmydata=true
 
 rootdir="$1"
-fmdir="$(pwd)"
-image="$fmdir"/"$2"
+image="$(cd "$(dirname "$2")"; pwd)/$(basename "$2")"
+
 cd "$rootdir"
 
 echo info: building $MACHINE
