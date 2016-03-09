@@ -100,8 +100,7 @@ unmount_file_systems() {
 use_eatmydata=true
 
 rootdir="$1"
-fmdir="$(pwd)"
-image="$fmdir"/"$2"
+image="$(cd "$(dirname "$2")"; pwd)/$(basename "$2")"
 
 mount_file_systems
 trap unmount_file_systems EXIT
