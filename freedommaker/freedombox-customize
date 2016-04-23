@@ -172,6 +172,14 @@ chroot $rootdir /usr/lib/freedombox/setup 2>&1 | \
 # anymore.
 rm $rootdir/etc/ssh/ssh_host_* || true
 
+# Move hostname to 127.0.1.1 line of /etc/hosts.
+# TODO: Can this be changed in vmdebootstrap?
+sed -i "s/127.0.0.1.*/127.0.0.1	localhost/" "$rootdir"/etc/hosts
+if ! grep -q 127.0.1.1 "$rootdir"/etc/hosts ; then
+    sed -i "/127.0.0.1.*/a \
+127.0.1.1	freedombox" "$rootdir"/etc/hosts
+fi
+
 # copy u-boot to beginning of image
 case "$MACHINE" in
     beaglebone)
