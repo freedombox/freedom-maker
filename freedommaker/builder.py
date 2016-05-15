@@ -22,6 +22,7 @@ Worker class to run various command build the image.
 
 import logging
 import os
+import shutil
 import subprocess
 
 BASE_PACKAGES = [
@@ -252,8 +253,11 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
                         archive_file)
             return
 
-        options = ['--no-warn', '--best', '--force']
-        self._run(['xz'] + options + [image_file])
+        command = ['xz', '--no-warn', '--best', '--force']
+        if shutil.which('pxz'):
+            command = ['pxz', '-9', '--force']
+
+        self._run(command + [image_file])
 
     def sign(self, archive):
         """Signed the final output image."""
