@@ -107,99 +107,6 @@ raspberry2_setup_boot() {
     raspberry_setup_boot
 }
 
-beaglebone_setup_boot() {
-    # Setup uEnv.txt
-    if grep -q btrfs /etc/fstab ; then
-	fstype=btrfs
-    else
-	fstype=ext4
-    fi
-    kernelVersion=$(ls /usr/lib/*/am335x-boneblack.dtb | head -1 | cut -d/ -f4)
-    version=$(echo $kernelVersion | sed 's/linux-image-\(.*\)/\1/')
-    initRd=initrd.img-$version
-    vmlinuz=vmlinuz-$version
-
-    # uEnv.txt for Beaglebone
-    # based on https://github.com/beagleboard/image-builder/blob/master/target/boot/beagleboard.org.txt
-    cat >> /boot/uEnv.txt <<EOF
-mmcroot=/dev/mmcblk0p2 ro
-mmcrootfstype=$fstype rootwait fixrtc
-
-console=ttyO0,115200n8
-
-kernel_file=$vmlinuz
-initrd_file=$initRd
-
-loadaddr=0x80200000
-initrd_addr=0x81000000
-fdtaddr=0x80F80000
-
-initrd_high=0xffffffff
-fdt_high=0xffffffff
-
-loadkernel=load mmc \${mmcdev}:\${mmcpart} \${loadaddr} \${kernel_file}
-loadinitrd=load mmc \${mmcdev}:\${mmcpart} \${initrd_addr} \${initrd_file}; setenv initrd_size \${filesize}
-loadfdt=load mmc \${mmcdev}:\${mmcpart} \${fdtaddr} /dtbs/\${fdtfile}
-
-loadfiles=run loadkernel; run loadinitrd; run loadfdt
-mmcargs=setenv bootargs console=tty0 console=\${console} root=\${mmcroot} rootfstype=\${mmcrootfstype}
-
-uenvcmd=run loadfiles; run mmcargs; bootz \${loadaddr} \${initrd_addr}:\${initrd_size} \${fdtaddr}
-EOF
-
-    mkdir -p /boot/dtbs
-    cp /usr/lib/linux-image-*-armmp/* /boot/dtbs
-}
-
-beaglebone_flash() {
-    # allow flash-kernel to work without valid /proc contents
-    # ** this doesn't *really* work, since there are too many checks
-    #    that fail in an emulated environment!  We'll have to do it by
-    #    hand below anyway...
-    export FK_MACHINE="TI AM335x BeagleBone"
-    apt-get install -y flash-kernel
-}
-
-beaglebone_repack_kernel() {
-# process installed kernel to create uImage, uInitrd, dtb
-# using flash-kernel would be a good approach, except it fails in the
-# cross build environment due to too many environment checks...
-#FK_MACHINE="TI AM335x BeagleBone" flash-kernel
-#  so, let's do it manually...
-
-# flash-kernel's hook-functions provided to mkinitramfs have the
-# unfortunate side-effect of creating /conf/param.conf in the initrd
-# when run from our emulated chroot environment, which means our root=
-# on the kernel command line is completely ignored!  repack the initrd
-# to remove this evil...
-
-    echo "info: repacking beaglebone kernel and initrd"
-
-    kernelVersion=$(ls /usr/lib/*/am335x-boneblack.dtb | head -1 | cut -d/ -f4)
-    version=$(echo $kernelVersion | sed 's/linux-image-\(.*\)/\1/')
-    initRd=initrd.img-$version
-    vmlinuz=vmlinuz-$version
-
-    mkdir /tmp/initrd-repack
-
-    (cd /tmp/initrd-repack ; \
-	zcat /boot/$initRd | cpio -i ; \
-	rm -f conf/param.conf ; \
-	find . | cpio --quiet -o -H newc | \
-	gzip -9 > /boot/$initRd )
-
-    rm -rf /tmp/initrd-repack
-
-    (cd /boot ; \
-	cp /usr/lib/$kernelVersion/am335x-boneblack.dtb dtb ; \
-	cat $vmlinuz dtb >> temp-kernel ; \
-	mkimage -A arm -O linux -T kernel -n "Debian kernel ${version}" \
-	-C none -a 0x80200000 -e 0x80200000 -d temp-kernel uImage ; \
-	rm -f temp-kernel ; \
-	mkimage -A arm -O linux -T ramdisk -C gzip -a 0x81000000 -e 0x81000000 \
-	-n "Debian ramdisk ${version}" \
-	-d $initRd uInitrd )
-}
 
 setup_flash_kernel() {
     if [ ! -d /etc/flash-kernel ] ; then
@@ -233,10 +140,7 @@ case "$MACHINE" in
 	raspberry2_setup_boot
 	;;
     beaglebone)
-	beaglebone_setup_boot
-	beaglebone_flash
-	beaglebone_repack_kernel
-	enable_serial_console ttyO0
+        setup_flash_kernel 'TI AM335x BeagleBone Black' 'ttyO0'
 	;;
     cubietruck)
         setup_flash_kernel 'Cubietech Cubietruck'
