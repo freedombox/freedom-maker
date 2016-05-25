@@ -206,6 +206,16 @@ setup_flash_kernel() {
        mkdir /etc/flash-kernel
     fi
     echo -n "$1" > /etc/flash-kernel/machine
+
+    command_line=""
+    if [ -n "$2" ] ; then
+        command_line="console=$2"
+    fi
+
+    if [ -n "$command_line" ] ; then
+        echo flash-kernel flash-kernel/linux_cmdline string "$command_line" | debconf-set-selections
+    fi
+
     apt-get install -y flash-kernel
 }
 
@@ -230,22 +240,17 @@ case "$MACHINE" in
 	;;
     cubietruck)
         setup_flash_kernel 'Cubietech Cubietruck'
-	enable_serial_console ttyS0
 	;;
     a20-olinuxino-lime)
         setup_flash_kernel 'Olimex A20-OLinuXino-LIME'
-	enable_serial_console ttyS0
         ;;
     a20-olinuxino-lime2)
         setup_flash_kernel 'Olimex A20-OLinuXino-LIME2'
-	enable_serial_console ttyS0
         ;;
     a20-olinuxino-micro)
         setup_flash_kernel 'Olimex A20-Olinuxino Micro'
-	enable_serial_console ttyS0
         ;;
     cubieboard2)
 	setup_flash_kernel 'Cubietech Cubieboard2'
-	enable_serial_console ttyS0
         ;;
 esac
