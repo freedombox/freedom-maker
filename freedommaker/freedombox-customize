@@ -90,10 +90,13 @@ mount_file_systems() {
 }
 
 unmount_file_systems() {
-    umount "$rootdir/dev/pts"
-    umount "$rootdir/dev"
-    umount "$rootdir/proc"
-    umount "$rootdir/sys"
+    # XXX: Should be doing strict checks but /dev/pts seems to be
+    # prematurely unmounted for some reason perhaps due to issues in
+    # parallel builds.  Workaround that.
+    umount "$rootdir/dev/pts" || true
+    umount "$rootdir/dev" || true
+    umount "$rootdir/proc" || true
+    umount "$rootdir/sys" || true
 }
 
 # Set to true/false to control if eatmydata is used during build
