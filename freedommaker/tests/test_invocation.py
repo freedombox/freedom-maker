@@ -128,7 +128,7 @@ class TestInvocation(unittest.TestCase):
         distribution = distribution or 'unstable'
 
         free_tag = 'free'
-        if target in ('dreamplug', 'raspberry', 'raspberry2'):
+        if target in ('raspberry', 'raspberry2'):
             free_tag = 'nonfree'
 
         file_name = 'freedombox-{distribution}-{free_tag}_{build_stamp}_' \

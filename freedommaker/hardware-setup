@@ -14,17 +14,6 @@ enable_serial_console() {
     echo "T0:12345:respawn:/sbin/getty -L $device 115200 vt100" >> /etc/inittab
 }
 
-dreamplug_install_extra_packages() {
-    # Install additional hardware related packages for Dreamplug
-    if [ -n "`grep non-free /etc/apt/sources.list`" ]
-    then
-        echo "Installing non-free WIFI package: firmware-libertas"
-        apt-get install -y firmware-libertas
-    else
-        echo "Non-free packages disabled.  Skipping DreamPlug non-free WIFI."
-    fi
-}
-
 dreamplug_flash() {
     # allow flash-kernel to work without valid /proc contents
     # ** this doesn't *really* work, since there are too many checks
@@ -128,7 +117,6 @@ setup_flash_kernel() {
 
 case "$MACHINE" in
     dreamplug|guruplug)
-	dreamplug_install_extra_packages
 	dreamplug_flash
 	dreamplug_repack_kernel
 	enable_serial_console ttyS0
