@@ -156,6 +156,7 @@ def map_vm_disk_image(disk_image):
     device = '/dev/nbd7'
     subprocess.check_call(['modprobe', 'nbd', 'max_part=64'])
     subprocess.check_call(['qemu-nbd', '--connect=' + device, disk_image])
+    subprocess.check_call(['partprobe', device])
     output = subprocess.check_output(['fdisk', '-o', 'Device', '-l', device])
     root_device = output.decode().split('\n')[-2]
 
