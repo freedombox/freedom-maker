@@ -1,0 +1,211 @@
+#!/usr/bin/python3
+#
+# This file is part of Freedom Maker.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+"""
+Utility for converting VirtualBox disk images into Vagrant boxes.
+"""
+
+import argparse
+import logging
+import os
+import random
+import string
+import subprocess
+import sys
+import time
+
+vm_name = 'freedom-maker-vagrant-package'
+
+password = ''.join(random.SystemRandom().choice(
+    string.ascii_letters + string.digits) for x in range(20))
+
+logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
+
+
+def main():
+    """The main entry point."""
+    logging.basicConfig(level=logging.INFO)
+
+    parser = argparse.ArgumentParser(
+        description='Convert VirtualBox disk image into Vagrant box')
+    parser.add_argument(
+        'image',
+        help='Disk image file (.vdi) to be converted')
+
+    arguments = parser.parse_args()
+
+    check_requirements()
+
+    set_fbx_user_password(arguments)
+
+    setup_vm(arguments)
+    start_vm()
+
+    create_vagrant_user()
+    set_ssh_key()
+    setup_sudo()
+    install_guest_additions()
+    install_build_deps()
+
+    stop_vm()
+    package_vm()
+    delete_vm()
+
+
+def check_requirements():
+    """Check that the necessary requirements are available."""
+    if os.geteuid() != 0:
+        logger.error('Due to limitations of the tools invovled, you need to '
+                     'run this command as "root" user or using the "sudo" '
+                     'command.')
+        sys.exit(-1)
+
+    try:
+        subprocess.check_output(['which', 'VBoxManage'])
+    except subprocess.CalledProcessError:
+        logger.error('"VBoxManage" command not found.  It is provided by the '
+                     'package "virtualbox" in the "contrib" section of the '
+                     'Debian repository.')
+        sys.exit(-1)
+
+    try:
+        subprocess.check_output(['which', 'vagrant'])
+    except subprocess.CalledProcessError:
+        logger.error('"vagrant" command not found.  On Debian based '
+                     'systems it is provided by the package "vagrant".')
+        sys.exit(-1)
+
+
+def set_fbx_user_password(arguments):
+    """Set password for 'fbx' user using passwd-in-image script."""
+    passwd_tool = os.path.join(os.path.dirname(__file__), 'passwd-in-image')
+    subprocess.run([
+        'sudo', 'python3', passwd_tool, arguments.image, 'fbx',
+        '--password', password], check=True)
+
+
+def setup_vm(arguments):
+    """Create and configure VirtualBox VM."""
+    subprocess.run([
+        'VBoxManage', 'createvm', '--name', vm_name, '--ostype', 'Debian_64',
+        '--register'], check=True)
+    subprocess.run([
+        'VBoxManage', 'storagectl', vm_name, '--name', 'SATA Controller',
+        '--add', 'sata', '--controller', 'IntelAHCI'], check=True)
+    subprocess.run([
+        'VBoxManage', 'storageattach', vm_name,
+        '--storagectl', 'SATA Controller', '--port', '0', '--device', '0',
+        '--type', 'hdd', '--medium', arguments.image], check=True)
+    subprocess.run([
+        'VBoxManage', 'modifyvm', vm_name, '--pae', 'on', '--memory', '1024',
+        '--vram', '128', '--nic1', 'nat', '--natpf1', ',tcp,,2222,,22'
+        ], check=True)
+
+
+def start_vm():
+    """Start the VM."""
+    subprocess.run([
+        'VBoxManage', 'startvm', vm_name, '--type', 'headless'], check=True)
+    time.sleep(180)
+
+
+def create_vagrant_user():
+    """Create vagrant user."""
+    run_vm_command('sudo adduser --disabled-password --gecos "" vagrant')
+    run_vm_command(
+        'sudo sed -i "s/fbx/fbx vagrant/g" /etc/security/access.conf')
+
+
+def set_ssh_key():
+    """Install insecure public key for vagrant user.
+
+    This will be replaced by Vagrant during first boot.
+    """
+    run_vm_command('sudo mkdir /home/vagrant/.ssh')
+    run_vm_command(
+        'sudo wget -O /home/vagrant/.ssh/authorized_keys '
+        'https://raw.githubusercontent.com/mitchellh/vagrant/master/keys/'
+        'vagrant.pub')
+    run_vm_command('sudo chown -R vagrant:vagrant /home/vagrant/.ssh')
+    run_vm_command('sudo chmod 0700 /home/vagrant/.ssh')
+    run_vm_command('sudo chmod 0600 /home/vagrant/.ssh/authorized_keys')
+
+
+def setup_sudo():
+    """Setup password-less sudo for vagrant user."""
+    run_vm_command('sudo usermod -a -G sudo vagrant')
+    run_vm_command(
+        'sudo su -c "echo \'vagrant ALL=(ALL) NOPASSWD: ALL\' '
+        '>/etc/sudoers.d/vagrant"')
+
+
+def install_guest_additions():
+    """Install VirtualBox Guest Additions into the VM."""
+    run_vm_command(
+        'sudo sed -i "s/main/main contrib non-free/g" /etc/apt/sources.list')
+    run_vm_command('sudo apt-get update')
+    run_vm_command(
+        'sudo DEBIAN_FRONTEND=noninteractive apt install -y '
+        'linux-headers-$(uname -r) build-essential dkms '
+        'virtualbox-guest-additions-iso')
+    run_vm_command('sudo mkdir /media/VBoxGuestAdditions')
+    run_vm_command(
+        'sudo mount -o loop,ro '
+        '/usr/share/virtualbox/VBoxGuestAdditions.iso '
+        '/media/VBoxGuestAdditions')
+    run_vm_command('sudo sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run')
+    run_vm_command('sudo umount /media/VBoxGuestAdditions')
+    run_vm_command('sudo rmdir /media/VBoxGuestAdditions')
+
+
+def install_build_deps():
+    """Install build-depends for plinth and freedombox-setup."""
+    run_vm_command('sudo apt build-dep -y plinth freedombox-setup')
+
+
+def stop_vm():
+    """Shutdown the VM."""
+    run_vm_command('sudo shutdown now')
+    time.sleep(30)
+
+
+def package_vm():
+    """Convert the VM into a Vagrant box."""
+    subprocess.run(['vagrant', 'package', '--base', vm_name], check=True)
+
+
+def delete_vm():
+    """Delete the VM."""
+    subprocess.run(['VBoxManage', 'modifyvm', vm_name, '--hda', 'none'])
+    subprocess.run(['VBoxManage', 'unregistervm', vm_name, '--delete'])
+
+
+def run_vm_command(command):
+    """Send a command to the VM through SSH."""
+    echo = subprocess.Popen(['echo', password], stdout=subprocess.PIPE)
+    process = subprocess.Popen([
+        'sshpass', '-p', password, 'ssh',
+        '-o', 'UserKnownHostsFile=/dev/null',
+        '-o', 'StrictHostKeyChecking=no',
+        '-t', '-t', '-p', '2222', 'fbx@127.0.0.1',
+        command], stdin=echo.stdout)
+    process.communicate()
+
+
+if __name__ == '__main__':
+    main()
