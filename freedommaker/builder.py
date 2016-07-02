@@ -30,6 +30,7 @@ BASE_PACKAGES = [
     'base-files',
     'debian-archive-keyring',
     'ifupdown',
+    'init',
     'initramfs-tools',
     'kmod',
     'logrotate',
