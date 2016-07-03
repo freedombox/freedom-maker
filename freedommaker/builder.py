@@ -52,6 +52,7 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
     boot_size = None
     boot_offset = None
     kernel_flavor = 'default'
+    debootstrap_variant = None
 
     @classmethod
     def get_target_name(cls):
@@ -306,7 +307,6 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
 class AMDIntelImageBuilder(ImageBuilder):
     """Base image build for all Intel/AMD targets."""
     boot_loader = 'grub'
-    debootstrap_variant = None
 
     @classmethod
     def get_target_name(cls):
@@ -425,7 +425,6 @@ class QemuI386ImageBuilder(QemuImageBuilder):
 class ARMImageBuilder(ImageBuilder):
     """Base image builder for all ARM targets."""
     boot_loader = 'u-boot'
-    debootstrap_variant = 'minbase'
     boot_filesystem_type = 'ext2'
     boot_size = '128M'
 
