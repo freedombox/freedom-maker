@@ -26,16 +26,7 @@ import shutil
 import subprocess
 
 BASE_PACKAGES = [
-    'apt',
-    'base-files',
-    'debian-archive-keyring',
-    'ifupdown',
     'initramfs-tools',
-    'kmod',
-    'logrotate',
-    'netbase',
-    'rsyslog',
-    'udev',
 ]
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
