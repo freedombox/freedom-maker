@@ -346,9 +346,7 @@ class TestInvocation(unittest.TestCase):
     def test_base_packages(self):
         """Test that base packages are availble."""
         self.invoke()
-        for package in ['apt', 'base-files', 'debian-archive-keyring',
-                        'ifupdown', 'initramfs-tools', 'kmod', 'logrotate',
-                        'netbase', 'rsyslog', 'udev']:
+        for package in ['initramfs-tools']:
             self.assert_arguments_passed(['--package', package])
 
     def test_foreign_architecture(self):
@@ -456,8 +454,4 @@ class TestInvocation(unittest.TestCase):
         for target, architecture in ARCHITECTURES.items():
             self.build_stamp = self.random_string()
             self.invoke([target])
-            if architecture in ('i386', 'amd64'):
-                self.assert_arguments_not_passed(['--debootstrapopts'])
-            else:
-                self.assert_arguments_passed(
-                    ['--debootstrapopts', 'variant=minbase'])
+            self.assert_arguments_not_passed(['--debootstrapopts'])
