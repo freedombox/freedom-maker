@@ -24,6 +24,7 @@ import argparse
 import logging
 import os
 import random
+import shutil
 import string
 import subprocess
 import sys
@@ -75,17 +76,13 @@ def check_requirements():
                      'command.')
         sys.exit(-1)
 
-    try:
-        subprocess.check_output(['which', 'VBoxManage'])
-    except subprocess.CalledProcessError:
+    if not shutil.which('VBoxManage'):
         logger.error('"VBoxManage" command not found.  It is provided by the '
                      'package "virtualbox" in the "contrib" section of the '
                      'Debian repository.')
         sys.exit(-1)
 
-    try:
-        subprocess.check_output(['which', 'vagrant'])
-    except subprocess.CalledProcessError:
+    if not shutil.which('vagrant'):
         logger.error('"vagrant" command not found.  On Debian based '
                      'systems it is provided by the package "vagrant".')
         sys.exit(-1)
