@@ -154,20 +154,12 @@ def setup_sudo():
 def install_guest_additions():
     """Install VirtualBox Guest Additions into the VM."""
     run_vm_command(
-        'sudo sed -i "s/main/main contrib non-free/g" /etc/apt/sources.list')
+        'sudo sed -i "s/main/main contrib/g" /etc/apt/sources.list')
     run_vm_command('sudo apt-get update')
     run_vm_command(
         'sudo DEBIAN_FRONTEND=noninteractive apt install -y '
-        'linux-headers-$(uname -r) build-essential dkms '
-        'virtualbox-guest-additions-iso')
-    run_vm_command('sudo mkdir /media/VBoxGuestAdditions')
-    run_vm_command(
-        'sudo mount -o loop,ro '
-        '/usr/share/virtualbox/VBoxGuestAdditions.iso '
-        '/media/VBoxGuestAdditions')
-    run_vm_command('sudo sh /media/VBoxGuestAdditions/VBoxLinuxAdditions.run')
-    run_vm_command('sudo umount /media/VBoxGuestAdditions')
-    run_vm_command('sudo rmdir /media/VBoxGuestAdditions')
+        'linux-headers-$(uname -r) virtualbox-guest-dkms '
+        'virtualbox-guest-utils')
 
 
 def install_build_deps():
