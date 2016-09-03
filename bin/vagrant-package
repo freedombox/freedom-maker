@@ -61,7 +61,7 @@ def main():
     set_ssh_key()
     setup_sudo()
     install_guest_additions()
-    install_build_deps()
+    install_dev_packages()
 
     stop_vm()
     package_vm()
@@ -162,9 +162,10 @@ def install_guest_additions():
         'virtualbox-guest-utils')
 
 
-def install_build_deps():
-    """Install build-depends for plinth and freedombox-setup."""
+def install_dev_packages():
+    """Install build deps and other useful packages for development."""
     run_vm_command('sudo apt build-dep -y plinth freedombox-setup')
+    run_vm_command('sudo apt install -y python3-dev')
 
 
 def stop_vm():
