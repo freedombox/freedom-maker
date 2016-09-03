@@ -388,6 +388,65 @@ class VirtualBoxI386ImageBuilder(VirtualBoxImageBuilder):
     architecture = 'i386'
 
 
+class VagrantImageBuilder(VirtualBoxAmd64ImageBuilder):
+    """Image builder for Vagrant package."""
+    vagrant_file = 'package.box'
+
+    @classmethod
+    def get_target_name(cls):
+        """Return the name of the target for an image builder."""
+        return 'vagrant'
+
+    def build(self):
+        """Run the image building process."""
+        archive_file = self.image_file + '.xz'
+        vm_file = self._replace_extension(
+            self.image_file, self.vm_image_extension)
+        vm_archive_file = vm_file + '.xz'
+
+        # Create empty log file owned by process runner
+        open(self.log_file, 'w').close()
+
+        if not self.should_skip_step(self.vagrant_file):
+            if not self.should_skip_step(vm_file):
+                if not self.should_skip_step(vm_archive_file):
+                    if not self.should_skip_step(self.image_file):
+                        if not self.should_skip_step(archive_file):
+                            self.make_image()
+                            self.create_vm_file(self.image_file, vm_file)
+                            os.remove(self.image_file)
+                            self.vagrant_package(vm_file)
+                        else:
+                            logger.info(
+                                'Compressed image exists, uncompressing - %s',
+                                archive_file)
+                            self._run(['unxz', '--keep', archive_file])
+                            self.create_vm_file(self.image_file, vm_file)
+                            os.remove(self.image_file)
+                            self.vagrant_package(vm_file)
+                    else:
+                        logger.info(
+                            'Pre-built image exists, skipping build - %s',
+                            self.image_file)
+                        self.create_vm_file(self.image_file, vm_file)
+                        self.vagrant_package(vm_file)
+                else:
+                    logger.info('Compressed VM image exists, skipping - %s',
+                                vm_archive_file)
+                    self._run(['unxz', '--keep', vm_archive_file])
+                    self.vagrant_package(vm_file)
+            else:
+                logger.info('VM image exists, skipping - %s', vm_archive_file)
+                self.vagrant_package(vm_file)
+        else:
+            logger.info('Vagrant package exists, skipping - %s',
+                        self.vagrant_file)
+
+    def vagrant_package(self, vm_file):
+        """Create a vagrant package from VM file."""
+        self._run(['sudo', 'bin/vagrant-package', vm_file])
+
+
 class QemuImageBuilder(VMImageBuilder):
     """Base image builder for all Qemu targets."""
     vm_image_extension = '.qcow2'
