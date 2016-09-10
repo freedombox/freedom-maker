@@ -262,7 +262,11 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
             logger.info('Signature file up-to-date, skipping - %s', signature)
             return
 
-        os.remove(signature)
+        try:
+            os.remove(signature)
+        except FileNotFoundError:
+            pass
+
         self._run(['gpg', '--output', signature, '--detach-sig', archive])
 
     def should_skip_step(self, target, dependencies=None):
