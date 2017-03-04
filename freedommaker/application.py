@@ -30,8 +30,8 @@ from .builder import ImageBuilder
 import freedommaker
 
 IMAGE_SIZE = '3800M'
-BUILD_MIRROR = 'http://httpredir.debian.org/debian'
-MIRROR = 'http://httpredir.debian.org/debian'
+BUILD_MIRROR = 'http://deb.debian.org/debian'
+MIRROR = 'http://deb.debian.org/debian'
 DISTRIBUTION = 'unstable'
 INCLUDE_SOURCE = False
 BUILD_DIR = 'build'
