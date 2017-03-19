@@ -488,7 +488,10 @@ class RaspberryPiImageBuilder(ARMImageBuilder):
     kernel_flavor = None
 
 
-class RaspberryPi2ImageBuilder(RaspberryPiImageBuilder):
+class RaspberryPi2ImageBuilder(ARMImageBuilder):
     """Image builder for Raspberry Pi 2 target."""
     architecture = 'armhf'
     machine = 'raspberry2'
+    free = False
+    boot_offset = '160mib'
+    kernel_flavor = 'armmp'

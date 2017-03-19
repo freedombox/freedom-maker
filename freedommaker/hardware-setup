@@ -93,7 +93,35 @@ raspberry_setup_boot() {
 
 # Install binary blob and kernel needed to boot on the Raspberry Pi 2.
 raspberry2_setup_boot() {
-    raspberry_setup_boot
+    # Packages used by rpi-update to make Raspberry Pi bootable
+    apt-get install -y git-core binutils ca-certificates wget
+
+    rpi_tempdir=/tmp/fbx-rpi-update
+    if [ -d $rpi_tempdir ]; then
+        rm -rf $rpi_tempdir
+    fi
+    git clone $rpi_blob_repo $rpi_tempdir
+    cd $rpi_tempdir
+    git checkout $rpi_blob_commit -b $rpi_blob_commit
+
+    downloaded_rpi_blob_hash=$(sha256sum $rpi_tempdir/rpi-update \
+				      | awk -F ' ' '{print $1}')
+    if [ "$downloaded_rpi_blob_hash" != "$rpi_blob_hash" ]; then
+        echo 'WARNING: Unable to verify Raspberry Pi boot blob'
+        return
+    fi
+
+    cp $rpi_tempdir/rpi-update /usr/bin/rpi-update
+
+    chmod a+x /usr/bin/rpi-update
+    touch /boot/firmware/start.elf
+    SKIP_BACKUP=1 SKIP_WARNING=1 SKIP_KERNEL=1 \
+	       ROOT_PATH=/ BOOT_PATH=/boot/firmware \
+	       rpi-update | tee /root/rpi-update.log
+
+    # u-boot setup
+    apt-get install -y u-boot-rpi
+    cp /usr/lib/u-boot/rpi_2/u-boot.bin /boot/firmware/kernel.img
 }
 
 
@@ -126,6 +154,8 @@ case "$MACHINE" in
 	;;
     raspberry2)
 	raspberry2_setup_boot
+	setup_flash_kernel 'Raspberry Pi 2 Model B'
+	flash-kernel
 	;;
     beaglebone)
         setup_flash_kernel 'TI AM335x BeagleBone Black' 'ttyO0'
