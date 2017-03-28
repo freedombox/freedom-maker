@@ -126,6 +126,7 @@ case "$MACHINE" in
 	device=/dev/mapper/$(kpartx -avs "$image" \
 				    | awk '/^add map / {print $3; exit}')
 	mkfs -t vfat "$device"
+	parted -s "$image" set 1 lba on
 
 	mount -t btrfs "${device%?}3" "$rootdir"
 	mount -t ext2 "${device%?}2" "$rootdir"/boot
