@@ -493,5 +493,5 @@ class RaspberryPi2ImageBuilder(ARMImageBuilder):
     architecture = 'armhf'
     machine = 'raspberry2'
     free = False
-    boot_offset = '160mib'
+    boot_offset = '64mib'
     kernel_flavor = 'armmp'

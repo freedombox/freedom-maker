@@ -118,7 +118,7 @@ case "$MACHINE" in
 	umount "$rootdir"
 	kpartx -dvs "$image"
 
-	parted -s "$image" mkpart primary 0% 128MiB
+	parted -s "$image" mkpart primary 0% 60MiB
 
 	# Reorder partitions by start offset
 	sfdisk --reorder "$image"
