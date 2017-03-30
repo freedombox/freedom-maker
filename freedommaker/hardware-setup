@@ -95,8 +95,11 @@ raspberry_setup_boot() {
 raspberry2_setup_boot() {
     # install boot firmware
     apt-get install --no-install-recommends -y dpkg-dev
+    cd /tmp
     apt-get source raspi3-firmware
     cp raspi3-firmware*/boot/* /boot/firmware
+    rm -rf raspi3-firmware*
+    cd /
 
     # remove unneeded firmware files
     rm -f /boot/firmware/fixup_*
