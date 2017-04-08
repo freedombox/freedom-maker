@@ -47,6 +47,9 @@ def main():
     parser.add_argument(
         'image',
         help='Disk image file (.vdi) to be converted')
+    parser.add_argument(
+        '--output', default='package.box',
+        help='Path of the output vagrant box file (default: package.box)')
 
     arguments = parser.parse_args()
 
@@ -64,7 +67,7 @@ def main():
     install_dev_packages()
 
     stop_vm()
-    package_vm()
+    package_vm(arguments)
     delete_vm()
 
 
@@ -174,9 +177,10 @@ def stop_vm():
     time.sleep(30)
 
 
-def package_vm():
+def package_vm(arguments):
     """Convert the VM into a Vagrant box."""
-    subprocess.run(['vagrant', 'package', '--base', vm_name], check=True)
+    subprocess.run(['vagrant', 'package', '--base', vm_name, '--output',
+                    arguments.output], check=True)
 
 
 def delete_vm():
