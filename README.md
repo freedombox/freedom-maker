@@ -44,9 +44,21 @@ Freedom-maker supports building for the following targets:
 To build an image, first install the required dependencies for the
 image as follows:
 
-For all images:
-```
-$ sudo apt-get -y install git sudo vmdebootstrap dosfstools btrfs-tools pxz
+For all dependencies:
+```shell
+$ sudo apt-get -y install git \
+                          sudo \
+                          vmdebootstrap \
+                          dosfstools \
+                          btrfs-tools \
+                          pxz \
+                          extlinux \
+                          virtualbox \
+                          qemu-utils \
+                          qemu-user-static \
+                          binfmt-support \
+                          u-boot-tools \
+                          sshpass
 ```
 
 For VirtualBox:
