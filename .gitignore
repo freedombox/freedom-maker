@@ -4,3 +4,5 @@ vendor
 freedom_maker.egg-info
 freedommaker/tests/output
 *.pyc
+.idea/
+.DS_Store
