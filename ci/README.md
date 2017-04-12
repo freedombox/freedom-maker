@@ -27,6 +27,7 @@
 - Install Go [Server](https://www.gocd.io/download/).
 - Copy the `cruise-config.xml` to `/etc/go/`.
 - Start the Go Server using `sudo systemctl start go-server`.
+- Install the package `apt-cacher-ng` to cache the apt downloads from the agents.
 - Copy the `Vagrantfile` to some location like `/home/<username>`.
 - From that directory, start the virtual Debian instance using `vagrant up`. This will bring up a Debian instance called legolas having 2 cores and 2.5GB of RAM.
 - ssh into the instance using `vagrant ssh legolas`.
