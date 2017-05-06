@@ -57,10 +57,18 @@ set_apt_sources() {
     cat <<EOF > etc/apt/sources.list
 deb $NEW_MIRROR $SUITE $COMPONENTS
 deb-src $NEW_MIRROR $SUITE $COMPONENTS
-
-#deb http://security.debian.org/ $SUITE/updates main
-#deb-src http://security.debian.org/ $SUITE/updates main
 EOF
+
+    if [ "$SUITE" != "unstable" ] && [ "$SUITE" != "sid" ]; then
+	cat <<EOF >> etc/apt/sources.list
+
+deb http://security.debian.org/ $SUITE/updates $COMPONENTS
+deb-src http://security.debian.org/ $SUITE/updates $COMPONENTS
+
+deb $NEW_MIRROR $SUITE-updates $COMPONENTS
+deb-src $NEW_MIRROR $SUITE-updates $COMPONENTS
+EOF
+    fi
 }
 
 atheros_wifi() {
