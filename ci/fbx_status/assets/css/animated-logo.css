@@ -1,0 +1,77 @@
+div#butterfly{
+    position: absolute;
+    margin: 0 auto;
+    top: 9.4rem;
+    left: 0;
+    right: 0;
+    width: 12.4rem;
+    height: 9.8rem;
+    background: rgba(255,255,255,1);
+}
+
+div#wingtop, div#wings{
+    position: absolute;
+    left:0;
+    top: 0;
+    width: 12.4rem;
+    height: 9.6rem;
+    background-image: url("../images/wings-wingtop.png");
+    background-repeat:no-repeat;
+    background-size: 12.4rem auto;
+}
+
+div#wingtop {
+    background-position: 0 -9.6rem;
+}
+
+div#wings{
+    -webkit-transform-origin: center center;
+    -webkit-animation-name: wingani;
+    -webkit-animation-duration: 30s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: ease-in-out;
+
+    -moz-transform-origin: center center;
+    -moz-animation-name: wingani;
+    -moz-animation-duration: 30s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: ease-in-out;
+
+    transform-origin: center center;
+    animation-name: wingani;
+    animation-duration: 30s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+
+@-webkit-keyframes wingani {
+    from {-webkit-transform: rotate3d(0, 1, 0, 180deg);}
+
+    10%  {-webkit-transform: rotate3d(0, 1, 0, 180deg);}
+    12%  {-webkit-transform: rotate3d(0, 1, 0, 155deg);}
+    16%  {-webkit-transform: rotate3d(0, 1, 0, 180deg);}
+
+    66%  {-webkit-transform: rotate3d(0, 1, 0, 180deg);}
+    68%  {-webkit-transform: rotate3d(0, 1, 0, 160deg);}
+    69%  {-webkit-transform: rotate3d(0, 1, 0, 180deg);}
+    70%  {-webkit-transform: rotate3d(0, 1, 0, 150deg);}
+    74%  {-webkit-transform: rotate3d(0, 1, 0, 180deg);}
+
+    to   {-webkit-transform: rotate3d(0, 1, 0, 180deg);}
+}
+
+@-moz-keyframes wingani {
+    from {-moz-transform: rotate3d(0, 1, 0, 180deg);}
+
+    10%  {-moz-transform: rotate3d(0, 1, 0, 180deg);}
+    12%  {-moz-transform: rotate3d(0, 1, 0, 155deg);}
+    16%  {-moz-transform: rotate3d(0, 1, 0, 180deg);}
+
+    66%  {-moz-transform: rotate3d(0, 1, 0, 180deg);}
+    68%  {-moz-transform: rotate3d(0, 1, 0, 160deg);}
+    69%  {-moz-transform: rotate3d(0, 1, 0, 180deg);}
+    71%  {-moz-transform: rotate3d(0, 1, 0, 150deg);}
+    75%  {-moz-transform: rotate3d(0, 1, 0, 180deg);}
+
+    to   {-moz-transform: rotate3d(0, 1, 0, 180deg);}
+}

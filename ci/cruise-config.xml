@@ -15,343 +15,511 @@
 <!--You should have received a copy of the GNU General Public License-->
 <!--along with this program.  If not, see <http://www.gnu.org/licenses/>.-->
 
-<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="90">
-    <server artifactsdir="artifacts" agentAutoRegisterKey="1cf6988c-6f83-4038-b4da-514653ffcc3f"
-            commandRepositoryLocation="default" serverId="d7655976-addc-4af1-8fb3-f22ed543056c"/>
-    <pipelines group="stable">
-        <pipeline name="freedom-maker-amd64" isLocked="false" template="freedom-maker">
-            <params>
-                <param name="target">amd64</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-i386" isLocked="false" template="freedom-maker">
-            <params>
-                <param name="target">i386</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-raspberry" isLocked="false" template="freedom-maker">
-            <params>
-                <param name="target">raspberry</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-raspberry2" isLocked="false" template="freedom-maker">
-            <params>
-                <param name="target">raspberry2</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-dreamplug" isLocked="false" template="freedom-maker">
-            <params>
-                <param name="target">dreamplug</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-virtualbox-i386" isLocked="false" template="freedom-maker">
-            <params>
-                <param name="target">virtualbox-i386</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-virtualbox-amd64" isLocked="false" template="freedom-maker">
-            <params>
-                <param name="target">virtualbox-amd64</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-qemu-i386" isLocked="false" template="freedom-maker">
-            <params>
-                <param name="target">qemu-i386</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-qemu-amd64" isLocked="false" template="freedom-maker">
-            <params>
-                <param name="target">qemu-amd64</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-beaglebone" isLocked="false" template="freedom-maker">
-            <params>
-                <param name="target">beaglebone</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-cubieboard2" isLocked="false" template="freedom-maker">
-            <params>
-                <param name="target">cubieboard2</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-cubietruck" isLocked="false" template="freedom-maker">
-            <params>
-                <param name="target">cubietruck</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-a20-olinuxino-lime" isLocked="false" template="freedom-maker">
-            <params>
-                <param name="target">a20-olinuxino-lime</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-a20-olinuxino-lime2" isLocked="false"
-                  template="freedom-maker">
-            <params>
-                <param name="target">a20-olinuxino-lime2</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-a20-olinuxino-micro" isLocked="false"
-                  template="freedom-maker">
-            <params>
-                <param name="target">a20-olinuxino-micro</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-            </materials>
-        </pipeline>
-    </pipelines>
-    <pipelines group="dev">
-        <pipeline name="plinth" isLocked="false">
-            <timer>0 0 18 1/1 * ? *</timer>
-            <materials>
-                <git url="https://github.com/freedombox/Plinth.git" shallowClone="true"
-                     dest="plinth_github" materialName="Plinth_Github"/>
-                <git url="git://anonscm.debian.org/freedombox/plinth.git" dest="plinth_alioth"
-                     materialName="Plinth_Alioth"/>
-            </materials>
-            <stage name="test" cleanWorkingDir="true">
-                <jobs>
-                    <job name="unit_test">
-                        <tasks>
-                            <exec command="python3" workingdir="plinth_github">
-                                <arg>setup.py</arg>
-                                <arg>test</arg>
-                                <runif status="passed"/>
-                            </exec>
-                        </tasks>
-                        <resources>
-                            <resource>unit_test</resource>
-                        </resources>
-                    </job>
-                </jobs>
-            </stage>
-            <stage name="package">
-                <jobs>
-                    <job name="build_deb">
-                        <tasks>
-                            <exec command="mv">
-                                <arg>plinth_alioth/debian</arg>
-                                <arg>plinth_github</arg>
-                                <runif status="passed"/>
-                            </exec>
-                            <exec command="sudo" workingdir="plinth_github">
-                                <arg>mk-build-deps</arg>
-                                <runif status="passed"/>
-                            </exec>
-                            <exec command="sudo" workingdir="plinth_github">
-                                <arg>bash</arg>
-                                <arg>-c</arg>
-                                <arg>dpkg -i plinth-build-deps_*.deb</arg>
-                                <runif status="passed"/>
-                            </exec>
-                            <exec command="sudo">
-                                <arg>apt</arg>
-                                <arg>install</arg>
-                                <arg>-y</arg>
-                                <arg>-f</arg>
-                                <runif status="passed"/>
-                            </exec>
-                            <exec command="debuild" workingdir="plinth_github">
-                                <arg>-i</arg>
-                                <arg>-us</arg>
-                                <arg>-uc</arg>
-                                <arg>-b</arg>
-                                <runif status="passed"/>
-                            </exec>
-                        </tasks>
-                        <resources>
-                            <resource>gbp</resource>
-                        </resources>
-                        <artifacts>
-                            <artifact src="*.deb" dest="plinth.deb"/>
-                        </artifacts>
-                    </job>
-                </jobs>
-            </stage>
-        </pipeline>
-        <pipeline name="freedom-maker-amd64_dev" template="freedom-maker_dev">
-            <params>
-                <param name="target">amd64</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-                <pipeline pipelineName="plinth" stageName="package" materialName="Plinth_Deb"/>
-            </materials>
-        </pipeline>
-        <pipeline name="freedom-maker-a20-olinuxino-lime2_dev" template="freedom-maker_dev">
-            <params>
-                <param name="target">a20-olinuxino-lime2</param>
-                <param name="apt_host">10.0.2.2:3142</param>
-            </params>
-            <materials>
-                <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true"
-                     dest="freedommaker_github" autoUpdate="false"
-                     materialName="FreedomMaker_Github"/>
-                <pipeline pipelineName="plinth" stageName="package" materialName="Plinth_Deb"/>
-            </materials>
-        </pipeline>
-    </pipelines>
-    <templates>
-        <pipeline name="freedom-maker">
-            <stage name="build" cleanWorkingDir="true">
-                <jobs>
-                    <job name="build">
-                        <tasks>
-                            <exec command="python3" workingdir="freedommaker_github">
-                                <arg>-m</arg>
-                                <arg>freedommaker</arg>
-                                <arg>--build-mirror=http://#{apt_host}/debian</arg>
-                                <arg>#{target}</arg>
-                                <runif status="passed"/>
-                            </exec>
-                        </tasks>
-                        <resources>
-                            <resource>img</resource>
-                        </resources>
-                        <artifacts>
-                            <artifact src="freedommaker_github/build/*.xz"/>
-                            <artifact src="freedommaker_github/build/*.log"/>
-                        </artifacts>
-                    </job>
-                </jobs>
-            </stage>
-        </pipeline>
-        <pipeline name="freedom-maker_dev">
-            <stage name="build">
-                <jobs>
-                    <job name="build">
-                        <tasks>
-                            <fetchartifact pipeline="plinth" stage="package" job="build_deb"
-                                           srcfile="plinth.deb" dest="freedommaker_github">
-                                <runif status="passed"/>
-                            </fetchartifact>
-                            <exec command="python3" workingdir="freedommaker_github">
-                                <arg>-m</arg>
-                                <arg>freedommaker</arg>
-                                <arg>--build-mirror=http://#{apt_host}/debian</arg>
-                                <arg>#{target}</arg>
-                                <arg>--custom-package=plinth.deb</arg>
-                                <runif status="passed"/>
-                            </exec>
-                        </tasks>
-                        <resources>
-                            <resource>img</resource>
-                        </resources>
-                        <artifacts>
-                            <artifact src="freedommaker_github/build/*.xz"/>
-                            <artifact src="freedommaker_github/build/*.log"/>
-                        </artifacts>
-                    </job>
-                </jobs>
-            </stage>
-        </pipeline>
-    </templates>
-    <agents>
-    </agents>
+<cruise xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="cruise-config.xsd" schemaVersion="90">
+  <server artifactsdir="artifacts" agentAutoRegisterKey="1cf6988c-6f83-4038-b4da-514653ffcc3f" commandRepositoryLocation="default" serverId="d7655976-addc-4af1-8fb3-f22ed543056c" />
+  <pipelines group="stable">
+    <pipeline name="freedom-maker-amd64" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">amd64</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-amd64</param>
+        <param name="artifact_name">freedombox-unstable-free_dailydebian_all-amd64.img.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-i386" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">i386</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-i386</param>
+        <param name="artifact_name">freedombox-unstable-free_dailydebian_all-i386.img.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-raspberry" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">raspberry</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-raspberry</param>
+        <param name="artifact_name">freedombox-unstable-nonfree_dailydebian_raspberry-armel.img.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-raspberry2" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">raspberry2</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-raspberry2</param>
+        <param name="artifact_name">freedombox-unstable-nonfree_dailydebian_raspberry2-armhf.img.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-dreamplug" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">dreamplug</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-dreamplug</param>
+        <param name="artifact_name">freedombox-unstable-free_dailydebian_dreamplug-armel.img.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-virtualbox-i386" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">virtualbox-i386</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-virtualbox-i386</param>
+        <param name="artifact_name">freedombox-unstable-free_dailydebian_all-i386.vdi.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-virtualbox-amd64" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">virtualbox-amd64</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-virtualbox-amd64</param>
+        <param name="artifact_name">freedombox-unstable-free_dailydebian_all-amd64.vdi.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-qemu-i386" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">qemu-i386</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-qemu-i386</param>
+        <param name="artifact_name">freedombox-unstable-free_dailydebian_all-i386.qcow2.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-qemu-amd64" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">qemu-amd64</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-qemu-amd64</param>
+        <param name="artifact_name">freedombox-unstable-free_dailydebian_all-amd64.qcow2.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-beaglebone" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">beaglebone</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-beaglebone</param>
+        <param name="artifact_name">freedombox-unstable-free_dailydebian_beaglebone-armhf.img.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-cubieboard2" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">cubieboard2</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-cubieboard2</param>
+        <param name="artifact_name">freedombox-unstable-free_dailydebian_cubieboard2-armhf.img.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-cubietruck" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">cubietruck</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-cubietruck</param>
+        <param name="artifact_name">freedombox-unstable-free_dailydebian_cubietruck-armhf.img.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-a20-olinuxino-lime" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">a20-olinuxino-lime</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-a20-olinuxino-lime</param>
+        <param name="artifact_name">freedombox-unstable-free_dailydebian_a20-olinuxino-lime-armhf.img.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-a20-olinuxino-lime2" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">a20-olinuxino-lime2</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-a20-olinuxino-lime2</param>
+        <param name="artifact_name">freedombox-unstable-free_dailydebian_a20-olinuxino-lime2-armhf.img.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-a20-olinuxino-micro" isLocked="false" template="freedom-maker">
+      <params>
+        <param name="target">a20-olinuxino-micro</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-a20-olinuxino-micro</param>
+        <param name="artifact_name">freedombox-unstable-free_dailydebian_a20-olinuxino-micro-armhf.img.xz</param>
+      </params>
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+      </materials>
+    </pipeline>
+  </pipelines>
+  <pipelines group="dev">
+    <pipeline name="plinth" isLocked="false">
+      <timer>0 0 18 1/1 * ? *</timer>
+      <materials>
+        <git url="https://github.com/freedombox/Plinth.git" shallowClone="true" dest="plinth_github" materialName="Plinth_Github" />
+        <git url="git://anonscm.debian.org/freedombox/plinth.git" dest="plinth_alioth" materialName="Plinth_Alioth" />
+      </materials>
+      <stage name="test" cleanWorkingDir="true">
+        <jobs>
+          <job name="unit_test">
+            <environmentvariables>
+              <variable name="ARTIFACT_HOST">
+                <value>fbfvm1.freedomboxfoundation.org</value>
+              </variable>
+              <variable name="ARTIFACT_UPLOAD_PATH">
+                <value>/var/www/ci.freedombox.org/status/</value>
+              </variable>
+              <variable name="ARTIFACT_UPLOAD_USER">
+                <value>dailybuilder</value>
+              </variable>
+            </environmentvariables>
+            <tasks>
+              <exec command="bash" workingdir="plinth_github">
+                <arg>-c</arg>
+                <arg>python3 setup.py test &amp;&amp; touch ../passed</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="python3">
+                <arg>-c</arg>
+                <arg>import os; open('result', 'w').write('{"pipeline_name": "%s", "result": "Passed"}' % os.environ['GO_PIPELINE_NAME']) if os.path.exists('passed') else open('result', 'w').write('{"pipeline_name": "%s", "result": "Failed"}' % os.environ['GO_PIPELINE_NAME'])</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash">
+                <arg>-c</arg>
+                <arg>mv result ${GO_PIPELINE_NAME}_status.json &amp;&amp; rsync ${GO_PIPELINE_NAME}_status.json ${ARTIFACT_UPLOAD_USER}@${ARTIFACT_HOST}:${ARTIFACT_UPLOAD_PATH} &amp;&amp; rm -f passed</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <resources>
+              <resource>unit_test</resource>
+            </resources>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="package">
+        <jobs>
+          <job name="build_deb">
+            <tasks>
+              <exec command="mv">
+                <arg>plinth_alioth/debian</arg>
+                <arg>plinth_github</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="sudo" workingdir="plinth_github">
+                <arg>mk-build-deps</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="sudo" workingdir="plinth_github">
+                <arg>bash</arg>
+                <arg>-c</arg>
+                <arg>dpkg -i plinth-build-deps_*.deb</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="sudo">
+                <arg>apt</arg>
+                <arg>install</arg>
+                <arg>-y</arg>
+                <arg>-f</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="debuild" workingdir="plinth_github">
+                <arg>-i</arg>
+                <arg>-us</arg>
+                <arg>-uc</arg>
+                <arg>-b</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+            <resources>
+              <resource>gbp</resource>
+            </resources>
+            <artifacts>
+              <artifact src="*.deb" dest="plinth.deb" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="freedom-maker-amd64_dev" template="freedom-maker_dev">
+      <params>
+        <param name="target">amd64</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-amd64_dev</param>
+        <param name="artifact_name">freedombox-unstable-free_dailyupstream_all-amd64.img.xz</param>
+      </params>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+        <pipeline pipelineName="plinth" stageName="package" materialName="Plinth_Deb" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-a20-olinuxino-lime2_dev" template="freedom-maker_dev">
+      <params>
+        <param name="target">a20-olinuxino-lime2</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-a20-olinuxino-lime2_dev</param>
+        <param name="artifact_name">freedombox-unstable-free_dailyupstream_a20-olinuxino-lime2-armhf.img.xz</param>
+      </params>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+        <pipeline pipelineName="plinth" stageName="package" materialName="Plinth_Deb" />
+      </materials>
+    </pipeline>
+    <pipeline name="freedom-maker-raspberry2_dev" template="freedom-maker_dev">
+      <params>
+        <param name="artifact_name">freedombox-unstable-nonfree_dailybuilder_raspberry2-armhf.img.xz</param>
+        <param name="apt_host">10.0.2.2:3142</param>
+        <param name="pipeline_name">freedom-maker-raspberry2_dev</param>
+        <param name="target">raspberry2</param>
+      </params>
+      <materials>
+        <git url="https://github.com/freedombox/freedom-maker.git" shallowClone="true" dest="freedommaker_github" autoUpdate="false" materialName="FreedomMaker_Github" />
+        <pipeline pipelineName="plinth" stageName="package" materialName="Plinth_Deb" />
+      </materials>
+    </pipeline>
+  </pipelines>
+  <templates>
+    <pipeline name="freedom-maker">
+      <stage name="build" cleanWorkingDir="true">
+        <jobs>
+          <job name="build">
+            <environmentvariables>
+              <variable name="GO_SERVER_URL">
+                <value>http://10.0.2.2:8153</value>
+              </variable>
+              <variable name="ARTIFACT_HOST">
+                <value>fbfvm1.freedomboxfoundation.org</value>
+              </variable>
+              <variable name="ARTIFACT_UPLOAD_PATH">
+                <value>/var/www/ci.freedombox.org/status/</value>
+              </variable>
+              <variable name="ARTIFACT_UPLOAD_USER">
+                <value>dailybuilder</value>
+              </variable>
+            </environmentvariables>
+            <tasks>
+              <exec command="bash" workingdir="freedommaker_github">
+                <arg>-c</arg>
+                <arg>python3 -m freedommaker --build-mirror=http://#{apt_host}/debian --build-stamp=dailydebian #{target} &amp;&amp; touch ../passed</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash">
+                <arg>-c</arg>
+                <arg>curl ${GO_SERVER_URL}/go/api/config/pipeline_groups &gt; pipeline_info.json</arg>
+                <runif status="any" />
+              </exec>
+              <exec command="bash">
+                <arg>-c</arg>
+                <arg>rsync pipeline_info.json ${ARTIFACT_UPLOAD_USER}@${ARTIFACT_HOST}:${ARTIFACT_UPLOAD_PATH}</arg>
+                <runif status="any" />
+              </exec>
+              <exec command="python3">
+                <arg>-c</arg>
+                <arg>import os; open('result', 'w').write('{"pipeline_name": "%s", "result": "Passed"}' % os.environ['GO_PIPELINE_NAME']) if os.path.exists('passed') else open('result', 'w').write('{"pipeline_name": "%s", "result": "Failed"}' % os.environ['GO_PIPELINE_NAME'])</arg>
+                <runif status="any" />
+              </exec>
+              <exec command="bash">
+                <arg>-c</arg>
+                <arg>mv result ${GO_PIPELINE_NAME}_status.json &amp;&amp; rsync ${GO_PIPELINE_NAME}_status.json ${ARTIFACT_UPLOAD_USER}@${ARTIFACT_HOST}:${ARTIFACT_UPLOAD_PATH} &amp;&amp; rm -f passed</arg>
+                <runif status="any" />
+              </exec>
+            </tasks>
+            <resources>
+              <resource>img</resource>
+            </resources>
+            <artifacts>
+              <artifact src="freedommaker_github/build/*.xz" />
+              <artifact src="freedommaker_github/build/*.log" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="publish">
+        <jobs>
+          <job name="publish_artifacts">
+            <environmentvariables>
+              <variable name="ARTIFACT_HOST">
+                <value>fbfvm1.freedomboxfoundation.org</value>
+              </variable>
+              <variable name="ARTIFACT_UPLOAD_PATH">
+                <value>/srv/ftp/pub/freedombox/nightly/</value>
+              </variable>
+              <variable name="ARTIFACT_UPLOAD_USER">
+                <value>dailybuilder</value>
+              </variable>
+            </environmentvariables>
+            <tasks>
+              <fetchartifact pipeline="#{pipeline_name}" stage="build" job="build" srcfile="#{artifact_name}">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="bash">
+                <arg>-c</arg>
+                <arg>rsync #{artifact_name} ${ARTIFACT_UPLOAD_USER}@${ARTIFACT_HOST}:${ARTIFACT_UPLOAD_PATH}</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+    <pipeline name="freedom-maker_dev">
+      <stage name="build">
+        <jobs>
+          <job name="build">
+            <environmentvariables>
+              <variable name="ARTIFACT_HOST">
+                <value>fbfvm1.freedomboxfoundation.org</value>
+              </variable>
+              <variable name="ARTIFACT_UPLOAD_PATH">
+                <value>/var/www/ci.freedombox.org/status/</value>
+              </variable>
+              <variable name="ARTIFACT_UPLOAD_USER">
+                <value>dailybuilder</value>
+              </variable>
+            </environmentvariables>
+            <tasks>
+              <exec command="bash" workingdir="freedommaker_github">
+                <arg>-c</arg>
+                <arg>python3 -m freedommaker --build-mirror=http://#{apt_host}/debian --custom-package=plinth.deb --build-stamp=dailyupstream #{target} &amp;&amp; touch ../passed</arg>
+                <runif status="passed" />
+              </exec>
+              <exec command="bash">
+                <arg>-c</arg>
+                <arg>curl ${GO_SERVER_URL}/go/api/config/pipeline_groups &gt; pipeline_info.json</arg>
+                <runif status="any" />
+              </exec>
+              <exec command="bash">
+                <arg>-c</arg>
+                <arg>rsync pipeline_info.json ${ARTIFACT_UPLOAD_USER}@${ARTIFACT_HOST}:${ARTIFACT_UPLOAD_PATH}</arg>
+                <runif status="any" />
+              </exec>
+              <exec command="python3">
+                <arg>-c</arg>
+                <arg>import os; open('result', 'w').write('{"pipeline_name": "%s", "result": "Passed"}' % os.environ['GO_PIPELINE_NAME']) if os.path.exists('passed') else open('result', 'w').write('{"pipeline_name": "%s", "result": "Failed"}' % os.environ['GO_PIPELINE_NAME'])</arg>
+                <runif status="any" />
+              </exec>
+              <exec command="bash">
+                <arg>-c</arg>
+                <arg>mv result ${GO_PIPELINE_NAME}_status.json &amp;&amp; rsync ${GO_PIPELINE_NAME}_status.json ${ARTIFACT_UPLOAD_USER}@${ARTIFACT_HOST}:${ARTIFACT_UPLOAD_PATH} &amp;&amp; rm -f passed</arg>
+                <runif status="any" />
+              </exec>
+            </tasks>
+            <resources>
+              <resource>img</resource>
+            </resources>
+            <artifacts>
+              <artifact src="freedommaker_github/build/*.xz" />
+              <artifact src="freedommaker_github/build/*.log" />
+            </artifacts>
+          </job>
+        </jobs>
+      </stage>
+      <stage name="publish">
+        <jobs>
+          <job name="publish_artifacts">
+            <environmentvariables>
+              <variable name="ARTIFACT_HOST">
+                <value>fbfvm1.freedomboxfoundation.org</value>
+              </variable>
+              <variable name="ARTIFACT_UPLOAD_PATH">
+                <value>/srv/ftp/pub/freedombox/nightly/</value>
+              </variable>
+              <variable name="ARTIFACT_UPLOAD_USER">
+                <value>dailybuilder</value>
+              </variable>
+            </environmentvariables>
+            <tasks>
+              <fetchartifact pipeline="#{pipeline_name}" stage="build" job="build" srcfile="#{artifact_name}">
+                <runif status="passed" />
+              </fetchartifact>
+              <exec command="bash">
+                <arg>-c</arg>
+                <arg>rsync #{artifact_name} ${ARTIFACT_UPLOAD_USER}@${ARTIFACT_HOST}:${ARTIFACT_UPLOAD_PATH}</arg>
+                <runif status="passed" />
+              </exec>
+            </tasks>
+          </job>
+        </jobs>
+      </stage>
+    </pipeline>
+  </templates>
+  <agents>
+    <agent hostname="eowyn" ipaddress="192.168.33.14" uuid="39fe29de-9a94-472e-ae1d-482140c7d822">
+      <resources>
+        <resource>img</resource>
+      </resources>
+    </agent>
+    <agent hostname="frodo" ipaddress="192.168.33.12" uuid="5232088b-68a2-4e4b-8f33-e4e827e23bca">
+      <resources>
+        <resource>img</resource>
+      </resources>
+    </agent>
+    <agent hostname="gandalf" ipaddress="192.168.33.11" uuid="de3700f0-e162-45b7-a30d-37117bde5204">
+      <resources>
+        <resource>img</resource>
+      </resources>
+    </agent>
+    <agent hostname="legolas" ipaddress="192.168.33.10" uuid="8fc7439b-6c3c-4700-9337-ed6e29082d16">
+      <resources>
+        <resource>img</resource>
+      </resources>
+    </agent>
+    <agent hostname="samwise" ipaddress="192.168.33.13" uuid="c33d41c3-c2c3-4f61-b66f-5fafe2d3f298">
+      <resources>
+        <resource>img</resource>
+      </resources>
+    </agent>
+    <agent hostname="bilbo" ipaddress="192.168.33.15" uuid="c63d10e5-9b21-4660-b199-cc70a9e3350f">
+      <resources>
+        <resource>unit_test</resource>
+        <resource>gbp</resource>
+      </resources>
+    </agent>
+  </agents>
 </cruise>

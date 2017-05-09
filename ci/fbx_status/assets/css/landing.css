@@ -1,0 +1,215 @@
+.background-box {
+    position: absolute;
+    left: 46rem;
+    top: 2.4rem;
+    width: 23.4rem;
+    height: 22.7rem;
+    background: url("../images/boxfoto.jpg") no-repeat;
+    background-size: 23.4rem auto;
+    z-index: 1;
+}
+
+.description {
+    background: -webkit-linear-gradient(left, rgba(255,255,255,0.88) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
+    background: -o-linear-gradient(left, rgba(255,255,255,0.88) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(to right, rgba(255,255,255,0.88) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff',GradientType=1 );
+    padding: 2.4rem 0 3.2rem 3.2rem;
+    position: relative;
+    margin: 6.4rem 0 0 54.5rem;
+    z-index: 2;
+    overflow: visible;
+}
+
+.buttons {
+    position: absolute;
+    left: 25.6rem;
+    top: 9.8rem;
+}
+
+.boxes {
+    position: relative;
+    overflow: visible;
+    height: 108.8rem;
+    width: auto;
+    left: 0%;
+}
+
+.box {
+    position: relative;
+}
+
+    .box p {
+        position: relative;
+        padding: 1rem 0 1rem 1.6rem;
+        line-height: 1.25;
+        font-style: italic;
+        color: rgb(64,196,75);
+        background: rgb(203,239,206);
+        background: -moz-linear-gradient(30deg, rgba(203,239,206,1) 0%, rgba(255,255,255,1) 30%);
+        background: -webkit-linear-gradient(30deg, rgba(203,239,206,1) 0%,rgba(255,255,255,1) 30%);
+        background: linear-gradient(30deg, rgba(203,239,206,1) 0%,rgba(255,255,255,1) 30%);
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cbefce', endColorstr='#ffffff',GradientType=1 );
+    }
+
+        .box p:after {  /*triangle of speech bubble*/
+            content:" ";
+            position: absolute;
+            width: 0;
+            height: 0;
+            left: 4rem;
+            border-top: 3.2rem solid transparent;
+            border-bottom: 3.2rem solid transparent;
+            border-left: 3.2rem solid #d6f3d8;
+            z-index: -1;
+        }
+
+        .box .graybox {
+            position: relative;
+            left: -3.2rem;
+            width: 17.7rem;
+            height: 20.4rem;
+            background: url("../images/graybox.png") no-repeat 0 -14.8rem;
+        }
+
+        .box .graybox:before { /*long line*/
+            content: " ";
+            position: absolute;
+            height: 1rem;
+            width: 200rem;
+            right: 95%;
+            top: -53.5rem;
+            transform: skewY(30deg); /* Standard syntax */
+            background: rgb(122,189,255);
+            z-index: -1;
+        }
+
+
+.box.description1 {
+    left: 54rem;
+    top: 5.12rem;
+    width: 38rem;
+}
+    .box.description1 .graybox:before { /*long line*/
+        height: 1rem;
+    }
+
+.box.description2 {
+    left: 69.2rem;
+    top: -0.6rem;
+    width: 46rem;
+}
+
+    .box.description2 .graybox {
+        background-size: 14rem;
+        background-position: 0 -11.5rem;
+        left: -2rem;
+    }
+    .box.description2 .graybox:before { /*long line*/
+        height: 0.7rem;
+        top: -54rem;
+    }
+
+.box.description3 {
+    left: 27.4rem;
+    top: -31rem;
+    width: 36rem;
+}
+
+    .box.description3 .graybox {
+        background-position: 0 -10rem;
+        background-size: 12rem;
+        left: -1.5rem;
+    }
+    .box.description3 .graybox:before { /*long line*/
+        height: 0.6rem;
+        top: -55rem;
+    }
+
+.box.link a {
+    position: relative;
+    display: block;
+    padding-left: 6.4rem;
+    text-decoration: none;
+    line-height: 1;
+    font-style: italic;
+}
+.box.link  a:hover {
+    text-decoration: underline;
+}
+.box.link  a:before {
+    content: " ";
+    position: absolute;
+    height: 6.4rem;
+    width: 6.4rem;
+    margin: -1rem 0 0 -7rem;
+    background: url("../images/icons.png") no-repeat 0 0;
+    background-size: auto 6.4rem;
+}
+.box.link .graybox:before { /*long line*/
+    height: 0.4rem;
+    top: -55rem;
+}
+.box.link .graybox {
+    background-size: 9rem;
+    left: -1.5rem;
+    background-position: 0 -7.5rem;
+}
+.box.link a {
+    top: -2rem;
+    left: -0.5rem;
+    background: white
+}
+
+.box.link1 {
+    left: 88rem;
+    top: -35rem;
+    width: 20rem;
+}
+
+
+    .box.link1 a:before {
+        background-position: 0 0;
+    }
+
+.box.link2 {
+    left: 52rem;
+    top: -52rem;
+    width: 28rem;
+}
+
+    .box.link2 a:before {
+        background-position: -8rem 0;
+    }
+
+.box.link3 {
+    left: 16rem;
+    top: -64rem;
+    width: 28rem;
+}
+
+    .box.link3 a:before {
+        background-position: -16rem;
+    }
+
+.line {
+    position: absolute;
+    height: 0.3rem;
+    width: 200rem;
+    right: 128%;
+    top: 51rem;
+    transform: skewY(30deg); /* Standard syntax */
+    background: rgb(122,189,255);
+    z-index: -1;
+}
+
+.line:nth-last-of-type(2) {right: 113%;}
+.line:nth-last-of-type(3) {right: 92%;}
+.line:nth-last-of-type(4) {right: 108%;}
+.line:nth-last-of-type(5) {right: 63%;}
+.line:nth-last-of-type(6) {right: 45%;}
+.line:nth-last-of-type(7) {right: 30%;}
+
+.lastlink {
+    margin-top: 3.2rem;
+}
