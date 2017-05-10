@@ -22,10 +22,21 @@ var all_status_url = "/status/pipeline_info.json";
 var generatePipelineDiv = function (groupName, data) {
     var outerDiv = $('<div></div>');
     var ulList = $('<ul></ul>');
-    var title = $('<h3>' + groupName + '</h3>');
+    var title = $('<h2>' + groupName + '</h2>');
 
     data.forEach(function(d) {
-        ulList.append($('<li>' + d.name + ' : ' + d.result + '</li>'));
+        var style = d.result.toLowerCase();
+        console.log(style);
+
+        ulList.append($(
+            '<li>' +
+                '<div class="build-name id="' + d.name + '-name">' +
+                    d.name +
+                '</div> ' +
+                '<div class="build-status ' + style + '" id="' + d.name + '-status">' +
+                    d.result +
+                '</div>' +
+            '</li>'));
     });
 
     outerDiv.append(title);

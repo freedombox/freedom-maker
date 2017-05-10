@@ -46,19 +46,18 @@ image as follows:
 
 For all dependencies:
 ```shell
-$ sudo apt-get -y install git \
-                          sudo \
-                          vmdebootstrap \
-                          dosfstools \
-                          btrfs-tools \
-                          pxz \
-                          extlinux \
-                          virtualbox \
-                          qemu-utils \
-                          qemu-user-static \
-                          binfmt-support \
-                          u-boot-tools \
-                          sshpass
+$ apt-get -y install git \
+                     vmdebootstrap \
+                     dosfstools \
+                     btrfs-tools \
+                     pxz \
+                     extlinux \
+                     virtualbox \
+                     qemu-utils \
+                     qemu-user-static \
+                     binfmt-support \
+                     u-boot-tools \
+                     sshpass
 ```
 
 For VirtualBox:
