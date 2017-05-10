@@ -26,7 +26,6 @@ var generatePipelineDiv = function (groupName, data) {
 
     data.forEach(function(d) {
         var style = d.result.toLowerCase();
-        console.log(style);
 
         ulList.append($(
             '<li>' +
