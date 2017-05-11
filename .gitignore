@@ -6,3 +6,5 @@ freedommaker/tests/output
 *.pyc
 .idea/
 .DS_Store
+ci/fbx_status/status/
+*.swp

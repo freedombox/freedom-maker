@@ -1,0 +1,350 @@
+/*
+* This file is part of Freedom Maker.
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+html {
+    font-size: 62.5%;
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    font-family: "LatoLatinWeb";
+    font-size: 2.1rem;
+    line-height: 3.2rem;
+    color: rgb(100, 100, 100);
+    background: rgb(255, 255, 255);
+    background: -moz-linear-gradient(left, rgb(255, 255, 255) 75%, rgb(242, 249, 255) 100%);
+    background: -webkit-linear-gradient(left, rgb(255, 255, 255) 75%, rgb(242, 249, 255) 100%);
+    background: linear-gradient(to right, rgb(255, 255, 255) 75%, rgb(242, 249, 255) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f2f9ff', GradientType=1);
+}
+
+i {
+    font-style: italic;
+}
+
+b {
+    font-weight: bold;
+}
+
+p {
+    margin: 1.6rem 0 3.2rem;
+}
+
+a {
+    color: rgb(45, 144, 233);
+    font-weight: bold;
+    transition: all 0.15s ease-out 0s;
+    outline: none;
+    text-decoration: none;
+}
+
+a:hover {
+    color: rgb(23, 113, 207);
+    text-decoration: underline;
+}
+
+.container {
+    margin: 0 auto;
+    max-width: 115.2rem;
+}
+
+header,
+footer,
+.main {
+    display: block;
+}
+
+.main > .container ol {
+    list-style-type: decimal;
+}
+
+.main > .container ul {
+    list-style-type: disc;
+}
+
+.main > .container ul,
+.main > .container ol {
+    padding: 0 0 3.2rem 3.2rem;
+}
+
+.main > .container li {
+    margin-top: 3.2rem;
+}
+
+/*===== START Head =====*/
+
+header {
+    height: 25.5rem;
+}
+
+header a.logo {
+    top: 7.7rem;
+    position: absolute;
+    height: 19.2rem;
+    width: 28.8rem;
+    background: url("../images/logos.png") no-repeat;
+    background-size: auto 19.2rem;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+/*===== END Header =====*/
+
+/*===== START main =====*/
+
+.main {
+    position: relative;
+    max-width: 115.2rem;
+    margin: 0 auto 6.4rem;
+    z-index: 2;
+}
+
+h1.headlinegroup {
+    text-align: center;
+    color: rgb(22, 115, 207);
+    font-style: italic;
+    font-size: 5rem;
+    font-family: "LatoLatinWebThin";
+    padding: 40px 0 6.4rem;
+}
+
+h2 {
+    text-align: center;
+    color: rgb(22, 115, 207);
+    font-size: 4rem;
+    padding: 40px 0 2.4rem;
+}
+
+#builds li {
+    padding: 1.6rem;
+    list-style: none;
+    border: 1px solid #cccccc;
+    border-top-width: 0px;
+    margin: 0px;
+}
+
+#builds li:first-child {
+    border-top-width: 1px;
+    border-radius: 10px 10px 0px 0px;
+}
+
+#builds li:last-child {
+    border-radius: 0px 0px 10px 10px;
+}
+
+#builds li .build-name {
+    float: left;
+}
+
+#builds li .build-status {
+    text-align: right;
+}
+
+#download {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.passed {
+    color: #9ACD32;
+    font-weight: bold;
+}
+
+.failed {
+    color: red;
+    font-weight: bold;
+}
+
+.unknown {
+
+}
+
+h1.headlinegroup em {
+    font-family: "LatoLatinWeb";
+}
+
+a.bluebutton,
+a.greenbutton {
+    border-radius: 0.8rem;
+    height: 3.2rem;
+    color: rgb(255, 255, 255);
+    font-style: italic;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    text-shadow: 0.1rem 0.1rem 0 rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+}
+
+a.bluebutton:hover,
+a.greenbutton:hover {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    text-shadow: 0.1rem 0.1rem 0 rgba(0, 0, 0, 0.2);
+}
+
+a.greenbutton {
+    background: rgb(64, 196, 75);
+}
+
+a.greenbutton:hover {
+    background: rgb(47, 181, 71);
+}
+
+a.bluebutton {
+    background: rgb(125, 185, 232);
+    background: -moz-linear-gradient(top, rgb(125, 185, 232) 0%, rgb(37, 126, 219) 100%);
+    background: -webkit-linear-gradient(top, rgb(125, 185, 232) 0%, rgb(37, 126, 219) 100%);
+    background: linear-gradient(to bottom, rgb(125, 185, 232) 0%, rgb(37, 126, 219) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#7db9e8', endColorstr='#257edb', GradientType=0);
+}
+
+a.bluebutton:hover {
+    background: rgb(37, 126, 219);
+    background: -moz-linear-gradient(top, rgb(37, 126, 219) 0%, rgb(37, 126, 219) 100%);
+    background: -webkit-linear-gradient(top, rgb(37, 126, 219) 0%, rgb(37, 126, 219) 100%);
+    background: linear-gradient(to bottom, rgb(37, 126, 219) 0%, rgb(37, 126, 219) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#257edb', endColorstr='#257edb', GradientType=0);
+}
+
+a.bigbluebutton {
+    background: rgb(96, 165, 236);
+    background: -moz-linear-gradient(top, rgb(96, 165, 236) 0%, rgb(37, 126, 219) 100%);
+    background: -webkit-linear-gradient(top, rgb(96, 165, 236) 0%, rgb(37, 126, 219) 100%);
+    background: linear-gradient(to bottom, rgb(96, 165, 236) 0%, rgb(37, 126, 219) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#60a5ec', endColorstr='#257edb', GradientType=0);
+    border-radius: 0.6rem;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    text-decoration: none;
+    font-style: italic;
+    text-shadow: 0.1rem 0.1rem 0 rgb(22, 115, 207);
+    display: table;
+    font-size: 2.4rem;
+    padding: 1.5rem 2.2rem;
+    background-size: auto auto;
+    margin: 0 auto;
+}
+
+a.bigbluebutton:hover {
+    color: rgb(255, 255, 255);
+    background: rgb(22, 115, 207);
+    background: -moz-linear-gradient(top, rgb(36, 134, 232) 0%, rgb(0, 99, 196) 100%);
+    background: -webkit-linear-gradient(top, rgb(36, 134, 232) 0%, rgb(0, 99, 196) 100%);
+    background: linear-gradient(to bottom, rgb(36, 134, 232) 0%, rgb(0, 99, 196) 100%);
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr='#1673cf', endColorstr='#1673cf', GradientType=0);
+}
+
+a.download {
+    font-size: 2.4rem;
+    font-style: italic;
+    display: table;
+    text-decoration: none;
+    text-align: center;
+    padding: 0.6rem 3rem;
+    margin: 0 auto;
+}
+
+a.download:hover {
+    text-decoration: underline;
+}
+
+.lastlink {
+    display: block;
+    text-align: center;
+    padding: 3.2rem 0 0;
+    margin: 16rem 12.8rem 0;
+    border-top: 0.3rem dotted rgb(150, 150, 150);
+}
+
+/*===== END main =====*/
+
+/*===== START Footer =====*/
+
+footer {
+    position: relative;
+    z-index: 1;
+}
+
+footer .menu {
+    max-width: 89.6rem;
+    margin: 0 auto 6.4rem;
+}
+
+footer .menu ul {
+    width: 32%;
+    display: inline-block;
+}
+
+footer .menu ul li a {
+    font-weight: bold;
+    font-style: italic;
+    color: rgb(64, 196, 75);
+    text-decoration: none;
+}
+
+footer .menu ul li a:hover {
+    color: rgb(47, 153, 56);
+}
+
+footer .supporters {
+    background: rgb(250, 250, 250);
+    border-radius: 1rem;
+    color: rgb(216, 216, 216);
+    padding: 0 1rem;
+    font-style: italic;
+    font-size: 1.5rem;
+    overflow: auto;
+}
+
+footer .logo {
+    background: url("../images/logos.png") no-repeat;
+    background-size: auto 19.2rem;
+    height: 19.2rem;
+    width: 44.8rem;
+    position: inline;
+    float: left;
+}
+
+footer .logo.debian {
+    width: 19.2rem;
+    background-position: -28.8rem 0;
+}
+
+footer .supporters a {
+    opacity: 0.66;
+}
+
+footer .supporters a:hover {
+    opacity: 1;
+}
+
+footer .supporters a img {
+    padding: 3.2rem;
+}
+
+footer .language {
+    padding: 3.2rem 0;
+    width: 20rem;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+/*===== END Footer =====*/
