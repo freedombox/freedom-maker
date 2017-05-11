@@ -279,9 +279,6 @@ a.download:hover {
 
 footer {
     position: relative;
-    background: rgb(255, 255, 255);
-    margin-top: -16rem;
-    padding-top: 16rem;
     z-index: 1;
 }
 
