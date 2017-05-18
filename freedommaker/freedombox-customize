@@ -166,6 +166,12 @@ echo "info: creating initial user $username with disabled password!"
 chroot $rootdir adduser --gecos $username --disabled-password $username
 chroot $rootdir adduser $username sudo
 
+if ! grep -q -- "^-:ALL EXCEPT root fbx (admin) (sudo):ALL$" \
+     /etc/security/access.conf ; then
+    printf "%s\n" "-:ALL EXCEPT root fbx (admin) (sudo):ALL" \
+           >> /etc/security/access.conf
+fi
+
 case "$MACHINE" in
     virtualbox)
         # hide irrelevant console keyboard messages.
