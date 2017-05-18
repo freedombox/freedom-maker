@@ -534,6 +534,11 @@ class CubietruckImageBuilder(A20ImageBuilder):
     machine = 'cubietruck'
 
 
+class PCDuino3ImageBuilder(A20ImageBuilder):
+    """Image builder for PCDuino3 target."""
+    machine = 'pcduino3'
+
+
 class DreamPlugImageBuilder(ARMImageBuilder):
     """Image builder for DreamPlug target."""
     architecture = 'armel'

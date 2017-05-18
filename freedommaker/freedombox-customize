@@ -228,11 +228,11 @@ fi
 # copy u-boot to beginning of image
 case "$MACHINE" in
     beaglebone)
-	dd if=$rootdir/usr/lib/u-boot/am335x_boneblack/MLO of="$image" \
-	   count=1 seek=1 conv=notrunc bs=128k
-	dd if=$rootdir/usr/lib/u-boot/am335x_boneblack/u-boot.img of="$image" \
-	   count=2 seek=1 conv=notrunc bs=384k
-	;;
+        dd if=$rootdir/usr/lib/u-boot/am335x_boneblack/MLO of="$image" \
+           count=1 seek=1 conv=notrunc bs=128k
+        dd if=$rootdir/usr/lib/u-boot/am335x_boneblack/u-boot.img of="$image" \
+           count=2 seek=1 conv=notrunc bs=384k
+        ;;
     cubietruck)
         dd if=$rootdir/usr/lib/u-boot/Cubietruck/u-boot-sunxi-with-spl.bin of="$image" \
            seek=8 conv=notrunc bs=1k
@@ -251,6 +251,10 @@ case "$MACHINE" in
         ;;
     cubieboard2)
         dd if=$rootdir/usr/lib/u-boot/Cubieboard2/u-boot-sunxi-with-spl.bin of="$image" \
+           seek=8 conv=notrunc bs=1k
+        ;;
+    pcduino3)
+        dd if=$rootdir/usr/lib/u-boot/Linksprite_pcDuino3/u-boot-sunxi-with-spl.bin of="$image" \
            seek=8 conv=notrunc bs=1k
         ;;
 esac
