@@ -1,0 +1,43 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# This file is part of Freedom Maker.
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+Vagrant.configure("2") do |config|
+  config.vm.define "legolas" do |legolas|
+    legolas.vm.box = "legolas"
+    legolas.vm.hostname = "legolas"
+    legolas.vm.box_url = "minimal/jessie64"
+    legolas.vm.network :private_network, ip: "192.168.33.10"
+
+    legolas.vm.provider :virtualbox do |v|
+      v.customize ["modifyvm", :id, "--memory", 2560, "--cpus", 2]
+    end
+  end
+
+  # Uncomment this to add another box.
+  #config.vm.define "gandalf" do |gandalf|
+  #  gandalf.vm.box = "gandalf"
+  #  gandalf.vm.hostname = "gandalf"
+  #  gandalf.vm.box_url = "minimal/jessie64"
+  #  gandalf.vm.network :private_network, ip: "192.168.33.11"
+  #
+  #  gandalf.vm.provider :virtualbox do |v|
+  #    v.customize ["modifyvm", :id, "--memory", 2560, "--cpus", 2]
+  #  end
+  #end
+end
