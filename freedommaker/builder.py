@@ -141,7 +141,8 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
             'MIRROR': self.arguments.mirror,
             'BUILD_MIRROR': self.arguments.build_mirror,
             'MACHINE': self.machine,
-            'SOURCE': 'true' if self.arguments.include_source else 'false',
+            'SOURCE': 'true' if self.arguments.download_source else 'false',
+            'SOURCE_IN_IMAGE': 'true' if self.arguments.include_source else 'false',
             'SUITE': self.arguments.distribution,
             'ENABLE_NONFREE': 'no' if self.free else 'yes',
         }

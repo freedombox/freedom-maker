@@ -237,13 +237,21 @@ class TestInvocation(unittest.TestCase):
         self.assert_environment_passed({'SUITE': distribution},
                                        distribution=distribution)
 
-    def test_include_source(self):
-        """Test that include-source parameter works."""
+    def test_download_source(self):
+        """Test that download-source parameter works."""
         self.invoke()
         self.assert_environment_passed({'SOURCE': 'false'})
 
-        self.invoke(include_source=True, force=True)
+        self.invoke(download_source=True, force=True)
         self.assert_environment_passed({'SOURCE': 'true'})
+
+    def test_include_source(self):
+        """Test that include-source parameter works."""
+        self.invoke()
+        self.assert_environment_passed({'SOURCE_IN_IMAGE': 'false'})
+
+        self.invoke(include_source=True, force=True)
+        self.assert_environment_passed({'SOURCE_IN_IMAGE': 'true'})
 
     def test_package(self):
         """Test that package parameter works."""

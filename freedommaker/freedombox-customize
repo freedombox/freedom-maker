@@ -113,6 +113,14 @@ unmount_file_systems() {
     esac
 }
 
+make_source_tarball() {
+    # Make source packages available outside of image.
+    (
+    cd "$rootdir/usr/src/packages"
+    tar -czvf "$1" ./*
+    )
+}
+
 # Set to true/false to control if eatmydata is used during build
 use_eatmydata=true
 
@@ -212,6 +220,15 @@ rm $rootdir/usr/sbin/policy-rc.d
 
 chroot $rootdir /usr/lib/freedombox/setup 2>&1 | \
     tee $rootdir/var/log/freedombox-setup.log
+
+if [ 'true' = "$SOURCE" ] ; then
+    make_source_tarball "${image%.img.temp}"-source.tar.gz
+
+    if [ 'false' = "$SOURCE_IN_IMAGE" ] ; then
+	# Remove source packages from image.
+	rm -rf "$rootdir/usr/src/packages"
+    fi
+fi
 
 # Remove SSH keys from the image, freedomxbox-setup does not do that
 # anymore.
