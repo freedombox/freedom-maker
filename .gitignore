@@ -6,3 +6,4 @@ freedommaker/tests/output
 *.pyc
 .idea/
 .DS_Store
+.pybuild/

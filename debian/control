@@ -1,0 +1,43 @@
+Source: freedom-maker
+Maintainer: FreedomBox Packaging Team <freedombox-pkg-team@lists.alioth.debian.org>
+Uploaders:
+ Joseph Nuthalapati <njoseph@riseup.net>,
+ Ferderico Ceratto <federico3@debian.org>
+Section: python
+Priority: extra
+Build-Depends:
+ debhelper (>= 9),
+ dh-python,
+ python3-all,
+ python3-setuptools,
+Standards-Version: 3.9.8
+Homepage: https://freedombox.org
+Vcs-Browser: https://anonscm.debian.org/git/freedombox/freedom-maker.git
+Vcs-Git: https://anonscm.debian.org/git/freedombox/freedom-maker.git
+
+Package: freedom-maker
+Architecture: all
+Depends:
+ ${misc:Depends},
+ ${python3:Depends},
+ binfmt-support,
+ btrfs-tools,
+ dosfstools,
+ extlinux,
+ git,
+ pxz,
+ qemu-user-static,
+ qemu-utils,
+ sshpass,
+ sudo,
+ u-boot-tools,
+ vmdebootstrap
+Suggests:
+ virtualbox
+Description: FreedomBox image builder
+ FreedomBox is a personal cloud server which can be installed on single board
+ computers and debian machines.
+ .
+ Freedom-Maker is a tool to build images for FreedomBox for various supported
+ hardware that can then be copied to SD card, USB stick or Hard Disk drive to
+ boot into FreedomBox.

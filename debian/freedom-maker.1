@@ -1,0 +1,161 @@
+'\" t
+.\"     Title: freedom-maker
+.\"    Author: [see the "Author" section]
+.\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
+.\"      Date: 06/05/2017
+.\"    Manual: FreedomBox
+.\"    Source: 0.8
+.\"  Language: English
+.\"
+.TH "FREEDOM\-MAKER" "1" "06/05/2017" "0\&.8" "FreedomBox"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+freedom-maker \- image builder for FreedomBox
+.SH "SYNOPSIS"
+.HP \w'\fBfreedom\-maker\fR\ 'u
+\fBfreedom\-maker\fR [\fB\-\-vmdebootstrap\fR] [\fB\-\-build\-stamp\fR] [\fB\-\-image\-size\fR] [\fB\-\-build\-mirror\fR] [\fB\-\-mirror\fR] [\fB\-\-distribution\fR] [\fB\-\-include\-source\fR] [\fB\-\-package\fR] [\fB\-\-custom\-package\fR] [\fB\-\-build\-dir\fR] [\fB\-\-log\-level\*(Aq\fR] [\fB\-\-hostname\fR] [\fB\-\-sign\fR] [\fB\-\-force\fR] [\fBtargets\fR] [\fB\-h,\ \fR\fB\-\-help\fR]
+.SH "DESCRIPTION"
+.PP
+FreedomBox is a community project to develop, design and promote personal servers running free software for private, personal communications\&. It is a networking appliance designed to allow interfacing with the rest of the Internet under conditions of protected privacy and data security\&. It hosts applications such as blog, wiki, website, social network, email, web proxy and a Tor relay on a device that can replace a wireless router so that data stays with the users\&.
+.PP
+FreedomMaker is a tool to build FreedomBox images for various single board computers, virtual machines and general purpose computers\&.
+.SH "OPTIONS"
+.PP
+\fB\-\-vmdebootstrap\fR
+.RS 4
+Path to vmdebootstrap executable
+.RE
+.PP
+\fB\-\-build\-stamp\fR
+.RS 4
+Build stamp to use on image file names
+.RE
+.PP
+\fB\-\-image\-size\fR
+.RS 4
+Size of the image to build
+.RE
+.PP
+\fB\-\-build\-mirror\fR
+.RS 4
+Debian mirror to use for building
+.RE
+.PP
+\fB\-\-mirror\fR
+.RS 4
+Debian mirror to use in built image
+.RE
+.PP
+\fB\-\-distribution\fR
+.RS 4
+Debian release to use in built image
+.RE
+.PP
+\fB\-\-include\-source\fR
+.RS 4
+Whether to include source in build image, False by default
+.RE
+.PP
+\fB\-\-package\fR
+.RS 4
+Install additional packages in the image
+.RE
+.PP
+\fB\-\-custom\-package\fR
+.RS 4
+Install package from DEB file into the image
+.RE
+.PP
+\fB\-\-build\-dir\fR
+.RS 4
+Directory to build images and create log file
+.RE
+.PP
+\fB\-\-log\-level\*(Aq\fR
+.RS 4
+The logging level \- choose one of (\*(Aqcritical\*(Aq, \*(Aqerror\*(Aq, \*(Aqwarn\*(Aq, \*(Aqinfo\*(Aq, \*(Aqdebug\*(Aq)\&. Default log level is \*(Aqdebug\*(Aq\&.
+.RE
+.PP
+\fB\-\-hostname\fR
+.RS 4
+Hostname to set inside the built images
+.RE
+.PP
+\fB\-\-sign\fR
+.RS 4
+Sign the images with default GPG key after building
+.RE
+.PP
+\fB\-\-force\fR
+.RS 4
+Force rebuild of images even when required image exists
+.RE
+.PP
+\fBtargets\fR
+.RS 4
+Image targets to build\&. Choose one or more of freedommaker, dreamplug, raspberry, raspberry2, beaglebone, cubieboard2, cubietruck, a20\-olinuxino\-lime, a20\-olinuxino\-lime2, a20\-olinuxino\-micro, i386, amd64, virtualbox\-i386, virtualbox\-amd64, qemu\-i386, qemu\-amd64
+.RE
+.SH "EXAMPLES"
+.PP
+\fBExample\ \&1.\ \&Build BeagleBone image\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ freedom\-maker beaglebone
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Build a FreedomBox image for the BeagleBone Single Board Computer\&.
+.PP
+\fBExample\ \&2.\ \&Build all images\fR
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$ python3 \-m freedommaker dreamplug raspberry raspberry2
+      beaglebone cubieboard2 cubietruck a20\-olinuxino\-lime a20\-olinuxino\-lime2 
+      a20\-olinuxino\-micro i386 amd64 virtualbox\-i386 virtualbox\-amd64 
+      qemu\-i386 qemu\-amd64
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Build all the available FreedomBox images using freedom\-maker\&.
+.SH "BUGS"
+.PP
+See the
+\m[blue]\fBFreedom\-maker issue tracker\fR\m[]\&\s-2\u[1]\d\s+2
+for a full list of known issues and TODO items\&.
+.SH "AUTHOR"
+.PP
+Freedom\-Maker Developers
+.SH "NOTES"
+.IP " 1." 4
+Freedom-maker issue tracker
+.RS 4
+\%https://github.com/freedombox/freedom-maker/issues
+.RE

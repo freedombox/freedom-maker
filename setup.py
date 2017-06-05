@@ -35,7 +35,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     entry_points={
         'console_scripts': [
-            'freedom-maker = freedommaker'
+            'freedom-maker = freedommaker:main'
         ]
     },
     test_suite='freedommaker.tests',

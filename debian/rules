@@ -1,0 +1,11 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE=1
+export PYBUILD_NAME=freedom-maker
+
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+# Skipping tests due to https://github.com/freedombox/freedom-maker/issues/102
+override_dh_auto_test:
+	true

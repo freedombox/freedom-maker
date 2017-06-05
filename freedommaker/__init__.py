@@ -26,4 +26,8 @@ __version__ = '0.8'
 
 __all__ = [
     'Application',
+    'main',
 ]
+
+def main():
+    Application().run()
