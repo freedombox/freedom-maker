@@ -46,22 +46,22 @@ dreamplug_repack_kernel() {
     mkdir /tmp/initrd-repack
 
     (cd /tmp/initrd-repack ; \
-	zcat /boot/$initRd | cpio -i ; \
-	rm -f conf/param.conf ; \
-	find . | cpio --quiet -o -H newc | \
-	gzip -9 > /boot/$initRd )
+        zcat /boot/$initRd | cpio -i ; \
+        rm -f conf/param.conf ; \
+        find . | cpio --quiet -o -H newc | \
+        gzip -9 > /boot/$initRd )
 
     rm -rf /tmp/initrd-repack
 
     (cd /boot ; \
-	cp /usr/lib/$kernelVersion/kirkwood-dreamplug.dtb dtb ; \
-	cat $vmlinuz dtb >> temp-kernel ; \
-	mkimage -A arm -O linux -T kernel -n "Debian kernel ${version}" \
-	-C none -a 0x8000 -e 0x8000 -d temp-kernel uImage ; \
-	rm -f temp-kernel ; \
-	mkimage -A arm -O linux -T ramdisk -C gzip -a 0x0 -e 0x0 \
-	-n "Debian ramdisk ${version}" \
-	-d $initRd uInitrd )
+        cp /usr/lib/$kernelVersion/kirkwood-dreamplug.dtb dtb ; \
+        cat $vmlinuz dtb >> temp-kernel ; \
+        mkimage -A arm -O linux -T kernel -n "Debian kernel ${version}" \
+        -C none -a 0x8000 -e 0x8000 -d temp-kernel uImage ; \
+        rm -f temp-kernel ; \
+        mkimage -A arm -O linux -T ramdisk -C gzip -a 0x0 -e 0x0 \
+        -n "Debian ramdisk ${version}" \
+        -d $initRd uInitrd )
 }
 
 # Install binary blob and kernel needed to boot on the Raspberry Pi.
@@ -131,24 +131,24 @@ setup_flash_kernel() {
 
 case "$MACHINE" in
     dreamplug|guruplug)
-	dreamplug_flash
-	dreamplug_repack_kernel
-	enable_serial_console ttyS0
-	;;
+        dreamplug_flash
+        dreamplug_repack_kernel
+        enable_serial_console ttyS0
+        ;;
     raspberry)
-	raspberry_setup_boot
-	;;
+        raspberry_setup_boot
+        ;;
     raspberry2)
-	raspberry2_setup_boot
-	setup_flash_kernel 'Raspberry Pi 2 Model B'
-	flash-kernel
-	;;
+        raspberry2_setup_boot
+        setup_flash_kernel 'Raspberry Pi 2 Model B'
+        flash-kernel
+        ;;
     beaglebone)
         setup_flash_kernel 'TI AM335x BeagleBone Black' 'ttyO0'
-	;;
+        ;;
     cubietruck)
         setup_flash_kernel 'Cubietech Cubietruck'
-	;;
+        ;;
     a20-olinuxino-lime)
         setup_flash_kernel 'Olimex A20-OLinuXino-LIME'
         ;;
@@ -159,6 +159,9 @@ case "$MACHINE" in
         setup_flash_kernel 'Olimex A20-Olinuxino Micro'
         ;;
     cubieboard2)
-	setup_flash_kernel 'Cubietech Cubieboard2'
+        setup_flash_kernel 'Cubietech Cubieboard2'
+        ;;
+    pcduino3)
+        setup_flash_kernel 'LinkSprite pcDuino3'
         ;;
 esac
