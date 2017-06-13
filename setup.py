@@ -33,6 +33,7 @@ setuptools.setup(
     author_email='freedombox-discuss@lists.alioth.debian.org',
     url='http://freedomboxfoundation.org',
     packages=setuptools.find_packages(),
+    scripts=['bin/passwd-in-image','bin/vagrant-package'],
     entry_points={
         'console_scripts': [
             'freedom-maker = freedommaker:main'
