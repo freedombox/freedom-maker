@@ -1,1 +1,3 @@
 debian/freedom-maker.1
+debian/passwd-in-image.1
+debian/vagrant-package.1
