@@ -37,6 +37,7 @@ Freedom-maker supports building for the following targets:
 - *virtualbox-amd64*: 64-bit image for the VirtualBox virtualization tool
 - *qemu-i386*: 32-bit image for the Qemu virtualization tool
 - *qemu-amd64*: 64-bit image for the Qemu virtualization tool
+- *pcDuino3*: pcDuino3  
 - *test*: build virtualbox i386 image and run diagnostics tests on it
 
 ## Install dependencies
