@@ -68,8 +68,8 @@
       data stays with the users.
     </para>
     <para>
-      FreedomMaker is a tool to build FreedomBox images for various single
-      board computers, virtual machines and general purpose computers. 
+      freedom-maker is a tool to build FreedomBox images for various single
+      board computers, virtual machines and general purpose computers.
     </para>
   </refsect1>
 
@@ -231,7 +231,7 @@
   <refsect1>
     <title>Bugs</title>
     <para>
-      See the <ulink url="https://github.com/freedombox/freedom-maker/issues">Freedom-maker
+      See the <ulink url="https://github.com/freedombox/freedom-maker/issues">freedom-maker
       issue tracker</ulink> for a full list of known issues and TODO items.
     </para>
   </refsect1>
@@ -240,7 +240,7 @@
     <title>Author</title>
     <para>
       <author>
-        <firstname>Freedom-Maker Developers</firstname>
+        <firstname>FreedomBox Developers</firstname>
         <contrib>Original author</contrib>
       </author>
     </para>

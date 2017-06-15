@@ -20,7 +20,7 @@
 -->
 <refentry>
   <refmeta>
-    <refentrytitle><application>passwd-in-image</application></refentrytitle>
+    <refentrytitle><application>vagrant-package</application></refentrytitle>
     <manvolnum>1</manvolnum>
     <refmiscinfo class="manual">FreedomBox Manual</refmiscinfo>
     <refmiscinfo class="version">0.8</refmiscinfo>
@@ -29,16 +29,16 @@
   <refnamediv>
     <refname><application>vagrant-package</application></refname>
     <refpurpose>
-      Convert VirtualBox disk image into Vagrant box
+      convert VirtualBox disk image into Vagrant box
     </refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>
     <cmdsynopsis>
       <command>vagrant-package</command>
-        <arg> <option>image</option></arg>
-        <arg> <option>--output</option></arg>
-        <arg><option>-h, </option><option>--help</option></arg>
+      <arg><option>image</option></arg>
+      <arg><option>--output</option><arg choice="req">OUTPUT</arg></arg>
+      <arg><option>-h, </option><option>--help</option></arg>
    </cmdsynopsis>
   </refsynopsisdiv>
 
@@ -55,8 +55,8 @@
       data stays with the users.
     </para>
     <para>
-      FreedomMaker is a tool to build FreedomBox images for various single
-      board computers, virtual machines and general purpose computers. 
+      freedom-maker is a tool to build FreedomBox images for various single
+      board computers, virtual machines and general purpose computers.
     </para>
     <para>
       Vagrant Package script lets you convert a Virtualbox disk image into a
@@ -68,18 +68,18 @@
     <title>Options</title>
     <variablelist>
       <varlistentry>
-        <term> <option>image</option></term>
+        <term><option>image</option></term>
         <listitem>
           <para>
-            Disk image file (.vdi) to be converted
+            Disk image file (.vdi) to be converted.
           </para>
         </listitem>
       </varlistentry>
       <varlistentry>
-        <term> <option>--output</option></term>
+        <term><option>--output OUTPUT</option></term>
          <listitem>
           <para>
-            Path of the output vagrant box file (default: package.box)
+            Path of the output vagrant box file (default: package.box).
           </para>
         </listitem>
       </varlistentry>
@@ -90,19 +90,17 @@
     <title>Examples</title>
 
     <example>
-      <title>change password for a user</title>
-      <synopsis>$ vagrant-package freedom-maker-beaglebone.vdi --output
-      beaglebone.box </synopsis>
-      <para>
-        Convert VirtualBox disk image into Vagrant box
-      </para>
+      <title>Convert amd64 VirtualBox disk image into Vagrant box</title>
+      <synopsis>$ vagrant-package freedom-maker-amd64.vdi --output
+      freedom-maker-amd64.box</synopsis>
     </example>
   </refsect1>
 
   <refsect1>
     <title>Bugs</title>
     <para>
-      See the <ulink url="https://github.com/freedombox/freedom-maker/issues">Freedom-maker
+      See the <ulink
+      url="https://github.com/freedombox/freedom-maker/issues">freedom-maker
       issue tracker</ulink> for a full list of known issues and TODO items.
     </para>
   </refsect1>
@@ -111,7 +109,7 @@
     <title>Author</title>
     <para>
       <author>
-        <firstname>Freedom-Maker Developers</firstname>
+        <firstname>FreedomBox Developers</firstname>
         <contrib>Original author</contrib>
       </author>
     </para>
