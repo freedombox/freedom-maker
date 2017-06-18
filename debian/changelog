@@ -1,5 +1,6 @@
-freedom-maker (0.8) UNRELEASED; urgency=low
+freedom-maker (0.8) unstable; urgency=low
 
+  [ Joseph Nuthalapati ]
   * Initial release. (Closes: #864764)
 
- -- Joseph Nuthalapati <njoseph@riseup.net>  Mon, 12 Jun 2017 09:13:35 +0000
+ -- Federico Ceratto <federico@debian.org>  Sun, 18 Jun 2017 16:00:03 +0100
