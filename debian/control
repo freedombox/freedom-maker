@@ -1,8 +1,6 @@
 Source: freedom-maker
 Maintainer: FreedomBox Packaging Team <freedombox-pkg-team@lists.alioth.debian.org>
-Uploaders:
- Joseph Nuthalapati <njoseph@riseup.net>,
- Ferderico Ceratto <federico3@debian.org>
+Uploaders: Joseph Nuthalapati <njoseph@riseup.net>, Federico Ceratto <federico@debian.org>
 Section: python
 Priority: extra
 Build-Depends:
@@ -36,7 +34,7 @@ Suggests:
  virtualbox
 Description: FreedomBox image builder
  FreedomBox is a personal cloud server which can be installed on single board
- computers and debian machines.
+ computers and Debian machines.
  .
  Freedom-Maker is a tool to build images for FreedomBox for various supported
  hardware that can then be copied to SD card, USB stick or Hard Disk drive to
