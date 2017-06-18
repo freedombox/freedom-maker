@@ -136,6 +136,7 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
             '--log-level', self.arguments.log_level,
             '--verbose',
             '--customize', self.customization_script,
+            '--no-systemd-networkd',
         ]
         self.environment = {
             'MIRROR': self.arguments.mirror,
