@@ -1,7 +1,7 @@
 Source: freedom-maker
 Maintainer: FreedomBox Packaging Team <freedombox-pkg-team@lists.alioth.debian.org>
 Uploaders: Joseph Nuthalapati <njoseph@riseup.net>, Federico Ceratto <federico@debian.org>
-Section: python
+Section: utils
 Priority: extra
 Build-Depends:
  debhelper (>= 9),
