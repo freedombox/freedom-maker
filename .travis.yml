@@ -1,0 +1,24 @@
+dist: trusty
+sudo: required
+services:
+  - docker
+before_install:
+  - docker pull debian:"${BUILD_DISTRIBUTION:?}"
+  - docker run -d --name buildhost --privileged -v "${TRAVIS_BUILD_DIR:?}":/tmp/build_dir -w "/tmp/build_dir" debian:"${BUILD_DISTRIBUTION:?}" tail -f /dev/null
+install:
+  - docker exec buildhost apt-get -qq update
+  - docker exec buildhost apt-get install -y --no-install-recommends ${COMMON_DEPS:?}
+  - docker exec buildhost apt-get install -y --no-install-recommends ${TARGET_DEPS:?}
+script:
+  - travis_wait docker exec buildhost python3 -m freedommaker "${TARGET:?}" --distribution="${DISTRIBUTION:?}"
+  - ls -l build
+  - file build/freedombox-*.img*
+after_failure:
+  - docker exec buildhost /bin/sh -c 'for F in $(find . -name "*.log"); do echo ${F:?}; tail -n 1000 ${F:?}; done'
+env:
+  global:
+    - BUILD_DISTRIBUTION=stretch
+    - COMMON_DEPS="python3-minimal libpython3-stdlib sudo vmdebootstrap"
+    - DISTRIBUTION=stable
+  matrix:
+    - TARGET=raspberry TARGET_DEPS="dosfstools qemu-user-static binfmt-support pxz"
