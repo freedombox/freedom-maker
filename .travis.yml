@@ -13,6 +13,7 @@ script:
   - travis_wait docker exec buildhost python3 -m freedommaker "${TARGET:?}" --distribution="${DISTRIBUTION:?}"
   - ls -l build
   - file build/freedombox-*.img*
+  - md5sum build/freedombox-*.img*
 after_failure:
   - docker exec buildhost /bin/sh -c 'for F in $(find . -name "*.log"); do echo ${F:?}; tail -n 1000 ${F:?}; done'
 env:
@@ -22,3 +23,13 @@ env:
     - DISTRIBUTION=stable
   matrix:
     - TARGET=raspberry TARGET_DEPS="dosfstools qemu-user-static binfmt-support pxz"
+deploy:
+  provider: releases
+  api_key:
+    secure: pQrU4QWlOmXPbOK8IBog/b4LPwuDqHc3/lI/2o5IN6gThqTDI6WYnvRaQl7XJBS+ecemwV5fbSqCA6Rv6Sl/IopgbXh5t0iRvFpNzI0DInPSCkOzxDeRiCsoXLOiEw3XhY7s9iX3U6aD4KOuPpodA2cHLit7OzRRnn2ePtyEpFkp63Zu/P6U2E39dVYMrxVr9aDfNZxmEk00dtTb6BkulbOOk2cNz38LPtGaoGp0Wv3dIGHPVhV3cYafQsbzyqRLCeTkDTgUojHdRC77rppwuGS9oZPgCIPD2ql+IcUYZuBqnBv0GYegrKlTCo+l270BhODuVMbRUjlnq0fp9zmUPB9wTz1Z1tdRoj8NawC94EZ7YDSgG4Xl9Ztqyosv5Zw7RUTXEsNiqM1j1QNWPXPluiXf+rFcbNaRO8zNJPc+Ra+9G5T9x2B+hrP2WHNHIFqrJ5sbJsQFQHlcnmqcZ8aNWYavSo+EG77tqPKdd/SzLJJLOv0m4YxUt5rxnrb4gy8NTnSVlsHJPyW5rAVKthcB6zj1X0KKDnTM3qWpsrWxWZS0KC3fjxnAnNDRDt/isa2gjgS+/vxNgS57yk9+XD+DFQj8EvpAkZ/foL/xMNaVxxa0xgQANjnrugbpXh8o8s6tKLXnk7LCGXSH+afNpfuDAFOz2z0m+157r3A6DSp5k4Q=
+  file_glob: true
+  file: build/freedombox-*-*_*_raspberry-armel.img.xz
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
