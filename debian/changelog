@@ -1,3 +1,9 @@
+freedom-maker (0.9) UNRELEASED; urgency=medium
+
+  * Remove dependency on extlinux. (Closes: #869203)
+
+ -- Sunil Mohan Adapa <sunil@medhas.org>  Tue, 25 Jul 2017 19:34:03 +0530
+
 freedom-maker (0.8) unstable; urgency=low
 
   [ Joseph Nuthalapati ]

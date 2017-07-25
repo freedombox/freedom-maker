@@ -21,7 +21,6 @@ Depends:
  binfmt-support,
  btrfs-tools,
  dosfstools,
- extlinux,
  git,
  pxz,
  qemu-user-static,

@@ -182,7 +182,6 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         """Add parameters related to boot loader."""
         option_map = {
             'grub': ['--grub'],
-            'extlinux': [],
             'u-boot': ['--no-extlinux'],
             None: ['--no-extlinux']
         }

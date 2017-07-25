@@ -53,7 +53,6 @@ $ sudo apt-get -y install git \
                           dosfstools \
                           btrfs-tools \
                           pxz \
-                          extlinux \
                           virtualbox \
                           qemu-utils \
                           qemu-user-static \
@@ -64,7 +63,7 @@ $ sudo apt-get -y install git \
 
 For VirtualBox:
 ```
-$ sudo apt-get -y install extlinux virtualbox
+$ sudo apt-get -y install virtualbox
 ```
 
 For Qemu:
@@ -84,7 +83,7 @@ $ sudo apt-get -y install qemu-user-static binfmt-support u-boot-tools
 
 For Testing:
 ```
-$ sudo apt-get install extlinux virtualbox sshpass
+$ sudo apt-get install virtualbox sshpass
 ```
 
 ## Running Build
