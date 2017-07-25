@@ -407,27 +407,27 @@ class TestInvocation(unittest.TestCase):
             if architecture in ('i386', 'amd64'):
                 self.assert_arguments_passed(['--roottype', 'btrfs'])
                 self.assert_arguments_not_passed(['--boottype'])
-                self.assert_arguments_passed(['--package', 'btrfs-tools'])
+                self.assert_arguments_passed(['--package', 'btrfs-progs'])
                 self.assert_arguments_not_passed(['--bootsize', '128M'])
             elif target in ('raspberry'):
                 self.assert_arguments_passed(['--roottype', 'ext4'])
                 self.assert_arguments_passed(['--boottype', 'vfat'])
-                self.assert_arguments_not_passed(['--package', 'btrfs-tools'])
+                self.assert_arguments_not_passed(['--package', 'btrfs-progs'])
                 self.assert_arguments_passed(['--bootsize', '128M'])
             elif target in ('raspberry2'):
                 self.assert_arguments_passed(['--roottype', 'btrfs'])
                 self.assert_arguments_passed(['--boottype', 'ext2'])
-                self.assert_arguments_passed(['--package', 'btrfs-tools'])
+                self.assert_arguments_passed(['--package', 'btrfs-progs'])
                 self.assert_arguments_passed(['--bootsize', '128M'])
             elif target in ('dreamplug'):
                 self.assert_arguments_passed(['--roottype', 'btrfs'])
                 self.assert_arguments_passed(['--boottype', 'vfat'])
-                self.assert_arguments_passed(['--package', 'btrfs-tools'])
+                self.assert_arguments_passed(['--package', 'btrfs-progs'])
                 self.assert_arguments_passed(['--bootsize', '128M'])
             else:
                 self.assert_arguments_passed(['--roottype', 'btrfs'])
                 self.assert_arguments_passed(['--boottype', 'ext2'])
-                self.assert_arguments_passed(['--package', 'btrfs-tools'])
+                self.assert_arguments_passed(['--package', 'btrfs-progs'])
                 self.assert_arguments_passed(['--bootsize', '128M'])
 
     def test_boot_offset(self):

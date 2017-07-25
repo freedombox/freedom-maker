@@ -51,7 +51,7 @@ $ sudo apt-get -y install git \
                           sudo \
                           vmdebootstrap \
                           dosfstools \
-                          btrfs-tools \
+                          btrfs-progs \
                           pxz \
                           virtualbox \
                           qemu-utils \
