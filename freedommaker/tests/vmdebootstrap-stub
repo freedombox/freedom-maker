@@ -42,7 +42,11 @@ def main():
 
     arguments, unknown = parser.parse_known_args()
     with open(arguments.image, 'w') as file_handle:
-        print(json.dumps(output), file=file_handle)
+        output = json.dumps(output)
+        # Make the output a multiple of 512 bytes so it be treated as disk
+        # image
+        output += ' ' * (((512 - (len(output) % 512)) % 512) - 1)
+        print(output, file=file_handle)
 
 
 if __name__ == '__main__':
