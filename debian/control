@@ -1,6 +1,9 @@
 Source: freedom-maker
 Maintainer: FreedomBox Packaging Team <freedombox-pkg-team@lists.alioth.debian.org>
-Uploaders: Joseph Nuthalapati <njoseph@riseup.net>, Federico Ceratto <federico@debian.org>
+Uploaders:
+ Joseph Nuthalapati <njoseph@riseup.net>,
+ Federico Ceratto <federico@debian.org>,
+ Sunil Mohan Adapa <sunil@medhas.org>,
 Section: utils
 Priority: extra
 Build-Depends:

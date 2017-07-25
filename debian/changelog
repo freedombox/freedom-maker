@@ -1,6 +1,7 @@
 freedom-maker (0.9) UNRELEASED; urgency=medium
 
   * Remove dependency on extlinux. (Closes: #869203)
+  * Add myself to list of uploaders.
 
  -- Sunil Mohan Adapa <sunil@medhas.org>  Tue, 25 Jul 2017 19:34:03 +0530
 
