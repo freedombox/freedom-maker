@@ -170,7 +170,10 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
     def process_architecture(self):
         """Add parameters specific to the architecture."""
         if self.architecture not in ('i386', 'amd64'):
-            self.parameters += ['--foreign', '/usr/bin/qemu-arm-static']
+            if self.architecture == 'arm64':
+                self.parameters += ['--foreign', '/usr/bin/qemu-aarch64-static']
+            else:
+                self.parameters += ['--foreign', '/usr/bin/qemu-arm-static']
 
             # Using taskset to pin build process to single core. This
             # is a workaround for a qemu-user-static issue that causes
@@ -566,3 +569,13 @@ class RaspberryPi2ImageBuilder(ARMImageBuilder):
     free = False
     boot_offset = '64mib'
     kernel_flavor = 'armmp'
+
+
+class RaspberryPi3ImageBuilder(ARMImageBuilder):
+    """Image builder for Raspberry Pi 3 target."""
+    architecture = 'arm64'
+    machine = 'raspberry3'
+    free = False
+    boot_loader = None
+    boot_offset = '64mib'
+    kernel_flavor = 'arm64'

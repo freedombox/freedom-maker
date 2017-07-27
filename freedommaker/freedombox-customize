@@ -108,7 +108,7 @@ unmount_file_systems() {
     umount "$rootdir/sys" || true
 
     case "$MACHINE" in
-	raspberry2)
+	raspberry2 | raspberry3)
 	    umount "$rootdir/boot/firmware" || true
 	    ;;
     esac
@@ -130,7 +130,7 @@ image="$(cd "$(dirname "$2")"; pwd)/$(basename "$2")"
 
 # Create vfat /boot/firmware partition for devices that need it.
 case "$MACHINE" in
-    raspberry2)
+    raspberry2 | raspberry3)
 	umount "$rootdir/boot"
 	umount "$rootdir"
 	kpartx -dvs "$image"

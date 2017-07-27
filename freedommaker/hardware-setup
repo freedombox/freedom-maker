@@ -127,6 +127,25 @@ raspberry2_setup_boot() {
     cp /usr/lib/u-boot/rpi_2/u-boot.bin /boot/firmware/kernel.img
 }
 
+# Install binary blob and u-boot needed to boot on the Raspberry Pi 3.
+raspberry3_setup_boot() {
+    # install boot firmware
+    apt-get install --no-install-recommends -y dpkg-dev
+    cd /tmp
+    apt-get source raspi3-firmware
+    cp raspi3-firmware*/boot/* /boot/firmware
+    rm -rf raspi3-firmware*
+    cd /
+
+    # remove unneeded firmware files
+    rm -f /boot/firmware/fixup_*
+    rm -f /boot/firmware/start_*
+
+    # u-boot setup
+    apt-get install -y u-boot-rpi u-boot-tools
+    cp /usr/lib/u-boot/rpi_3/u-boot.bin /boot/firmware/kernel.img
+}
+
 
 setup_flash_kernel() {
     if [ ! -d /etc/flash-kernel ] ; then
@@ -144,6 +163,16 @@ setup_flash_kernel() {
     fi
 
     apt-get install -y flash-kernel
+
+    # add machine db entry for Raspberry Pi 3
+    cat >>/etc/flash-kernel/db <<EOF
+Machine: Raspberry Pi 3 Model B
+Kernel-Flavors: arm64
+DTB-Id: bcm2837-rpi-3-b.dtb
+U-Boot-Script-Name: bootscr.uboot-generic
+Required-Packages: u-boot-tools
+Boot-Script-Path: /boot/boot.scr
+EOF
 }
 
 stable_mac_address_workaround() {
@@ -174,6 +203,11 @@ case "$MACHINE" in
         setup_flash_kernel 'Raspberry Pi 2 Model B'
         flash-kernel
         stable_mac_address_workaround
+        ;;
+    raspberry3)
+        raspberry3_setup_boot
+        setup_flash_kernel 'Raspberry Pi 3 Model B'
+        flash-kernel
         ;;
     beaglebone)
         setup_flash_kernel 'TI AM335x BeagleBone Black' 'ttyO0'

@@ -52,6 +52,7 @@ ARCHITECTURES = {
     'dreamplug': 'armel',
     'raspberry': 'armel',
     'raspberry2': 'armhf',
+    'raspberry3': 'arm64',
 }
 
 
@@ -123,12 +124,13 @@ class TestInvocation(unittest.TestCase):
             'dreamplug': 'dreamplug-armel.img',
             'raspberry': 'raspberry-armel.img',
             'raspberry2': 'raspberry2-armhf.img',
+            'raspberry3': 'raspberry3-arm64.img',
         }
 
         distribution = distribution or 'unstable'
 
         free_tag = 'free'
-        if target in ('raspberry', 'raspberry2'):
+        if target in ('raspberry', 'raspberry2', 'raspberry3'):
             free_tag = 'nonfree'
 
         file_name = 'freedombox-{distribution}-{free_tag}_{build_stamp}_' \
@@ -379,7 +381,7 @@ class TestInvocation(unittest.TestCase):
                 self.assert_arguments_not_passed(['--package', 'u-boot'])
                 self.assert_arguments_not_passed(['--package', 'u-boot-tools'])
                 self.assert_arguments_not_passed(['--no-extlinux'])
-            elif target in ('raspberry', 'raspberry2'):
+            elif target in ('raspberry'):
                 self.assert_arguments_not_passed(['--grub'])
                 self.assert_arguments_not_passed(['--package', 'u-boot'])
                 self.assert_arguments_not_passed(['--package', 'u-boot-tools'])
@@ -404,7 +406,7 @@ class TestInvocation(unittest.TestCase):
                 self.assert_arguments_not_passed(['--boottype'])
                 self.assert_arguments_passed(['--package', 'btrfs-tools'])
                 self.assert_arguments_not_passed(['--bootsize', '128M'])
-            elif target in ('raspberry', 'raspberry2'):
+            elif target in ('raspberry'):
                 self.assert_arguments_passed(['--roottype', 'ext4'])
                 self.assert_arguments_passed(['--boottype', 'vfat'])
                 self.assert_arguments_not_passed(['--package', 'btrfs-tools'])
@@ -425,7 +427,7 @@ class TestInvocation(unittest.TestCase):
         for target, architecture in ARCHITECTURES.items():
             self.build_stamp = self.random_string()
             self.invoke([target])
-            if target in ('raspberry', 'raspberry2', 'dreamplug') or \
+            if target in ('raspberry', 'dreamplug') or \
                architecture in ('i386', 'amd64'):
                 self.assert_arguments_not_passed(['--bootoffset'])
             elif target in ('beaglebone'):
@@ -445,9 +447,17 @@ class TestInvocation(unittest.TestCase):
                 self.assert_arguments_not_passed(['--no-kernel'])
                 self.assert_arguments_passed(
                     ['--kernel-package', 'linux-image-armmp'])
-            elif target in ('raspberry', 'raspberry2'):
+            elif target in ('raspberry'):
                 self.assert_arguments_passed(['--no-kernel'])
                 self.assert_arguments_not_passed(['--kernel-package'])
+            elif target in ('raspberry2'):
+                self.assert_arguments_not_passed(['--no-kernel'])
+                self.assert_arguments_passed(
+                    ['--kernel-package', 'linux-image-armmp-lpae'])
+            elif target in ('raspberry3'):
+                self.assert_arguments_notpassed(['--no-kernel'])
+                self.assert_arguments_passed(
+                    ['--kernel-package', 'linux-image-arm64'])
             elif target in ('dreamplug'):
                 self.assert_arguments_not_passed(['--no-kernel'])
                 self.assert_arguments_passed(
