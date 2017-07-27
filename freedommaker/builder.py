@@ -182,7 +182,6 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         """Add parameters related to boot loader."""
         option_map = {
             'grub': ['--grub'],
-            'extlinux': [],
             'u-boot': ['--no-extlinux'],
             None: ['--no-extlinux']
         }
@@ -217,7 +216,7 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
             self.parameters += ['--boottype', self.boot_filesystem_type]
 
         if 'btrfs' in [self.root_filesystem_type, self.boot_filesystem_type]:
-            self.packages += ['btrfs-tools']
+            self.packages += ['btrfs-progs']
 
     def process_packages(self):
         """Add parameters for additional packages to install in image."""
