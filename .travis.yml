@@ -14,6 +14,12 @@ script:
   - travis_wait docker exec buildhost python3 -m freedommaker "${TARGET:?}" --distribution="${DISTRIBUTION:?}"
   - ls -l build
   - file build/freedombox-*.img*
+  - TmpDir="$(mktemp -d)"
+  - cp -p "$(ls build/freedombox-*.img*)" "${TmpDir:?}"
+  - ( cd "${TmpDir:?}" && ${DECOMPRESS_AND_DELETE_IMAGE:?} freedombox-*.img*; )
+  - file "${TmpDir:?}"/freedombox-*.img
+  - fdisk -l "${TmpDir:?}"/freedombox-*.img
+  - rm -r "${TmpDir:?}"
 after_failure:
   - docker exec buildhost /bin/sh -c 'for F in $(find . -name "*.log"); do echo ${F:?}; tail -n 1000 ${F:?}; done'
 env:
@@ -22,4 +28,4 @@ env:
     - COMMON_DEPS="python3-minimal libpython3-stdlib sudo vmdebootstrap"
     - DISTRIBUTION=stable
   matrix:
-    - TARGET=raspberry TARGET_DEPS="dosfstools qemu-user-static binfmt-support pxz"
+    - TARGET=raspberry TARGET_DEPS="dosfstools qemu-user-static binfmt-support pxz" DECOMPRESS_AND_DELETE_IMAGE="xz -d"
