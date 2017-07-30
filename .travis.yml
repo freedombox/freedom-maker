@@ -11,7 +11,7 @@ install:
   - docker exec buildhost apt-get install -y --no-install-recommends ${COMMON_DEPS:?}
   - docker exec buildhost apt-get install -y --no-install-recommends ${TARGET_DEPS:?}
 script:
-  - travis_wait docker exec buildhost python3 -m freedommaker "${TARGET:?}" --distribution="${DISTRIBUTION:?}"
+  - travis_wait 30 docker exec buildhost python3 -m freedommaker "${TARGET:?}" --distribution="${DISTRIBUTION:?}"
   - ls -l build
   - file build/freedombox-*.img*
   - TmpDir="$(mktemp -d)"
