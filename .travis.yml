@@ -23,3 +23,13 @@ env:
     - DISTRIBUTION=stable
   matrix:
     - TARGET=raspberry TARGET_DEPS="dosfstools qemu-user-static binfmt-support pxz"
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+  irc:
+    channels:
+      - "irc.oftc.net#freedombox"
+    on_success: always
+on_failure: always
