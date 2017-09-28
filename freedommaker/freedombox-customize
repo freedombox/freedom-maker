@@ -224,8 +224,12 @@ chroot $rootdir /tmp/hardware-setup 2>&1 | \
 
 rm $rootdir/usr/sbin/policy-rc.d
 
-chroot $rootdir /usr/lib/freedombox/setup 2>&1 | \
-    tee $rootdir/var/log/freedombox-setup.log
+# freedombox-setup up to version 0.10 had setup steps.
+# Setup is delegated to Plinth in later versions.
+if [ -f $rootdir/usr/lib/freedombox/setup ]; then
+    chroot $rootdir /usr/lib/freedombox/setup 2>&1 | \
+        tee $rootdir/var/log/freedombox-setup.log
+fi
 
 if [ 'true' = "$SOURCE" ] ; then
     make_source_tarball "${image%.img.temp}"-source.tar.gz
