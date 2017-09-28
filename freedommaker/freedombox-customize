@@ -186,6 +186,11 @@ esac
 set_apt_sources $BUILD_MIRROR
 chroot $rootdir apt-get update
 
+# Set a flag to indicate that this is a FreedomBox image
+# and FreedomBox is not installed using a Debian package
+mkdir -p $rootdir/var/lib/freedombox
+touch $rootdir/var/lib/freedombox/is-freedombox-disk-image
+
 cat > $rootdir/usr/sbin/policy-rc.d <<EOF
 #!/bin/sh
 exit 101
