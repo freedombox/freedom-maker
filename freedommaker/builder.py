@@ -543,7 +543,7 @@ class DreamPlugImageBuilder(ARMImageBuilder):
     """Image builder for DreamPlug target."""
     architecture = 'armel'
     machine = 'dreamplug'
-    kernel_flavor = 'kirkwood'
+    kernel_flavor = 'marvell'
     boot_filesystem_type = 'vfat'
 
 
