@@ -95,6 +95,7 @@ mount_file_systems() {
     mount /dev     -t devfs  -o bind "$rootdir/dev"
     mount /dev/pts -t devpts -o bind "$rootdir/dev/pts"
     mount /proc    -t proc   -o bind "$rootdir/proc"
+    mount /run     -t run    -o bind "$rootdir/run"
     mount /sys     -t sys    -o bind "$rootdir/sys"
 }
 
@@ -105,6 +106,7 @@ unmount_file_systems() {
     umount "$rootdir/dev/pts" || true
     umount "$rootdir/dev" || true
     umount "$rootdir/proc" || true
+    umount "$rootdir/run" || true
     umount "$rootdir/sys" || true
 
     case "$MACHINE" in
