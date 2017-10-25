@@ -286,6 +286,12 @@ case "$MACHINE" in
         dd if=$rootdir/usr/lib/u-boot/Linksprite_pcDuino3/u-boot-sunxi-with-spl.bin of="$image" \
            seek=8 conv=notrunc bs=1k
         ;;
+    pine64-plus)
+        dd if=$rootdir/usr/lib/u-boot/pine64_plus/sunxi-spl.bin of="$image" \
+           seek=8 conv=notrunc bs=1k
+        dd if=$rootdir/usr/lib/u-boot/pine64_plus/u-boot.bin of="$image" \
+           seek=40 conv=notrunc bs=1k
+        ;;
 esac
 
 if $use_eatmydata ; then

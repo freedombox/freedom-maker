@@ -170,7 +170,12 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
     def process_architecture(self):
         """Add parameters specific to the architecture."""
         if self.architecture not in ('i386', 'amd64'):
-            self.parameters += ['--foreign', '/usr/bin/qemu-arm-static']
+            qemu_arch = 'arm'
+            if self.architecture == 'arm64':
+                qemu_arch = 'aarch64'
+
+            self.parameters += ['--foreign', '/usr/bin/qemu-{arch}-static'
+                                .format(arch=qemu_arch)]
 
             # Using taskset to pin build process to single core. This
             # is a workaround for a qemu-user-static issue that causes
@@ -188,8 +193,11 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         self.parameters += option_map[self.boot_loader]
 
         if self.boot_loader == 'u-boot':
-            self.parameters += [
-                '--package', 'u-boot-tools', '--package', 'u-boot']
+            self.parameters += ['--package', 'u-boot-tools']
+            if self.architecture != 'arm64':
+                self.parameters += ['--package', 'u-boot']
+            else:
+                self.parameters += ['--package', 'u-boot-sunxi']
 
         if self.boot_size:
             self.parameters += ['--bootsize', self.boot_size]
@@ -565,3 +573,15 @@ class RaspberryPi2ImageBuilder(ARMImageBuilder):
     free = False
     boot_offset = '64mib'
     kernel_flavor = 'armmp'
+
+
+class A64ImageBuidler(ARMImageBuilder):
+    """Image builder for all Allwinner A64 board based targets."""
+    architecture = 'arm64'
+    kernel_flavor = 'arm64'
+    boot_offset = '1mib'
+
+
+class Pine64PlusImageBuilder(A64ImageBuidler):
+    """Image builder for Pine A64+ (1GB and 2GB versions)."""
+    machine = 'pine64-plus'

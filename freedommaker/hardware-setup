@@ -196,4 +196,7 @@ case "$MACHINE" in
     pcduino3)
         setup_flash_kernel 'LinkSprite pcDuino3'
         ;;
+    pine64-plus)
+        setup_flash_kernel 'Pine64+'
+        ;;
 esac
