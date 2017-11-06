@@ -450,9 +450,13 @@ class TestInvocation(unittest.TestCase):
         for target, architecture in ARCHITECTURES.items():
             self.build_stamp = self.random_string()
             self.invoke([target])
-            if architecture in ('i386', 'amd64'):
+            if architecture in ('amd64'):
                 self.assert_arguments_not_passed(['--no-kernel'])
                 self.assert_arguments_not_passed(['--kernel-package'])
+            elif architecture in ('i386'):
+                self.assert_arguments_not_passed(['--no-kernel'])
+                self.assert_arguments_passed(
+                    ['--kernel-package', 'linux-image-686'])
             elif target in ('beaglebone'):
                 self.assert_arguments_not_passed(['--no-kernel'])
                 self.assert_arguments_passed(
@@ -466,7 +470,7 @@ class TestInvocation(unittest.TestCase):
             elif target in ('dreamplug'):
                 self.assert_arguments_not_passed(['--no-kernel'])
                 self.assert_arguments_passed(
-                    ['--kernel-package', 'linux-image-kirkwood'])
+                    ['--kernel-package', 'linux-image-marvell'])
             else:
                 self.assert_arguments_not_passed(['--no-kernel'])
                 self.assert_arguments_passed(
