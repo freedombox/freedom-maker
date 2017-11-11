@@ -527,6 +527,11 @@ class A20OLinuXinoMicroImageBuilder(A20ImageBuilder):
     machine = 'a20-olinuxino-micro'
 
 
+class BananaProImageBuilder(A20ImageBuilder):
+    """Image builder for Banana Pro target."""
+    machine = 'banana-pro'
+
+
 class Cubieboard2ImageBuilder(A20ImageBuilder):
     """Image builder for Cubieboard 2 target."""
     machine = 'cubieboard2'
