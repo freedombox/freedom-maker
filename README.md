@@ -28,6 +28,7 @@ Freedom-maker supports building for the following targets:
 - *a20-olinuxino-lime*: A20 OLinuXino Lime's SD card
 - *a20-olinuxino-lime2*: A20 OLinuXino Lime2's SD card
 - *a20-olinuxino-micro*: A20 OLinuXino MICRO's SD card
+- *banana-pro*: Banana Pro's SD card
 - *dreamplug*: DreamPlug's internal SD card
 - *raspberry*: RasbperryPi's SD card.
 - *raspberry2*: RasbperryPi 2's SD card.
@@ -98,7 +99,7 @@ $ sudo apt-get install virtualbox sshpass
     $ python3 -m freedommaker dreamplug raspberry raspberry2 beaglebone \
       cubieboard2 cubietruck a20-olinuxino-lime a20-olinuxino-lime2 \
       a20-olinuxino-micro i386 amd64 virtualbox-i386 virtualbox-amd64 \
-      qemu-i386 qemu-amd64
+      qemu-i386 qemu-amd64 banana-pro
     ```
 
     or to build just a single image:
