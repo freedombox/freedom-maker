@@ -191,8 +191,8 @@ case "$MACHINE" in
         setup_flash_kernel 'Olimex A20-Olinuxino Micro'
         ;;
     banana-pro)
-	setup_flash_kernel 'LeMaker Banana Pro'
-	;;
+        setup_flash_kernel 'LeMaker Banana Pro'
+        ;;
     cubieboard2)
         setup_flash_kernel 'Cubietech Cubieboard2'
         ;;
