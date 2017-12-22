@@ -573,3 +573,12 @@ class RaspberryPi2ImageBuilder(ARMImageBuilder):
     free = False
     boot_offset = '64mib'
     kernel_flavor = 'armmp'
+
+
+class RaspberryPi3ImageBuilder(ARMImageBuilder):
+    """Image builder for Raspberry Pi 3 target."""
+    architecture = 'armhf'
+    machine = 'raspberry3'
+    free = False
+    boot_offset = '64mib'
+    kernel_flavor = 'armmp'

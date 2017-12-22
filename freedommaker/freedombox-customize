@@ -110,9 +110,9 @@ unmount_file_systems() {
     umount "$rootdir/sys" || true
 
     case "$MACHINE" in
-	raspberry2)
-	    umount "$rootdir/boot/firmware" || true
-	    ;;
+        raspberry2 | raspberry3)
+            umount "$rootdir/boot/firmware" || true
+        ;;
     esac
 }
 
@@ -132,30 +132,30 @@ image="$(cd "$(dirname "$2")"; pwd)/$(basename "$2")"
 
 # Create vfat /boot/firmware partition for devices that need it.
 case "$MACHINE" in
-    raspberry2)
-	umount "$rootdir/boot"
-	umount "$rootdir"
-	kpartx -dvs "$image"
+    raspberry2 | raspberry3)
+        umount "$rootdir/boot"
+        umount "$rootdir"
+        kpartx -dvs "$image"
 
-	parted -s "$image" mkpart primary 0% 60MiB
+        parted -s "$image" mkpart primary 0% 60MiB
 
-	# Reorder partitions by start offset
-	sfdisk --reorder "$image"
+        # Reorder partitions by start offset
+        sfdisk --reorder "$image"
 
-	device=/dev/mapper/$(kpartx -avs "$image" \
-				    | awk '/^add map / {print $3; exit}')
-	mkfs -t vfat "$device"
-	parted -s "$image" set 1 lba on
+        device=/dev/mapper/$(kpartx -avs "$image" \
+            | awk '/^add map / {print $3; exit}')
+        mkfs -t vfat "$device"
+        parted -s "$image" set 1 lba on
 
-	mount -t btrfs "${device%?}3" "$rootdir"
-	mount -t ext2 "${device%?}2" "$rootdir"/boot
-	mkdir "$rootdir/boot/firmware"
-	mount -t vfat "$device" "$rootdir/boot/firmware"
+        mount -t btrfs "${device%?}3" "$rootdir"
+        mount -t ext2 "${device%?}2" "$rootdir"/boot
+        mkdir "$rootdir/boot/firmware"
+        mount -t vfat "$device" "$rootdir/boot/firmware"
 
-	fs_uuid=$(blkid -c /dev/null -o value -s UUID "$device")
-	echo "UUID=$fs_uuid /boot/firmware vfat errors=remount-ro 0 3" \
-	     >>"$rootdir"/etc/fstab
-	;;
+        fs_uuid=$(blkid -c /dev/null -o value -s UUID "$device")
+        echo "UUID=$fs_uuid /boot/firmware vfat errors=remount-ro 0 3" \
+             >>"$rootdir"/etc/fstab
+        ;;
 esac
 
 mount_file_systems

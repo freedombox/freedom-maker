@@ -109,7 +109,9 @@ raspberry_setup_boot() {
 }
 
 # Install binary blob and u-boot needed to boot on the Raspberry Pi 2.
-raspberry2_setup_boot() {
+raspberry2or3_setup_boot() {
+    pi_version="$1"
+
     # install boot firmware
     apt-get install --no-install-recommends -y dpkg-dev
     cd /tmp
@@ -124,7 +126,14 @@ raspberry2_setup_boot() {
 
     # u-boot setup
     apt-get install -y u-boot-rpi
-    cp /usr/lib/u-boot/rpi_2/u-boot.bin /boot/firmware/kernel.img
+    case "$pi_version" in
+        raspberry2)
+            cp /usr/lib/u-boot/rpi_2/u-boot.bin /boot/firmware/kernel.img
+            ;;
+        raspberry3)
+            cp /usr/lib/u-boot/rpi_3_32b/u-boot.bin /boot/firmware/kernel.img
+            ;;
+    esac
 }
 
 
@@ -170,8 +179,14 @@ case "$MACHINE" in
         raspberry_setup_boot
         ;;
     raspberry2)
-        raspberry2_setup_boot
+        raspberry2or3_setup_boot 'raspberry2'
         setup_flash_kernel 'Raspberry Pi 2 Model B'
+        flash-kernel
+        stable_mac_address_workaround
+        ;;
+    raspberry3)
+        raspberry2or3_setup_boot 'raspberry3'
+        setup_flash_kernel 'Raspberry Pi 3 Model B'
         flash-kernel
         stable_mac_address_workaround
         ;;

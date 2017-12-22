@@ -32,6 +32,7 @@ Freedom-maker supports building for the following targets:
 - *dreamplug*: DreamPlug's internal SD card
 - *raspberry*: RasbperryPi's SD card.
 - *raspberry2*: RasbperryPi 2's SD card.
+- *raspberry3*: RasbperryPi 3's SD card.
 - *i386*: Disk image for any machine with i386 architecture
 - *amd64*: Disk image for any machine with amd64 architecture.
 - *virtualbox-i386*: 32-bit image for the VirtualBox virtualization tool
@@ -96,8 +97,8 @@ $ sudo apt-get install virtualbox sshpass
 
 2. Build all images:
     ```
-    $ python3 -m freedommaker dreamplug raspberry raspberry2 beaglebone \
-      cubieboard2 cubietruck a20-olinuxino-lime a20-olinuxino-lime2 \
+    $ python3 -m freedommaker dreamplug raspberry raspberry2 raspberry3 \
+      beaglebone cubieboard2 cubietruck a20-olinuxino-lime a20-olinuxino-lime2 \
       a20-olinuxino-micro i386 amd64 virtualbox-i386 virtualbox-amd64 \
       qemu-i386 qemu-amd64 banana-pro
     ```
