@@ -141,7 +141,21 @@ setup_flash_kernel() {
     if [ ! -d /etc/flash-kernel ] ; then
        mkdir /etc/flash-kernel
     fi
-    echo -n "$1" > /etc/flash-kernel/machine
+    full_machine_name="$1"
+    echo -n "$full_machine_name" > /etc/flash-kernel/machine
+
+    # Raspberry Pi 3 Model B can also work with armmp kernel, so add it to the
+    # flash-kernel database in addition to the existing arm64. XXX: Remove this
+    # override when flash-kernel is updated.
+    case "$full_machine_name" in
+        "Raspberry Pi 3 Model B")
+            mkdir -p /usr/share/flash-kernel/db/
+            cat >/usr/share/flash-kernel/db/01-raspberrypi3-freedombox.db <<EOF
+Machine: Raspberry Pi 3 Model B
+Kernel-Flavors: arm64 armmp armmp-lpae
+EOF
+            ;;
+    esac
 
     command_line=""
     if [ -n "$2" ] ; then
