@@ -19,7 +19,7 @@ Basic image builder using vmdebootstrap.
 """
 
 import logging
-import os
+import shutil
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,8 @@ class VmdebootstrapBuilderBackend():
                         self.builder.image_file)
             return
 
-        temp_image_file = self.builder.image_file + '.temp'
+        temp_image_file = self.builder.get_temp_image_file()
+        logger.info('Building image in temporary file - %s', temp_image_file)
         self.execution_wrapper = ['sudo', '-H']
         self.parameters = [
             '--hostname',
@@ -90,14 +91,16 @@ class VmdebootstrapBuilderBackend():
         ] + self.parameters
         self.builder._run(command)
 
-        os.rename(temp_image_file, self.builder.image_file)
+        logger.info('Moving file: %s -> %s', temp_image_file,
+                    self.builder.image_file)
+        shutil.move(temp_image_file, self.builder.image_file)
 
     def process_variant(self):
         """Add paramaters for deboostrap variant."""
         if self.builder.debootstrap_variant:
             self.parameters += [
-                '--debootstrapopts', 'variant=' +
-                self.builder.debootstrap_variant
+                '--debootstrapopts',
+                'variant=' + self.builder.debootstrap_variant
             ]
 
     def process_architecture(self):
