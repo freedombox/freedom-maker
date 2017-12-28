@@ -25,6 +25,9 @@ import os
 import shutil
 import subprocess
 
+from . import vmdb2
+from . import vmdebootstrap
+
 BASE_PACKAGES = [
     'initramfs-tools',
 ]
@@ -38,6 +41,7 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
     machine = 'all'
     free = True
 
+    builder_backend = 'vmdebootstrap'
     root_filesystem_type = 'btrfs'
     boot_filesystem_type = None
     boot_size = None
@@ -68,10 +72,11 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
         """Initialize object."""
         self.arguments = arguments
         self.packages = BASE_PACKAGES
-        self.parameters = []
-        self.environment = []
 
-        self.files_to_clean = []
+        self.builder_backends = {}
+        self.builder_backends['vmdebootstrap'] = \
+            vmdebootstrap.VmdebootstrapBuilderBackend(self)
+        self.builder_backends['vmdb2'] = vmdb2.Vmdb2BuilderBackend(self)
 
         self.image_file = os.path.join(
             self.arguments.build_dir, self._get_image_base_name() + '.img')
@@ -106,6 +111,10 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
 
         self.sign(archive_file)
 
+    def make_image(self):
+        """Call a builder backend to create basic image."""
+        self.builder_backends[self.builder_backend].make_image()
+
     def _get_image_base_name(self):
         """Return the base file name of the final image."""
         free_tag = 'free' if self.free else 'nonfree'
@@ -115,128 +124,6 @@ class ImageBuilder(object):  # pylint: disable=too-many-instance-attributes
                 distribution=self.arguments.distribution, free_tag=free_tag,
                 build_stamp=self.arguments.build_stamp, machine=self.machine,
                 architecture=self.architecture)
-
-    def make_image(self):
-        """Create a disk image."""
-        if self.should_skip_step(self.image_file):
-            logger.info('Image exists, skipping build - %s', self.image_file)
-            return
-
-        temp_image_file = self.image_file + '.temp'
-        self.execution_wrapper = ['sudo', '-H']
-        self.parameters = [
-            '--hostname', self.arguments.hostname,
-            '--image', temp_image_file,
-            '--size', self.arguments.image_size,
-            '--mirror', self.arguments.build_mirror,
-            '--distribution', self.arguments.distribution,
-            '--arch', self.architecture,
-            '--lock-root-password',
-            '--log', self.log_file,
-            '--log-level', self.arguments.log_level,
-            '--verbose',
-            '--customize', self.customization_script,
-        ]
-        self.environment = {
-            'MIRROR': self.arguments.mirror,
-            'BUILD_MIRROR': self.arguments.build_mirror,
-            'MACHINE': self.machine,
-            'SOURCE': 'true' if self.arguments.download_source else 'false',
-            'SOURCE_IN_IMAGE': 'true' if self.arguments.include_source else 'false',
-            'SUITE': self.arguments.distribution,
-            'ENABLE_NONFREE': 'no' if self.free else 'yes',
-        }
-        self.process_variant()
-        self.process_architecture()
-        self.process_boot_loader()
-        self.process_kernel_flavor()
-        self.process_filesystems()
-        self.process_packages()
-        self.process_custom_packages()
-        self.process_environment()
-
-        command = self.execution_wrapper + [self.arguments.vmdebootstrap] + \
-            self.parameters
-        self._run(command)
-
-        os.rename(temp_image_file, self.image_file)
-
-    def process_variant(self):
-        """Add paramaters for deboostrap variant."""
-        if self.debootstrap_variant:
-            self.parameters += \
-                ['--debootstrapopts', 'variant=' + self.debootstrap_variant]
-
-    def process_architecture(self):
-        """Add parameters specific to the architecture."""
-        if self.architecture not in ('i386', 'amd64'):
-            self.parameters += ['--foreign', '/usr/bin/qemu-arm-static']
-
-            # Using taskset to pin build process to single core. This
-            # is a workaround for a qemu-user-static issue that causes
-            # builds to hang. (See Debian bug #769983 for details.)
-            self.execution_wrapper = \
-                ['taskset', '0x01'] + self.execution_wrapper
-
-    def process_boot_loader(self):
-        """Add parameters related to boot loader."""
-        option_map = {
-            'grub': ['--grub'],
-            'u-boot': ['--no-extlinux'],
-            None: ['--no-extlinux']
-        }
-        self.parameters += option_map[self.boot_loader]
-
-        if self.boot_loader == 'u-boot':
-            self.parameters += [
-                '--package', 'u-boot-tools', '--package', 'u-boot']
-
-        if self.boot_size:
-            self.parameters += ['--bootsize', self.boot_size]
-
-        if self.boot_offset:
-            self.parameters += ['--bootoffset', self.boot_offset]
-
-    def process_kernel_flavor(self):
-        """Add parameters for kernel flavor."""
-        if self.kernel_flavor == 'default':
-            return
-
-        if self.kernel_flavor is None:
-            self.parameters += ['--no-kernel']
-            return
-
-        self.parameters += ['--kernel-package',
-                            'linux-image-' + self.kernel_flavor]
-
-    def process_filesystems(self):
-        """Add parameters necessary for file systems."""
-        self.parameters += ['--roottype', self.root_filesystem_type]
-        if self.boot_filesystem_type:
-            self.parameters += ['--boottype', self.boot_filesystem_type]
-
-        if 'btrfs' in [self.root_filesystem_type, self.boot_filesystem_type]:
-            self.packages += ['btrfs-progs']
-
-    def process_packages(self):
-        """Add parameters for additional packages to install in image."""
-        for package in self.packages + (self.arguments.package or []):
-            self.parameters += ['--package', package]
-
-    def process_custom_packages(self):
-        """Add parameters for custom DEB packages to install in image."""
-        for package in (self.arguments.custom_package or []):
-            if 'plinth_' in package:
-                self.environment['CUSTOM_PLINTH'] = package
-            elif 'freedombox-setup_' in package:
-                self.environment['CUSTOM_SETUP'] = package
-            else:
-                self.parameters += ['--custom-package', package]
-
-    def process_environment(self):
-        """Add environment we wish to pass to the command wrapper: sudo."""
-        for key, value in self.environment.items():
-            self.execution_wrapper += [key + '=' + value]
 
     def compress(self, archive_file, image_file):
         """Compress the generate image."""
