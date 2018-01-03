@@ -6,7 +6,7 @@ Uploaders:
  Sunil Mohan Adapa <sunil@medhas.org>,
  James Valleroy <jvalleroy@mailbox.org>,
 Section: utils
-Priority: extra
+Priority: optional
 Build-Depends:
  debhelper (>= 9),
  dh-python,
