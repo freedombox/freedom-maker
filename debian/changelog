@@ -1,4 +1,4 @@
-freedom-maker (0.9) UNRELEASED; urgency=medium
+freedom-maker (0.9) unstable; urgency=medium
 
   [ Sunil Mohan Adapa ]
   * Remove dependency on extlinux. (Closes: #869203)
@@ -10,7 +10,7 @@ freedom-maker (0.9) UNRELEASED; urgency=medium
   * Bump standards version.
   * Replace priority extra with priority optional.
 
- -- James Valleroy <jvalleroy@mailbox.org>  Tue, 02 Jan 2018 19:14:12 -0500
+ -- James Valleroy <jvalleroy@mailbox.org>  Tue, 02 Jan 2018 19:30:22 -0500
 
 freedom-maker (0.8) unstable; urgency=low
 
