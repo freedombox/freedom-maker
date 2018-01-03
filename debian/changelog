@@ -1,10 +1,16 @@
 freedom-maker (0.9) UNRELEASED; urgency=medium
 
+  [ Sunil Mohan Adapa ]
   * Remove dependency on extlinux. (Closes: #869203)
   * Add myself to list of uploaders.
-  * Depend on btrfs-progs instead of btrfs-tools. (Closes #869223)
+  * Depend on btrfs-progs instead of btrfs-tools. (Closes: #869223)
 
- -- Sunil Mohan Adapa <sunil@medhas.org>  Tue, 25 Jul 2017 19:34:03 +0530
+  [ James Valleroy ]
+  * Add myself to list of uploaders.
+  * Bump standards version.
+  * Replace priority extra with priority optional.
+
+ -- James Valleroy <jvalleroy@mailbox.org>  Tue, 02 Jan 2018 19:14:12 -0500
 
 freedom-maker (0.8) unstable; urgency=low
 
