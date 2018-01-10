@@ -17,36 +17,6 @@ set -e
 set -x
 set -o pipefail
 
-enable_eatmydata_override() {
-    chroot $rootdir apt-get install --no-install-recommends -y eatmydata
-    if [ -x $rootdir/usr/bin/eatmydata ] && \
-        [ ! -f $rootdir/etc/apt/apt.conf.d/95debian-edu-install-dpkg-eatmydata ]; then
-        echo "info: Adding apt config to call dpkg via eatmydata"
-        printf "#!/bin/sh\nexec eatmydata dpkg \"\$@\"\n" \
-            > $rootdir/var/tmp/dpkg-eatmydata
-        chmod 755 $rootdir/var/tmp/dpkg-eatmydata
-        cat > $rootdir/etc/apt/apt.conf.d/95debian-edu-install-dpkg-eatmydata <<EOF
-Dir::Bin::dpkg "/var/tmp/dpkg-eatmydata";
-EOF
-    else
-        echo "error: unable to find /usr/bin/eatmydata after installing the eatmydata package"
-    fi
-}
-
-disable_eatmydata_override() {
-    for override in \
-        /etc/apt/apt.conf.d/95debian-edu-install-dpkg-eatmydata \
-        /var/tmp/dpkg-eatmydata ; do
-        echo "info: Removing apt config to call dpkg via eatmydata"
-        if [ -f $rootdir$override ] ; then
-            rm -f $rootdir$override
-        else
-            echo "warning: missing $rootdir$override"
-        fi
-    done
-    sync # Flush file buffers before continuing
-}
-
 set_apt_sources() {
     NEW_MIRROR="$1"
     COMPONENTS="main"
@@ -124,9 +94,6 @@ make_source_tarball() {
     )
 }
 
-# Set to true/false to control if eatmydata is used during build
-use_eatmydata=true
-
 rootdir="$1"
 image="$(cd "$(dirname "$2")"; pwd)/$(basename "$2")"
 
@@ -198,10 +165,6 @@ cat > $rootdir/usr/sbin/policy-rc.d <<EOF
 exit 101
 EOF
 chmod a+rx $rootdir/usr/sbin/policy-rc.d
-
-if $use_eatmydata ; then
-    enable_eatmydata_override
-fi
 
 if [ -n "$CUSTOM_PLINTH" ]; then
     cp "$CUSTOM_PLINTH" "$rootdir"/tmp
@@ -291,10 +254,6 @@ case "$MACHINE" in
            seek=8 conv=notrunc bs=1k
         ;;
 esac
-
-if $use_eatmydata ; then
-    disable_eatmydata_override
-fi
 
 set_apt_sources $MIRROR
 chroot $rootdir apt-get update

@@ -71,10 +71,14 @@ class Application(object):
 
             builder = cls(self.arguments)
             self.setup_logging(builder.log_file)
-            builder.build()
-            builder.cleanup()
-
-            logger.info('Target complete - %s', target)
+            try:
+                builder.build()
+                logger.info('Target complete - %s', target)
+            except:
+                logger.error('Target failed - %s', target)
+                raise
+            finally:
+                builder.cleanup()
 
     def parse_arguments(self):
         """Parse command line arguments."""
@@ -129,6 +133,10 @@ class Application(object):
         parser.add_argument(
             '--force', action='store_true',
             help='Force rebuild of images even when required image exists')
+        parser.add_argument(
+            '--build-in-ram', action='store_true',
+            help='Build the image in RAM so that it is faster, requires '
+            'free RAM about the size of disk image')
         parser.add_argument(
             'targets', nargs='+', help='Image targets to build')
 
