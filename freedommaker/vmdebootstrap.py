@@ -18,8 +18,10 @@
 Basic image builder using vmdebootstrap.
 """
 
+import json
 import logging
 import shutil
+import subprocess
 
 logger = logging.getLogger(__name__)
 
@@ -89,11 +91,50 @@ class VmdebootstrapBuilderBackend():
         command = self.execution_wrapper + [
             self.builder.arguments.vmdebootstrap
         ] + self.parameters
-        self.builder._run(command)
+
+        try:
+            self.builder._run(command)
+        finally:
+            self._cleanup_vmdebootstrap(temp_image_file)
 
         logger.info('Moving file: %s -> %s', temp_image_file,
                     self.builder.image_file)
         shutil.move(temp_image_file, self.builder.image_file)
+
+    def _cleanup_vmdebootstrap(self, image_file):
+        """Cleanup those that vmdebootstrap is supposed to have cleaned up."""
+        # XXX: Remove this when vmdebootstrap removes kpartx mappings properly
+        # after a successful build.
+        process = subprocess.run(['losetup', '--json'],
+                                 stdout=subprocess.PIPE,
+                                 check=True)
+        output = process.stdout.decode()
+        if not output:
+            return
+
+        loop_data = json.loads(output)
+        loop_device = None
+        for device_data in loop_data['loopdevices']:
+            if image_file == device_data['back-file']:
+                loop_device = device_data['name']
+                break
+
+        if not loop_device:
+            return
+
+        partition_devices = [
+            '/dev/mapper/' + loop_device.split('/')[-1] + 'p' + str(number)
+            for number in range(1, 4)
+        ]
+        # Don't log command, ignore errors, force
+        for device in partition_devices:
+            subprocess.run(['dmsetup', 'remove', '-f', device],
+                           stdout=subprocess.DEVNULL,
+                           stderr=subprocess.DEVNULL)
+
+        subprocess.run(['losetup', '-d', loop_device],
+                       stdout=subprocess.DEVNULL,
+                       stderr=subprocess.DEVNULL)
 
     def process_variant(self):
         """Add paramaters for deboostrap variant."""
