@@ -99,13 +99,14 @@ class VmdebootstrapBuilderBackend():
 
         logger.info('Moving file: %s -> %s', temp_image_file,
                     self.builder.image_file)
-        shutil.move(temp_image_file, self.builder.image_file)
+        self.builder._run(
+            ['sudo', 'mv', temp_image_file, self.builder.image_file])
 
     def _cleanup_vmdebootstrap(self, image_file):
         """Cleanup those that vmdebootstrap is supposed to have cleaned up."""
         # XXX: Remove this when vmdebootstrap removes kpartx mappings properly
         # after a successful build.
-        process = subprocess.run(['losetup', '--json'],
+        process = subprocess.run(['/sbin/losetup', '--json'],
                                  stdout=subprocess.PIPE,
                                  check=True)
         output = process.stdout.decode()
@@ -128,13 +129,9 @@ class VmdebootstrapBuilderBackend():
         ]
         # Don't log command, ignore errors, force
         for device in partition_devices:
-            subprocess.run(['dmsetup', 'remove', '-f', device],
-                           stdout=subprocess.DEVNULL,
-                           stderr=subprocess.DEVNULL)
+            subprocess.run(['sudo', 'dmsetup', 'remove', '-f', device])
 
-        subprocess.run(['losetup', '-d', loop_device],
-                       stdout=subprocess.DEVNULL,
-                       stderr=subprocess.DEVNULL)
+        subprocess.run(['sudo', 'losetup', '-d', loop_device])
 
     def process_variant(self):
         """Add paramaters for deboostrap variant."""
